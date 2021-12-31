@@ -1,0 +1,81 @@
+{
+  "name": "ashidori",
+  "version": "0.0.1",
+  "description": "An anime scrobbler built into your web browser.",
+  "main": "src/manifest.json",
+  "scripts": {
+    "start": "parcel build src/manifest.json --host localhost --target webex-dev",
+    "build": "parcel build src/manifest.json --target webex-prod",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clear-build-cache": "rm -rf .cache/ dist/",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
+    "format": "prettier --write \"src/**/*.{js,jsx}\""
+  },
+  "browserslist": [
+    "last 2 chrome version",
+    "last 2 firefox version"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanabanashiku/ashidori.git"
+  },
+  "keywords": [
+    "anime",
+    "scrobbler",
+    "kitsu",
+    "kitsu.io",
+    "mal",
+    "my",
+    "anime",
+    "list",
+    "anilist",
+    "netflix",
+    "crunchyroll",
+    "hulu",
+    "funimation",
+    "watch",
+    "tv",
+    "movies",
+    "content",
+    "media"
+  ],
+  "author": "Michael MacLean",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/hanabanashiku/ashidori/issues"
+  },
+  "homepage": "https://github.com/hanabanashiku/ashidori#readme",
+  "dependencies": {
+    "axios": "^0.24.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "@parcel/config-webextension": "^2.0.1",
+    "@types/firefox-webext-browser": "^94.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.12.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "husky": "^7.0.4",
+    "parcel": "^2.0.1"
+  },
+  "targets": {
+    "webext-dev": {
+      "sourceMap": {
+        "inline": true,
+        "inlineSources": true
+      }
+    },
+    "webext-prod": {}
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
+  }
+}

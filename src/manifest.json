@@ -1,0 +1,10 @@
+{
+    "name": "Ashidori",
+    "description": "An anime scrobbler built into your web browser.",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background/index.js"
+    },
+    "permissions": ["storage"]
+}
