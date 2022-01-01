@@ -2,10 +2,9 @@
   "name": "ashidori",
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
-  "main": "src/manifest.json",
   "scripts": {
-    "start": "parcel build src/manifest.json --host localhost --target webex-dev",
-    "build": "parcel build src/manifest.json --target webex-prod",
+    "start": "parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev --config @parcel/config-webextension",
+    "build": "parcel build src/manifest.json --target webext-prod --config @parcel/config-webextension",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
@@ -46,17 +45,25 @@
   },
   "homepage": "https://github.com/hanabanashiku/ashidori#readme",
   "dependencies": {
-    "axios": "^0.24.0"
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "axios": "^0.24.0",
+    "jquery": "^3.6.0",
+    "prop-types": "^15.8.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.7",
+    "@parcel/babel-preset-env": "^2.0.1",
     "@parcel/config-webextension": "^2.0.1",
     "@types/firefox-webext-browser": "^94.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^5.12.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "parcel": "^2.0.1"
   },
