@@ -7,16 +7,12 @@ const Layout = ({ children }) => (
     css={css`
       width: 80rem;
       margin: 32px auto;
-      padding: 8px;
+      padding: 16px 32px;
       border: 2px solid black;
       box-shadow: 3px 2px 5px grey;
     `}
   >
-    <div
-      css={css`
-        padding: 0 32px;
-      `}
-    >
+    <div>
       <div
         css={css`
           height: 128px;
@@ -37,7 +33,13 @@ const Layout = ({ children }) => (
       </p>
       <hr />
     </div>
-    <div>{children}</div>
+    <div
+      css={css`
+        padding: 8px 16px;
+      `}
+    >
+      {children}
+    </div>
   </div>
 );
 Layout.propTypes = {
