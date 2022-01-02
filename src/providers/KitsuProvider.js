@@ -1,6 +1,7 @@
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
-import PROVIDERS from "./providers";
+import { PROVIDERS } from "../enums";
+import UserData from "../models/UserData";
 
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
@@ -24,6 +25,17 @@ export default class KitsuProvider extends ApiProvider {
       return this._requestInterceptor(config);
     });
     this._setProvider(PROVIDERS.KITSU);
+  }
+
+  async fetchUserData() {
+    try {
+      const response = await this.#client.get("/users?filter[self]=true");
+      const userInfo = new UserData(response.data);
+      await super.getUserInfo(userInfo);
+      return userInfo;
+    } catch (e) {
+      throw new Error("Unable to get user info.");
+    }
   }
 
   async authorize(username, password) {

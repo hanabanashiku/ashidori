@@ -1,15 +1,30 @@
-import PROVIDERS from "./providers";
+import { PROVIDERS } from "../enums";
 
 export default class ApiProvider {
   /**
    * @returns {Promise<number>} The selected provider.
    * @see providers enum
    */
-  async getSelectedProvider() {
+  static async getSelectedProvider() {
     const result = await browser.storage.local.get({
       selected_provider: PROVIDERS.UNSELECTED,
     });
     return result["selected_provider"];
+  }
+
+  /**
+   * Gets data about the currently authenticated user.
+   * @returns {Promise<UserData>} A promise containing data about the current user.
+   */
+  async getUserData() {
+    const data = await browser.storage.local.get({ userData: null });
+    return data.userInfo;
+  }
+
+  async fetchUserData(info) {
+    return browser.storage.local.set({
+      userData: info,
+    });
   }
 
   /**
@@ -52,6 +67,7 @@ export default class ApiProvider {
       "access_token",
       "refresh_token",
       "access_token_expires_on",
+      "userData",
     ]);
   }
 

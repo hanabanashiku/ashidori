@@ -1,0 +1,4 @@
+{
+  "plugins": ["lodash", "@emotion"],
+  "presets": ["@emotion/babel-preset-css-prop"]
+}
