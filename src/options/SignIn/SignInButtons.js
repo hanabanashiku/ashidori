@@ -5,13 +5,11 @@ import { css } from "@emotion/react";
 const ProviderButton = ({ name, logo, onClick }) => (
   <div
     css={css`
-      border-right: 2px solid gray;
       padding: 0px 24px;
       & > img,
       button {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
       }
     `}
   >
@@ -40,8 +38,8 @@ const SignInButtons = () => {
         css={css`
           display: flex;
           justify-content: center;
-          & div:last-child {
-            border-right: none;
+          & div:not(:last-child) {
+            border-right: 2px solid gray;
           }
         `}
       >
