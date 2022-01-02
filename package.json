@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel src/manifest.json src/static/**/* src/**/*.{js,jsx,html} --host localhost --target webext-dev --config @parcel/config-webextension",
-    "build": "parcel build manifest.json static/**/* src/**/*.{js,jsx,html} --target webext-prod --config @parcel/config-webextension",
+    "start": "parcel src/manifest.json src/static/**/* src/**/*.{js,jsx,html} --host localhost --target webext-dev",
+    "build": "parcel build manifest.json static/**/* src/**/*.{js,jsx,html} --target webext-prod",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
@@ -61,6 +61,7 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@parcel/babel-preset-env": "^2.0.1",
     "@parcel/config-webextension": "^2.0.1",
+    "@parcel/transformer-webmanifest": "^2.0.1",
     "@types/firefox-webext-browser": "^94.0.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
@@ -70,7 +71,8 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
-    "parcel": "^2.0.1"
+    "parcel": "^2.0.1",
+    "webextension-polyfill": "^0.8.0"
   },
   "targets": {
     "webext-dev": {

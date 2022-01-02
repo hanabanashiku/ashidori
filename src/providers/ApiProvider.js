@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import { PROVIDERS } from "../enums";
 
 export default class ApiProvider {

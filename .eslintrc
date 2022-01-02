@@ -5,7 +5,7 @@
     "plugin:import/errors",
     "prettier"
   ],
-  "plugins": ["react", "import", "react-hooks", "@emotion"],
+  "plugins": ["react", "import", "react-hooks"],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
