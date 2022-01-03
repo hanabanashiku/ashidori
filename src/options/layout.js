@@ -18,7 +18,7 @@ const Layout = ({ children }) => (
           height: 128px;
           width: 512px;
           margin: auto;
-          background: url("/static/logo.png") no-repeat;
+          background: url("/static/images/logo.png") no-repeat;
         `}
       />
       <p

@@ -1,4 +1,9 @@
 {
-  "plugins": ["lodash", "@emotion"],
+  "plugins": [
+    "lodash",
+    "@emotion",
+    "@babel/plugin-proposal-private-methods",
+    "@babel/plugin-proposal-class-properties"
+  ],
   "presets": ["@emotion/babel-preset-css-prop"]
 }

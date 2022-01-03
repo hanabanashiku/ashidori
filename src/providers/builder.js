@@ -19,6 +19,10 @@ function buildApiInstance(provider) {
   }
 }
 
+/**
+ * Gets the current api instance or returns a new one.
+ * @returns {ApiProvider} The provider instance.
+ */
 export const getApiInstance = async () => {
   if (instance) {
     return instance;
@@ -32,4 +36,14 @@ export const getApiInstance = async () => {
 
 export const resetApiInstance = () => {
   instance = null;
+};
+
+/**
+ * Creates a new api instance.
+ * @param {number} provider The provider type.
+ * @returns {ApiProvider} The requested api provider.
+ */
+export const createApiInstance = (provider) => {
+  instance = buildApiInstance(provider);
+  return instance;
 };

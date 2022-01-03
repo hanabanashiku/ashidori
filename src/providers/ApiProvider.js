@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import UserData from "../models/UserData";
 import { PROVIDERS } from "../enums";
 
 export default class ApiProvider {
@@ -19,7 +20,7 @@ export default class ApiProvider {
    */
   async getUserData() {
     const data = await browser.storage.local.get({ userData: null });
-    return data.userInfo;
+    return new UserData(data.userData);
   }
 
   async fetchUserData(info) {
@@ -32,7 +33,7 @@ export default class ApiProvider {
    * Authorize with the API.
    * @param username {string} The username to use.
    * @param password {string} The password to use.
-   * @returns {boolean} True on success.
+   * @returns {Promise<boolean>} True on success.
    */
   authorize() {
     throw "Not Implemented";
@@ -56,6 +57,14 @@ export default class ApiProvider {
     const currentTime = Math.floor(new Date().getTime() / 1000);
 
     return currentTime > (await data)["access_token_expires_on"] - 600;
+  }
+
+  /**
+   * Check whether the user is authenticated.
+   * @returns {boolean} True if the user is signed in.
+   */
+  async isAuthenticated() {
+    return !!(await this.getAuthToken());
   }
 
   /**
@@ -94,7 +103,7 @@ export default class ApiProvider {
    * @see providers enum.
    */
   async _setProvider(provider) {
-    await browser.storage.local.set("selected_provider", provider);
+    await browser.storage.local.set({ selected_provider: provider });
   }
 
   /**
@@ -114,7 +123,7 @@ export default class ApiProvider {
    * @param {string} token The refresh token to set.
    */
   async _setRefreshToken(token) {
-    await browser.storage.local.set("refresh_token", token);
+    await browser.storage.local.set({ refresh_token: token });
   }
 
   /**
@@ -123,9 +132,9 @@ export default class ApiProvider {
    * @returns {Promise<import("axios").AxiosRequestConfig>}
    */
   async _requestInterceptor(config) {
-    if (this.shouldRefresh()) {
-      await this.refresh();
-    }
+    // if (this.shouldRefresh()) { todo
+    //   await this.refresh();
+    // }
 
     const token = await this.getAuthToken();
     if (!token) {

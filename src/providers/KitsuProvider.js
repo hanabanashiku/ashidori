@@ -30,8 +30,11 @@ export default class KitsuProvider extends ApiProvider {
   async fetchUserData() {
     try {
       const response = await this.#client.get("/users?filter[self]=true");
-      const userInfo = new UserData(response.data);
-      await super.getUserInfo(userInfo);
+      const userInfo = new UserData({
+        ...response.data,
+        provider: PROVIDERS.KITSU,
+      });
+      await super.fetchUserData(userInfo);
       return userInfo;
     } catch (e) {
       throw new Error("Unable to get user info.");
@@ -48,6 +51,7 @@ export default class KitsuProvider extends ApiProvider {
     try {
       const response = await axios.post(`${KITSU_AUTH_URL}/token`, params);
       await this.#setTokenResponse(response);
+      await this.fetchUserData();
       return true;
     } catch (e) {
       throw "Unable to authenticate. Check username/password";

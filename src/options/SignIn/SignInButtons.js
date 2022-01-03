@@ -52,7 +52,7 @@ const SignInButtons = () => {
         <ProviderButton
           name="Kitsu"
           logo="../../static/images/kitsu.png"
-          onClick={() => {}}
+          onClick={() => (window.location.href = "/options/kitsu.html")}
         />
 
         <ProviderButton
