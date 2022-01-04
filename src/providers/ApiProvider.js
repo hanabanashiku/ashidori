@@ -50,18 +50,20 @@ export default class ApiProvider {
 
   /**
    * Check if the access token is about to expire.
-   * @returns {boolean} Returns true if the token should be refreshed.
+   * @returns {Promise<boolean>} Returns true if the token should be refreshed.
    */
   async shouldRefresh() {
-    const data = browser.storage.local.get({ access_token_expires_on: 0 });
+    const data = await browser.storage.local.get({
+      access_token_expires_on: 0,
+    });
     const currentTime = Math.floor(new Date().getTime() / 1000);
 
-    return currentTime > (await data)["access_token_expires_on"] - 600;
+    return currentTime > data["access_token_expires_on"] - 600;
   }
 
   /**
    * Check whether the user is authenticated.
-   * @returns {boolean} True if the user is signed in.
+   * @returns {Promise<boolean>} True if the user is signed in.
    */
   async isAuthenticated() {
     return !!(await this.getAuthToken());
@@ -132,9 +134,9 @@ export default class ApiProvider {
    * @returns {Promise<import("axios").AxiosRequestConfig>}
    */
   async _requestInterceptor(config) {
-    // if (this.shouldRefresh()) { todo
-    //   await this.refresh();
-    // }
+    if (await this.shouldRefresh()) {
+      await this.refresh();
+    }
 
     const token = await this.getAuthToken();
     if (!token) {

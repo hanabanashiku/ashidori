@@ -21,7 +21,7 @@ function buildApiInstance(provider) {
 
 /**
  * Gets the current api instance or returns a new one.
- * @returns {ApiProvider} The provider instance.
+ * @returns {Promise<ApiProvider>} The provider instance.
  */
 export const getApiInstance = async () => {
   if (instance) {

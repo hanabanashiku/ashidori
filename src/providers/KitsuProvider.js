@@ -59,7 +59,7 @@ export default class KitsuProvider extends ApiProvider {
   }
 
   async refresh() {
-    const token = this.refreshToken;
+    const token = this.getRefreshToken();
     const params = new URLSearchParams();
     params.append("grant_type", "refresh_token");
     params.append("refresh_token", await token);

@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import { useForm } from "react-hook-form";
-import { createApiInstance } from "../../../providers/builder";
+import { createApiInstance, getApiInstance } from "../../../providers/builder";
 import { PROVIDERS } from "../../../enums";
 
 const KitsuLogin = () => {
   const { register, handleSubmit } = useForm();
   const [formEnabled, setFormEnabled] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const api = await getApiInstance();
+      if ((await api?.isAuthenticated()) === true) {
+        window.location.href = "/options/index.html";
+      }
+    })();
+  }, []);
 
   const onSubmit = async (values) => {
     setFormEnabled(false);
