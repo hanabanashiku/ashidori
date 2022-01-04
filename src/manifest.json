@@ -9,5 +9,11 @@
     "128": "static/icons/icon128.png"
   },
   "options_page": "options/index.html",
-  "permissions": ["storage"]
+  "content_scripts": [
+    {
+      "matches": ["*://beta.crunchyroll.com/watch/*"],
+      "js": ["content_scripts/crunchyroll/video.js"]
+    }
+  ],
+  "permissions": ["storage", "activeTab"]
 }
