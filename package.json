@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel src/manifest.json src/static/**/* src/**/*.{js,jsx,html} --host localhost --target webext-dev",
+    "start": "parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
     "build": "parcel build manifest.json static/**/* src/**/*.{js,jsx,html} --target webext-prod",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
