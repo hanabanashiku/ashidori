@@ -48,7 +48,7 @@ const Services = () => {
           margin-right: 8px;
         `}
       />
-      <img src={image} alt={name} height="48px" />
+      <img src={image} alt={name} title={name} height="48px" />
     </label>
   );
   ServiceCheckbox.propTypes = {
@@ -65,46 +65,53 @@ const Services = () => {
     <div
       css={css`
         position: relative;
-        width: 25rem;
+        width: 30rem;
       `}
     >
       <h2>Enable integrations on</h2>
-      <div>
-        <ServiceCheckbox
-          name="Crunchyroll"
-          image="../static/images/crunchyroll.png"
-          value={SERVICES.CRUNCHYROLL}
-        />
-        <ServiceCheckbox
-          name="Funimation"
-          image="../static/images/funimation.png"
-          value={SERVICES.FUNIMATION}
-        />
-        <ServiceCheckbox
-          name="Hulu"
-          image="../static/images/hulu.png"
-          value={SERVICES.HULU}
-        />
-        <ServiceCheckbox
-          name="Netfix"
-          image="../static/images/netflix.png"
-          value={SERVICES.NETFLIX}
-        />
-        <ServiceCheckbox
-          name="Amazon Prime"
-          image="../static/images/amazon_prime.png"
-          value={SERVICES.AMAZON_PRIME}
-        />
-        <ServiceCheckbox
-          name="Hidive"
-          image="../static/images/hidive.png"
-          value={SERVICES.HIDIVE}
-        />
+      <div
+        css={css`
+          column-count: 2;
+        `}
+      >
+        <div>
+          <ServiceCheckbox
+            name="Crunchyroll"
+            image="../static/images/crunchyroll.png"
+            value={SERVICES.CRUNCHYROLL}
+          />
+          <ServiceCheckbox
+            name="Funimation"
+            image="../static/images/funimation.png"
+            value={SERVICES.FUNIMATION}
+          />
+          <ServiceCheckbox
+            name="Hulu"
+            image="../static/images/hulu.png"
+            value={SERVICES.HULU}
+          />
+          <ServiceCheckbox
+            name="Netfix"
+            image="../static/images/netflix.png"
+            value={SERVICES.NETFLIX}
+          />
+          <ServiceCheckbox
+            name="Amazon Prime"
+            image="../static/images/amazon_prime.png"
+            value={SERVICES.AMAZON_PRIME}
+          />
+          <ServiceCheckbox
+            name="Hidive"
+            image="../static/images/hidive.png"
+            value={SERVICES.HIDIVE}
+          />
+        </div>
       </div>
+
       <div
         css={css`
           position: absolute;
-          right: 0;
+          right: 4rem;
           top: 0;
           & > button:not(:last-child) {
             margin-right: 8px;

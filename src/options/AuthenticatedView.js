@@ -9,6 +9,7 @@ const AuthenticatedView = ({ userData }) => {
   const signOut = async () => {
     const api = await getApiInstance();
     await api.signOut();
+    window.location.href = "/options/index.html";
   };
 
   return (
@@ -19,6 +20,41 @@ const AuthenticatedView = ({ userData }) => {
       `}
     >
       <h2>You are logged in using {PROVIDER_NAMES[userData.apiSource]}.</h2>
+      <img
+        src={userData.avatarUrl}
+        css={css`
+          float: left;
+          padding-right: 16px;
+          height: 64px;
+          width: 64px;
+        `}
+      />
+      <p
+        css={css`
+          font-weight: bold;
+          font-size: 18px;
+          margin: -2px 0;
+        `}
+      >
+        {userData.username}
+      </p>
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={userData.url}
+        css={css`
+          display: block;
+          padding-bottom: 4px;
+          font-weight: 16px;
+          text-decoration: none;
+          color: blue;
+          &:hover {
+            text-decoration: underline;
+          }
+        `}
+      >
+        View profile
+      </a>
       <button onClick={() => signOut()}>Sign Out</button>
     </div>
   );

@@ -66,8 +66,8 @@ export default class UserData {
       _provider: PROVIDERS.KITSU,
       _id: user.id,
       _name: user.attributes.name,
-      _url: user.links.self,
-      _avatarUrl: `https://kitsu.io/users/${user.attributes.slug}`,
+      _url: `https://kitsu.io/users/${user.attributes.slug}`,
+      _avatarUrl: user.attributes.avatar.small,
     });
   }
 }
