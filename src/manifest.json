@@ -15,5 +15,5 @@
       "js": ["content_scripts/crunchyroll/video.js"]
     }
   ],
-  "permissions": ["storage", "activeTab"]
+  "permissions": ["storage", "activeTab", "*://*.crunchyroll.com/*"]
 }

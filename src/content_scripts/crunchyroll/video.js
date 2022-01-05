@@ -1,35 +1,38 @@
-import $ from 'jquery';
-import Settings from '../../options/Settings';
-import { SERVICES } from '../../enums';
+import browser from "webextension-polyfill";
+import $ from "jquery";
+import Settings from "../../options/Settings";
+import { SERVICES } from "../../enums";
+import CrunchyrollService from "../../services/Crunchyroll";
 
-const episodeRegex = /^E(\d+) - (.+)$/.compile();
+let client;
+let episodeData;
 
-Settings.getEnabledServices().then(enabledServices => {
-    if(!enabledServices.includes(SERVICES.CRUNCHYROLL)) {
-        return;
-    }
+Settings.getEnabledServices().then((enabledServices) => {
+  if (!enabledServices.includes(SERVICES.CRUNCHYROLL)) {
+    return;
+  }
 
-    $(() => {
-        $(window).on('unload', async () => await onEpisodeCompleted())
+  $(() => {
+    client = new CrunchyrollService();
+    client.authenticate().then(() =>
+      getEpisodeData().then((data) => {
+        episodeData = data;
+        console.log(data);
+      })
+    );
+
+    $(window).on("unload", async () => {
+      await onEpisodeCompleted();
     });
+  });
 });
 
-async function onEpisodeCompleted() {
+async function getEpisodeData() {
+  const episodeId = /watch\/(.+?)\/.+/g.exec(window.location.href)[1];
 
+  return await client.getEpisodeData(episodeId);
 }
 
-function parseEpisodeData() {
-    const seriesName = $(".show-title-link > h4").first().text;
-    const episode = $(".erc-current-media-info > h2.c-heading").first().text;
-    const episodeMatch = /^E(\d+) - (.+)$/g.exec(episode);
-
-    if(!episodeMatch) {
-        return null;
-    }
-
-    return {
-        seriesName,
-        epsiodeNumber: episodeMatch[1],
-        episodeName: episodeMatch[2],
-    };
+async function onEpisodeCompleted() {
+  alert(episodeData);
 }
