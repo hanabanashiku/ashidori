@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+// import browser from "webextension-polyfill";
 import $ from "jquery";
 import Settings from "../../options/Settings";
 import { SERVICES } from "../../enums";
@@ -17,7 +17,6 @@ Settings.getEnabledServices().then((enabledServices) => {
     client.authenticate().then(() =>
       getEpisodeData().then((data) => {
         episodeData = data;
-        console.log(data);
       })
     );
 
