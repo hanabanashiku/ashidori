@@ -25,3 +25,20 @@ export const NOTIFY_EPSIODE_ANSWERS = {
   ALWAYS: "always",
   LATEST: "latest",
 };
+
+export const LIST_STATUS = {
+  NOT_WATCHING: 0,
+  PLANNED: 1,
+  CURRENT: 2,
+  DROPPED: 3,
+  ON_HOLD: 4,
+  COMPLETED: 5,
+};
+
+export const ANIME_STATUS = {
+  AIRING: 0,
+  FINISHED: 1,
+  ANNOUNCED: 2,
+  UNRELEASED: 3,
+  UPCOMING: 4,
+};
