@@ -9,7 +9,7 @@ export default class LibraryEntry {
   constructor(data = {}) {
     switch (data.service) {
       case PROVIDERS.KITSU:
-        this.#mapFromKitsu(data);
+        LibraryEntry.#mapFromKitsu(data);
         break;
 
       default:
@@ -82,7 +82,7 @@ export default class LibraryEntry {
     return this._anime;
   }
 
-  #mapFromKitsu(data) {
+  static #mapFromKitsu(data) {
     _.defaultsDeep(
       this,
       {

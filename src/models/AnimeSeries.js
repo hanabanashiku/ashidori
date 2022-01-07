@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { PROVIDERS, ANIME_STATUS } from "../enums";
+import { PROVIDERS, ANIME_STATUS, SERVICES } from "../enums";
 
 /**
  * An anime series.
@@ -8,7 +8,7 @@ export default class AnimeSeries {
   constructor(data = {}) {
     switch (data.provider) {
       case PROVIDERS.KITSU:
-        this.#mapFromKitsu(data);
+        AnimeSeries.#mapFromKitsu(data);
         break;
 
       default:
@@ -80,7 +80,7 @@ export default class AnimeSeries {
     return this._episodeLength;
   }
 
-  #mapFromKitsu(data) {
+  static #mapFromKitsu(data) {
     _.defaultsDeep(
       this,
       {
@@ -95,10 +95,30 @@ export default class AnimeSeries {
         _status: KITSU_ANIME_STATUS[data.attributes.status],
         _episodeCount: data.attributes.episodeCount,
         _episodeLength: data.attributes.episodeLength,
-        _streamingLinks: {}, // todo
+        _streamingLinks: AnimeSeries.#mapStreamingLinks(data.streamingLinks),
       },
       DEFAULT_VALUES
     );
+  }
+
+  static #mapStreamingLinks(links = []) {
+    const result = {};
+    const regex = /([a-zA-Z-]+\.(com|net|org|io|tv))/g;
+
+    for (const link of links) {
+      const url = link.attributes.url;
+      const domain = regex.exec(url)?.[1];
+      if (
+        !domain ||
+        !Object.prototype.hasOwnProperty.call(SERVICE_DOMAINS, domain)
+      ) {
+        continue;
+      }
+
+      result[SERVICE_DOMAINS[domain]] = url;
+    }
+
+    return result;
   }
 }
 
@@ -121,4 +141,14 @@ const KITSU_ANIME_STATUS = {
   tba: ANIME_STATUS.ANNOUNCED,
   unreleased: ANIME_STATUS.UNRELEASED,
   upcoming: ANIME_STATUS.UPCOMING,
+};
+
+const SERVICE_DOMAINS = {
+  "crunchyroll.com": SERVICES.CRUNCHYROLL,
+  "funimation.com": SERVICES.FUNIMATION,
+  "hulu.com": SERVICES.HULU,
+  "hidive.com": SERVICES.HIDIVE,
+  "netflix.com": SERVICES.NETFLIX,
+  "tubitv.com": SERVICES.TUBITV,
+  "amazon.com": SERVICES.AMAZON_PRIME,
 };

@@ -18,6 +18,7 @@ export const SERVICES = {
   NETFLIX: 3,
   AMAZON_PRIME: 4,
   HIDIVE: 5,
+  TUBITV: 6,
 };
 
 export const NOTIFY_EPSIODE_ANSWERS = {

@@ -1,9 +1,10 @@
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
-import { PROVIDERS } from "../enums";
+import { LIST_STATUS, PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
 import Library from "../models/Library";
+import AnimeSeries from "../models/AnimeSeries";
 
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
@@ -32,6 +33,10 @@ export default class KitsuProvider extends ApiProvider {
     this.getUserData().then((data) => (this.#userId = data?.id ?? null));
   }
 
+  /**
+   * Get the user's anime list.
+   * @returns {Promise<Library>} The user's library.
+   */
   async getAnimeList() {
     if (!this.#userId) {
       throw "Missing user data";
@@ -48,6 +53,56 @@ export default class KitsuProvider extends ApiProvider {
     );
 
     return new Library(items);
+  }
+
+  /**
+   * Get a single library entry for the current user.
+   * @param {string} animeId The id of the anime series to search for.
+   * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
+   */
+  async getSingleLibraryEntry(animeId) {
+    if (!this.#userId) {
+      throw "Missing user data";
+    }
+
+    const response = await this.#client.get(
+      `library-entries?filter[kind]=anime&filter[userId]=${
+        this.#userId
+      }&filter[animeId]=${animeId}&include=anime,anime.streamingLinks`
+    );
+
+    if (response.data.meta.count < 1) {
+      const anime = await this.getAnime(animeId);
+
+      return new LibraryEntry({
+        anime,
+      });
+    }
+
+    return KitsuProvider.#mapLibraryItem(
+      response.data.data[0],
+      response.data.included
+    );
+  }
+
+  /**
+   * Get an anime series based on anime id.
+   * @param {string} animeId The id of the anime series.
+   * @returns {Promise<AnimeSeries?>} The anime series, or null if not found.
+   */
+  async getAnime(animeId) {
+    const response = await this.#client.get(`anime?filter[id]=${animeId}&include=streamingLinks`);
+
+    if(response.data.meta.count < 1) {
+      return null;
+    }
+
+    const anime = response.data.data[0];
+    return new AnimeSeries({
+      ...anime,
+      streamingLinks: KitsuProvider.#getStreamingLinks(anime, response.data.included),
+      provider: PROVIDERS.KITSU,
+    });
   }
 
   async fetchUserData() {
@@ -111,13 +166,9 @@ export default class KitsuProvider extends ApiProvider {
         inc.type === "anime" && inc.id === entry.relationships.anime.data.id
     );
 
-    const streamingLinks = included.find(
-      (inc) => inc.type === "streamingLinks"
-    );
-
     anime = {
       ...anime,
-      streamingLinks,
+      streamingLinks: KitsuProvider.#getStreamingLinks(anime, included);
     };
 
     return new LibraryEntry({
@@ -125,5 +176,17 @@ export default class KitsuProvider extends ApiProvider {
       provider: PROVIDERS.KITSU,
       anime,
     });
+  }
+
+  static #getStreamingLinks(anime, included = []) {
+    return anime
+      ? anime.relationships.streamingLinks.data
+          ?.map((link) =>
+            included.find(
+              (inc) => inc.type === "streamingLinks" && inc.id === link.id
+            )
+          )
+          ?.filter((item) => !!item) ?? []
+      : [];
   }
 }
