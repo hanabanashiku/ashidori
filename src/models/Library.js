@@ -1,26 +1,56 @@
 import { ANIME_STATUS } from "../enums";
 
+/**
+ * A library of anime series.
+ */
 export default class Library {
-  #completed = [];
-  #watching = [];
-  #dropped = [];
-  #onHold = [];
-  #planned = [];
+  #entries;
 
   constructor(data = []) {
-    this.#completed = data.filter(
+    this.#entries = data;
+  }
+
+  /**
+   * @returns {[LibraryEntry]} The list of completed series.
+   */
+  get completed() {
+    return this.#entries.filter(
       (anime) => anime.status === ANIME_STATUS.COMPLETED
     );
-    this.#watching = data.filter(
+  }
+
+  /**
+   * @returns {[LibraryEntry]} The list of currently watching series.
+   */
+  get watching() {
+    return this.#entries.filter(
       (anime) => anime.status === ANIME_STATUS.CURRENT
     );
-    this.#dropped = data.filter(
+  }
+
+  /**
+   * @returns {[LibraryEntry]} The list of dropped series.
+   */
+  get dropped() {
+    return this.#entries.filter(
       (anime) => anime.status === ANIME_STATUS.DROPPED
     );
-    this.#onHold = data.filter(
+  }
+
+  /**
+   * @returns {[LibraryEntry]} The list of on-hold series.
+   */
+  get onHold() {
+    return this.#entries.filter(
       (anime) => anime.status === ANIME_STATUS.ON_HOLD
     );
-    this.#planned = data.filter(
+  }
+
+  /**
+   * @returns {[LibraryEntry]} The list of planned series.
+   */
+  get planned() {
+    return this.#entries.filter(
       (anime) => anime.status === ANIME_STATUS.PLANNED
     );
   }

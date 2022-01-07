@@ -3,6 +3,7 @@ import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
+import Library from "../models/Library";
 
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
@@ -39,19 +40,14 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
         this.#userId
-      }&include=anime`
+      }&include=anime,anime.streamingLinks`
     );
 
-    const items = response.data.data.map(
-      (entry) =>
-        new LibraryEntry({
-          ...entry,
-          provider: PROVIDERS.KITSU,
-          anime: response.data.included.find(
-            (anime) => anime.id === entry.relationships.animee.data.id
-          ),
-        })
+    const items = response.data.data.map((entry) =>
+      KitsuProvider.#mapLibraryItem(entry, response.data.included)
     );
+
+    return new Library(items);
   }
 
   async fetchUserData() {
@@ -107,5 +103,27 @@ export default class KitsuProvider extends ApiProvider {
       response.data["created_at"] + response.data["expires_in"]
     );
     this._setRefreshToken(response.data["refresh_token"]);
+  }
+
+  static #mapLibraryItem(entry, included = []) {
+    let anime = included.find(
+      (inc) =>
+        inc.type === "anime" && inc.id === entry.relationships.anime.data.id
+    );
+
+    const streamingLinks = included.find(
+      (inc) => inc.type === "streamingLinks"
+    );
+
+    anime = {
+      ...anime,
+      streamingLinks,
+    };
+
+    return new LibraryEntry({
+      ...entry,
+      provider: PROVIDERS.KITSU,
+      anime,
+    });
   }
 }

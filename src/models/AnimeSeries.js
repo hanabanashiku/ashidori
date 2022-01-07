@@ -1,6 +1,9 @@
 import _ from "lodash";
 import { PROVIDERS, ANIME_STATUS } from "../enums";
 
+/**
+ * An anime series.
+ */
 export default class AnimeSeries {
   constructor(data = {}) {
     switch (data.provider) {
@@ -11,6 +14,70 @@ export default class AnimeSeries {
       default:
         _.defaultsDeep(this, data, DEFAULT_VALUES);
     }
+  }
+
+  /**
+   * @returns {number|string} The series id.
+   */
+  get id() {
+    return this._id;
+  }
+
+  /**
+   * @returns {string} The title of the series.
+   */
+  get title() {
+    return this._title;
+  }
+
+  /**
+   * @returns {string} The translated title of the series.
+   */
+  get englishTitle() {
+    return this._englishTitle;
+  }
+
+  /**
+   * @returns {string} The synopsis of the series.
+   */
+  get description() {
+    return this._description;
+  }
+
+  /**
+   * @returns {Date} The date the series started airing.
+   */
+  get startDate() {
+    return this._startDate;
+  }
+
+  /**
+   * @returns {Date?} The date the series finished airing.
+   */
+  get endDate() {
+    return this._endDate;
+  }
+
+  /**
+   * @returns {number} The airing status of the series.
+   * @see ANIME_STATUS
+   */
+  get status() {
+    return this._status;
+  }
+
+  /**
+   * @returns {number} The number of episodes.
+   */
+  get episodeCount() {
+    return this._episodeCount;
+  }
+
+  /**
+   * @returns {number} The number of minutes per episode.
+   */
+  get episodeLength() {
+    return this._episodeLength;
   }
 
   #mapFromKitsu(data) {
