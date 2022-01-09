@@ -1,6 +1,6 @@
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
-import { LIST_STATUS, PROVIDERS } from "../enums";
+import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
 import Library from "../models/Library";
@@ -91,16 +91,21 @@ export default class KitsuProvider extends ApiProvider {
    * @returns {Promise<AnimeSeries?>} The anime series, or null if not found.
    */
   async getAnime(animeId) {
-    const response = await this.#client.get(`anime?filter[id]=${animeId}&include=streamingLinks`);
+    const response = await this.#client.get(
+      `anime?filter[id]=${animeId}&include=streamingLinks`
+    );
 
-    if(response.data.meta.count < 1) {
+    if (response.data.meta.count < 1) {
       return null;
     }
 
     const anime = response.data.data[0];
     return new AnimeSeries({
       ...anime,
-      streamingLinks: KitsuProvider.#getStreamingLinks(anime, response.data.included),
+      streamingLinks: KitsuProvider.#getStreamingLinks(
+        anime,
+        response.data.included
+      ),
       provider: PROVIDERS.KITSU,
     });
   }
@@ -168,7 +173,7 @@ export default class KitsuProvider extends ApiProvider {
 
     anime = {
       ...anime,
-      streamingLinks: KitsuProvider.#getStreamingLinks(anime, included);
+      streamingLinks: KitsuProvider.#getStreamingLinks(anime, included),
     };
 
     return new LibraryEntry({

@@ -9,11 +9,20 @@
     "128": "static/icons/icon128.png"
   },
   "options_page": "options/index.html",
+  "background": {
+    "scripts": ["background/updateList.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": ["*://beta.crunchyroll.com/watch/*"],
       "js": ["content_scripts/crunchyroll/video.js"]
     }
   ],
-  "permissions": ["storage", "activeTab", "*://*.crunchyroll.com/*"]
+  "permissions": [
+    "storage",
+    "activeTab",
+    "notifications",
+    "*://*.crunchyroll.com/*"
+  ]
 }

@@ -9,26 +9,26 @@ export default class AnimeSeason {
    * @returns {string} The season id.
    */
   get id() {
-    return this.id;
+    return this._id;
   }
 
   /**
    * @returns {string} The name of the season;
    */
   get name() {
-    return this.name;
+    return this._name;
   }
 
   /**
    * @returns {number} The season number.
    */
   get number() {
-    return this.number;
+    return this._number;
   }
 }
 
 const DEFAULT_VALUES = {
-  id: 0,
-  name: "",
-  number: 0,
+  _id: 0,
+  _name: "",
+  _number: 0,
 };

@@ -132,6 +132,7 @@ const DEFAULT_VALUES = {
   _status: ANIME_STATUS.ANNOUNCED,
   _episodeCount: 0,
   _episodeLength: 0,
+  _seasonCount: 0,
   _streamingLinks: {},
 };
 

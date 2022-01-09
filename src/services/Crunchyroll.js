@@ -1,6 +1,7 @@
 import axios from "axios";
 import AnimeEpisode from "../models/AnimeEpisode";
-import { SERVICES } from "../enums";
+import { ANIME_STATUS, SERVICES } from "../enums";
+import AnimeSeries from "../models/AnimeSeries";
 
 const AUTH_URL = "https://beta-api.crunchyroll.com/auth/v1/token";
 const BASE_URL = "https://beta-api.crunchyroll.com";
@@ -43,9 +44,50 @@ export default class CrunchyrollService {
     return true;
   }
 
+  /**
+   * @param {string} episodeId The id of the episode.
+   * @returns {AnimeEpisode} The anime episode data.
+   */
   async getEpisodeData(episodeId) {
+    const episode = await this.#getObject(episodeId);
+    const seriesId = CrunchyrollService.#parseLink(
+      episode.__links__["episode/series"].href,
+      "series"
+    );
+
+    const series = this.getSeriesData(seriesId);
+
+    return new AnimeEpisode({
+      ...episode,
+      series: await series,
+      service: SERVICES.CRUNCHYROLL,
+    });
+  }
+
+  /**
+   * Gets series data given a series id.
+   * @param {string} seriesId The id of the series.
+   * @returns {Promise<AnimeSeries>} The anime series data.
+   */
+  async getSeriesData(seriesId) {
+    const series = await this.#getObject(seriesId);
+    const { series_metadata: metadata } = series;
+
+    return new AnimeSeries({
+      _id: series.id,
+      _title: series.title,
+      _description: series.description,
+      _episodeCount: metadata.episode_count,
+      _seasonCount: metadata.season_count,
+      _status: metadata.is_simulcast
+        ? ANIME_STATUS.AIRING
+        : ANIME_STATUS.FINISHED,
+    });
+  }
+
+  async #getObject(objectId) {
     const response = await axios.get(
-      `${BASE_URL}/cms/v2${this.#bucket}/objects/${episodeId}`,
+      `${BASE_URL}/cms/v2${this.#bucket}/objects/${objectId}`,
       {
         params: {
           locale: "en-US",
@@ -56,11 +98,11 @@ export default class CrunchyrollService {
       }
     );
 
-    const item = response.data.items[0];
+    return response.data.items[0];
+  }
 
-    return new AnimeEpisode({
-      ...item,
-      service: SERVICES.CRUNCHYROLL,
-    });
+  static #parseLink(link, type) {
+    const regex = new RegExp(`${type}/(.+?)$`);
+    return regex.exec(link)[1];
   }
 }

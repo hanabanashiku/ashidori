@@ -29,12 +29,29 @@ export default class Settings {
   /**
    * Check if a particular anime service integration is enabled.
    * @param {number} service The service to check.
-   * @returns {boolean} True if the integration is enabled.
+   * @returns {Promise<boolean>} True if the integration is enabled.
    * @see SERVICES
    */
   static async isServiceEnabled(service) {
     const providers = await this.getEnabledServices();
     return providers.includes(service);
+  }
+
+  /**
+   * Get the number of minutes that should be waited before triggering an update.
+   * @returns {Promise<number>} A number of minutes.
+   */
+  static async shouldUpdateAfterMinutes() {
+    return this.#getStoredKey("update_delay", 10);
+  }
+
+  /**
+   * Set the number of minutes that should be waited before triggering an update.
+   * @param {string|number} value
+   * @returns {Promise<void>}
+   */
+  static async setShouldUpdateAfterMinutes(value) {
+    return this.#setStoredKey("update_delay", parseFloat(value));
   }
 
   /**
@@ -83,7 +100,6 @@ export default class Settings {
     return result[key];
   }
 
-  // eslint-disable-next-line no-dupe-class-members
   static async #setStoredKey(key, value) {
     const request = {};
     request[key] = value;

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import AnimeSeason from "./AnimeSeason";
 import { SERVICES } from "../enums";
+import AnimeSeries from "./AnimeSeries";
 
 /**
  * A model representing a single episode of an anime series.
@@ -20,66 +21,75 @@ export default class AnimeEpisode {
    * @returns {string} The episode id.
    */
   get id() {
-    return this.id;
+    return this._id;
   }
 
   /**
    * @returns {string} The episode title.
    */
   get title() {
-    return this.title;
+    return this._title;
   }
 
   /**
    * @returns {string} The episode description.
    */
   get description() {
-    return this.description;
+    return this._description;
   }
 
   /**
    * @returns {number} The episode number.
    */
   get number() {
-    return this.number;
+    return this._number;
   }
 
   /**
    * @returns {number} The duration of the episode in ms.
    */
   get duration() {
-    return this.duration;
+    return this._duration;
   }
 
   /**
    * @returns {AnimeSeason} The anime season data.
    */
   get season() {
-    return this.season;
+    return this._season;
+  }
+
+  /**
+   * @returns {AnimeSeries} The anime series data.
+   */
+  get series() {
+    return this._series;
   }
 
   /**
    * @returns {Date} The date and time the episode aired.
    */
   get airDate() {
-    return new Date(this.airDate);
+    return new Date(this._airDate);
   }
 
   #populateFromCrunchyroll(data) {
+    const { episode_metadata: episode, series_metadata: series } = data;
     _.defaultsDeep(
       this,
       {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        number: data.episode_metadata.episode_number,
-        duration: data.episode_metadata.duration_ms,
-        season: new AnimeSeason({
-          id: data.episode_metadata.season_id,
-          number: data.episode_metadata.season_number,
-          name: data.episode_metadata.season_title,
+        _id: data.id,
+        _title: data.title,
+        _description: data.description,
+        _number: episode.episode_number,
+        _duration: episode.duration_ms,
+        _airDate: episode.episode_air_date,
+        _season: new AnimeSeason({
+          _id: episode.season_id,
+          _number: episode.season_number,
+          _name: episode.season_title,
         }),
-        airDate: data.episode_metadata.episode_air_date,
+        _series: series,
       },
       DEFAULT_VALUES
     );
@@ -87,15 +97,12 @@ export default class AnimeEpisode {
 }
 
 const DEFAULT_VALUES = {
-  id: "0",
-  title: "",
-  description: "",
-  number: 0,
-  duration: 0,
-  season: {
-    id: "0",
-    number: 1,
-    name: "",
-  },
-  airDate: "",
+  _id: "0",
+  _title: "",
+  _description: "",
+  _number: 0,
+  _duration: 0,
+  _season: new AnimeSeason(),
+  _series: new AnimeSeries(),
+  _airDate: "",
 };

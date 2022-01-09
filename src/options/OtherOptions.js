@@ -24,6 +24,13 @@ const reducer = (state, action) => {
         shouldNotifiyForNewEpisodes: action.payload,
       };
 
+    case "setUpdateDelay":
+      Settings.setShouldUpdateAfterMinutes(action.payload);
+      return {
+        ...state,
+        updateDelay: action.payload,
+      };
+
     default:
       return state;
   }
@@ -39,12 +46,14 @@ const OtherOptions = () => {
       const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
       const shouldNotifiyForNewEpisodes =
         Settings.shouldNotifiyForNewEpisodes();
+      const updateDelay = Settings.shouldUpdateAfterMinutes();
 
       dispatch({
         type: "init",
         payload: {
           shouldShowUpdatePopup: await shouldShowUpdatePopup,
           shouldNotifiyForNewEpisodes: await shouldNotifiyForNewEpisodes,
+          updateDelay: await updateDelay,
         },
       });
     })();
@@ -60,6 +69,13 @@ const OtherOptions = () => {
   const setEpisodeNotifications = (value) => {
     dispatch({
       type: "setEpisodeNotifications",
+      payload: value,
+    });
+  };
+
+  const setUpdateMinutes = (value) => {
+    dispatch({
+      type: "setUpdateDelay",
       payload: value,
     });
   };
@@ -87,6 +103,24 @@ const OtherOptions = () => {
     >
       <h2>Options</h2>
       <label>
+        Wait&nbsp;
+        <input
+          type="number"
+          min="0"
+          max="25"
+          value={state.updateDelay}
+          onChange={(e) => setUpdateMinutes(e.target.value)}
+          css={css`
+            width: 3rem;
+          `}
+        />
+        minutes before updating episode count.
+      </label>
+      <label
+        css={css`
+          margin-left: 16px;
+        `}
+      >
         <input
           type="checkbox"
           name="should-show-update-poppup"
