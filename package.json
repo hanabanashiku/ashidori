@@ -4,7 +4,7 @@
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
     "start": "parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
-    "build": "parcel build manifest.json static/**/* src/**/*.{js,jsx,html} --target webext-prod",
+    "build": "parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
@@ -47,6 +47,8 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.0.0-rc.1",
     "axios": "^0.24.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
