@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
-    "build": "parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
+    "start": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
+    "build": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
+    "postbuild": "cp -r src/static dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",

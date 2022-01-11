@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getApiInstance } from "../providers/builder";
 import Header from "./Header";
+import LogInNotice from "./LogInNotice";
 
 const Popup = () => {
   const [authState, setAuthState] = useState(null);
@@ -22,7 +23,7 @@ const Popup = () => {
     }
 
     if (!authState) {
-      return "Log in";
+      return <LogInNotice />;
     }
 
     return "Logged in";
