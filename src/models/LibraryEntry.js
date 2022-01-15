@@ -1,15 +1,16 @@
 import _ from "lodash";
 import AnimeSeries from "./AnimeSeries";
 import { LIST_STATUS, PROVIDERS } from "../enums";
+import { STATUS_MAP as KITSU_STATUSES } from "../providers/KitsuProvider";
 
 /**
  * An entry in the user's anime library.
  */
 export default class LibraryEntry {
   constructor(data = {}) {
-    switch (data.service) {
+    switch (data.provider) {
       case PROVIDERS.KITSU:
-        LibraryEntry.#mapFromKitsu(data);
+        this.#mapFromKitsu(data);
         break;
 
       default:
@@ -82,7 +83,7 @@ export default class LibraryEntry {
     return this._anime;
   }
 
-  static #mapFromKitsu(data) {
+  #mapFromKitsu(data) {
     _.defaultsDeep(
       this,
       {
@@ -96,7 +97,7 @@ export default class LibraryEntry {
         _completedDate: data.attributes.finishedAt
           ? new Date(data.attributes.finishedAt)
           : null,
-        _lastUpdated: data.pattributes.rogressedAt
+        _lastUpdated: data.attributes.progressedAt
           ? new Date(data.attributes.progressedAt)
           : null,
         _rating: parseFloat(data.attributes.rating) / 2,
@@ -122,12 +123,4 @@ const DEFAULT_VALUES = {
   _lastUpdated: null,
   _rating: 0,
   _anime: null,
-};
-
-const KITSU_STATUSES = {
-  completed: LIST_STATUS.COMPLETED,
-  current: LIST_STATUS.CURRENT,
-  dropped: LIST_STATUS.DROPPED,
-  on_hold: LIST_STATUS.ON_HOLD,
-  planned: LIST_STATUS.PLANNED,
 };

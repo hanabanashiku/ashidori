@@ -1,4 +1,4 @@
-import { ANIME_STATUS } from "../enums";
+import { LIST_STATUS } from "../enums";
 
 /**
  * A library of anime series.
@@ -15,7 +15,7 @@ export default class Library {
    */
   get completed() {
     return this.#entries.filter(
-      (anime) => anime.status === ANIME_STATUS.COMPLETED
+      (anime) => anime.status === LIST_STATUS.COMPLETED
     );
   }
 
@@ -24,7 +24,7 @@ export default class Library {
    */
   get watching() {
     return this.#entries.filter(
-      (anime) => anime.status === ANIME_STATUS.CURRENT
+      (anime) => anime.status === LIST_STATUS.CURRENT
     );
   }
 
@@ -33,7 +33,7 @@ export default class Library {
    */
   get dropped() {
     return this.#entries.filter(
-      (anime) => anime.status === ANIME_STATUS.DROPPED
+      (anime) => anime.status === LIST_STATUS.DROPPED
     );
   }
 
@@ -42,7 +42,7 @@ export default class Library {
    */
   get onHold() {
     return this.#entries.filter(
-      (anime) => anime.status === ANIME_STATUS.ON_HOLD
+      (anime) => anime.status === LIST_STATUS.ON_HOLD
     );
   }
 
@@ -51,7 +51,7 @@ export default class Library {
    */
   get planned() {
     return this.#entries.filter(
-      (anime) => anime.status === ANIME_STATUS.PLANNED
+      (anime) => anime.status === LIST_STATUS.PLANNED
     );
   }
 }

@@ -23,6 +23,16 @@ export default class ApiProvider {
   }
 
   /**
+   * Gets the user's anime list for a given status.
+   * @param status {number} The anime status from the LIST_STATUS enum.
+   * @param page {number} Which page number to grab for, starting from 0.
+   * @returns {Promise<[LibraryEntry]} The list of library entries.
+   */
+  async getAnimeListByStatus() {
+    return Promise.reject("Not implemented");
+  }
+
+  /**
    * Gets data about the currently authenticated user.
    * @returns {Promise<UserData>} A promise containing data about the current user.
    */

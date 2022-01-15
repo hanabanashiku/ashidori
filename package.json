@@ -50,6 +50,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.0.0-rc.1",
+    "@mui/x-data-grid": "^5.2.2",
     "axios": "^0.24.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",

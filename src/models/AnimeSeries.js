@@ -8,7 +8,7 @@ export default class AnimeSeries {
   constructor(data = {}) {
     switch (data.provider) {
       case PROVIDERS.KITSU:
-        AnimeSeries.#mapFromKitsu(data);
+        this.#mapFromKitsu(data);
         break;
 
       default:
@@ -80,7 +80,7 @@ export default class AnimeSeries {
     return this._episodeLength;
   }
 
-  static #mapFromKitsu(data) {
+  #mapFromKitsu(data) {
     _.defaultsDeep(
       this,
       {
@@ -95,13 +95,13 @@ export default class AnimeSeries {
         _status: KITSU_ANIME_STATUS[data.attributes.status],
         _episodeCount: data.attributes.episodeCount,
         _episodeLength: data.attributes.episodeLength,
-        _streamingLinks: AnimeSeries.#mapStreamingLinks(data.streamingLinks),
+        _streamingLinks: this.#mapStreamingLinks(data.streamingLinks),
       },
       DEFAULT_VALUES
     );
   }
 
-  static #mapStreamingLinks(links = []) {
+  #mapStreamingLinks(links = []) {
     const result = {};
     const regex = /([a-zA-Z-]+\.(com|net|org|io|tv))/g;
 

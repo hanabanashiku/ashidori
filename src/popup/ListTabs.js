@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Tabs, Tab } from "@mui/material";
-import Loading from "./Loading";
-import { getApiInstance } from "../providers/builder";
+import AnimeList from "./AnimeList";
 import { LIST_STATUS } from "../enums";
 
 export const TABS = {
@@ -10,28 +9,10 @@ export const TABS = {
 
 const ListTabs = () => {
   const [value, setValue] = useState(TABS.CURRENT);
-  const [list, setList] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const api = await getApiInstance();
-      if (!api) return;
-      try {
-        const result = await api.getAnimeList();
-        setList(result);
-      } catch (e) {
-        setList("error");
-      }
-    })();
-  }, []);
-
-  if (!list) {
-    return <Loading />;
-  }
-
-  if (list === "error") {
-    return "An error occurred";
-  }
+  const tabProps = (tab) => ({
+    hide: tab !== value,
+  });
 
   return (
     <>
@@ -47,6 +28,26 @@ const ListTabs = () => {
         <Tab value={TABS.ON_HOLD} label="On hold" />
         <Tab value={TABS.DROPPED} label="Dropped" />
       </Tabs>
+      <AnimeList
+        {...tabProps(TABS.CURRENT)}
+        status={LIST_STATUS.CURRENT}
+      />
+      <AnimeList
+        {...tabProps(TABS.COMPLETED)}
+        status={LIST_STATUS.COMPLETED}
+      />
+      <AnimeList
+        {...tabProps(TABS.PLANNED)}
+        status={LIST_STATUS.PLANNED}
+      />
+      <AnimeList
+        {...tabProps(TABS.ON_HOLD)}
+        status={LIST_STATUS.ON_HOLD}
+      />
+      <AnimeList
+        {...tabProps(TABS.DROPPED)}
+        status={LIST_STATUS.DROPPED}
+      />
     </>
   );
 };
