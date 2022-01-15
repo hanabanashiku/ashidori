@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
     "build": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
-    "postbuild": "cp -r src/static dist",
+    "postbuild": "cp -r src/static dist/static",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",

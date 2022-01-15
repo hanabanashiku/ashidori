@@ -15,6 +15,14 @@ export default class ApiProvider {
   }
 
   /**
+   * Get the user's anime list.
+   * @returns {Promise<Library>} The user's library.
+   */
+  async getAnimeList() {
+    return Promise.reject("Not implemented");
+  }
+
+  /**
    * Gets data about the currently authenticated user.
    * @returns {Promise<UserData>} A promise containing data about the current user.
    */
