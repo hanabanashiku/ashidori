@@ -5,6 +5,7 @@ import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
 import Library from "../models/Library";
 import AnimeSeries from "../models/AnimeSeries";
+import PagedData from "../models/PagedData";
 import { LIST_STATUS } from "../enums";
 
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
@@ -72,26 +73,34 @@ export default class KitsuProvider extends ApiProvider {
    * Gets the user's anime list for a given status.
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.
-   * @returns {Promise<[LibraryEntry]} The list of library entries.
+   * @param limit {number} The number of items per page.
+   * @returns {Promise<PagedData<LibraryEntry>>]} The list of library entries.
    */
-  async getAnimeListByStatus(status, page) {
+  async getAnimeListByStatus(status, page, limit = 20) {
     if (!this.#userId) {
       throw "Missing user data";
     }
 
+    const kitsuStatus = mapStatus(status);
+
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
         this.#userId
-      }&filter[status]=${mapStatus(
-        status
-      )}&include=anime,anime.streamingLinks&page[limit]=30&page[offset]=${page}`
+      }&filter[status]=${kitsuStatus}&include=anime,anime.streamingLinks&page[limit]=${limit}&page[offset]=${
+        limit * page
+      }`
     );
 
     const items = response.data.data.map((entry) =>
       KitsuProvider.#mapLibraryItem(entry, response.data.included)
     );
 
-    return items;
+    return new PagedData({
+      data: items,
+      page,
+      limit,
+      total: response.data.meta.statusCounts[kitsuStatus],
+    });
   }
 
   /**

@@ -59,6 +59,28 @@ export default class AnimeSeries {
   }
 
   /**
+   * @returns {string} The season the show was released in.
+   */
+  get startSeason() {
+    let year = this.startDate.getFullYear();
+    const month = this.startDate.getMonth();
+    let season;
+
+    if (month > 11 || month < 4) {
+      season = "Winter";
+      if (month === 12) year += 1;
+    } else if (month >= 4 && month < 6) {
+      season = "Spring";
+    } else if (month >= 6 && month < 9) {
+      season = "Summer";
+    } else {
+      season = "Fall";
+    }
+
+    return `${season} ${year}`;
+  }
+
+  /**
    * @returns {number} The airing status of the series.
    * @see ANIME_STATUS
    */
