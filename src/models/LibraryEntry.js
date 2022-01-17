@@ -100,7 +100,7 @@ export default class LibraryEntry {
         _lastUpdated: data.attributes.progressedAt
           ? new Date(data.attributes.progressedAt)
           : null,
-        _rating: parseFloat(data.attributes.rating) / 2,
+        _rating: data.attributes.ratingTwenty / 2,
         _anime: Object.prototype.hasOwnProperty.call(data, "anime")
           ? new AnimeSeries({
               ...data.anime,

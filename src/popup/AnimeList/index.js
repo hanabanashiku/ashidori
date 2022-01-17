@@ -10,6 +10,7 @@ import { LIST_STATUS } from "../../enums";
 const DEFAULT_PAGE_SIZE = 25;
 
 const AnimeList = ({ status, hide }) => {
+  const [api, setApi] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [apiState, setApiState] = useState("loading");
@@ -17,9 +18,18 @@ const AnimeList = ({ status, hide }) => {
   const [itemCount, setItemCount] = useState(0);
 
   useEffect(() => {
+    (async () => {
+      setApi(await getApiInstance());
+    })();
+  }, []);
+
+  useEffect(() => {
     setApiState("loading");
     (async () => {
-      const api = await getApiInstance();
+      if (!api) {
+        return;
+      }
+
       try {
         const data = await api.getAnimeListByStatus(status, page, pageSize);
         setApiState("done");
@@ -29,7 +39,7 @@ const AnimeList = ({ status, hide }) => {
         setApiState("error");
       }
     })();
-  }, [page, pageSize, status, setItems, setPage, setApiState]);
+  }, [api, page, pageSize, status, setItems, setPage, setApiState]);
 
   const columns = useMemo(() => buildColumns(status), [status]);
 
@@ -39,13 +49,25 @@ const AnimeList = ({ status, hide }) => {
    * @returns
    */
   const buildRow = (item) => {
+    const common = {
+      id: item.id,
+      api,
+    };
+
     return {
       id: item.id,
       title: item.anime.title,
       episodeCount: item.anime.episodeCount,
-      progress: `${item.progress}/${item.anime?.episodeCount}`,
+      progress: {
+        ...common,
+        current: item.progress,
+        total: item.anime.episodeCount,
+      },
       startSeason: item.anime.startSeason,
-      rating: `${item.rating}`,
+      rating: {
+        ...common,
+        rating: item.rating,
+      },
     };
   };
   const rows = items.map((item) => buildRow(item));
@@ -55,9 +77,7 @@ const AnimeList = ({ status, hide }) => {
   }
 
   // TODO
-  // Add an argument for the number of rows so there aren't scrollbars
   // Sorting based on hidden columns? ideally last updated
-  // Make the cells look prettier
   return (
     <DataGrid
       css={css`
