@@ -19,17 +19,28 @@ export default class ApiProvider {
    * @returns {Promise<Library>} The user's library.
    */
   async getAnimeList() {
-    return Promise.reject("Not implemented");
+    return ApiProvider.#defaultImplAsync();
   }
 
   /**
    * Gets the user's anime list for a given status.
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.
-   * @returns {Promise<[LibraryEntry]} The list of library entries.
+   * @returns {Promise<[LibraryEntry]>} The list of library entries.
    */
   async getAnimeListByStatus() {
-    return Promise.reject("Not implemented");
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
+   * Updates an anime library entry with a given patch document.
+   * @param {string|number} itemId The library entry id.
+   * @param {object} patch The patch data.
+   * @returns {Promise<*>} The update promise.
+   * @see LibraryEntry for valid parameters.
+   */
+  async updateLibraryItem() {
+    return ApiProvider.#defaultImplAsync();
   }
 
   /**
@@ -54,7 +65,7 @@ export default class ApiProvider {
    * @returns {Promise<boolean>} True on success.
    */
   authorize() {
-    throw "Not Implemented";
+    return ApiProvider.#defaultImplAsync();
   }
 
   /**
@@ -63,7 +74,7 @@ export default class ApiProvider {
    * @throws
    */
   refresh() {
-    throw "Not Implemented";
+    return ApiProvider.#defaultImplAsync();
   }
 
   /**
@@ -162,5 +173,9 @@ export default class ApiProvider {
     }
     config.headers.Authorization = `Bearer ${token}`;
     return config;
+  }
+
+  static #defaultImplAsync() {
+    return Promise.reject("Not implemented");
   }
 }

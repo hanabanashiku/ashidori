@@ -1,3 +1,5 @@
+import _ from "lodash";
+import { omitBy } from "lodash/fp";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
@@ -20,6 +22,9 @@ export const STATUS_MAP = {
 };
 
 function mapStatus(status) {
+  if (status === undefined) {
+    return undefined;
+  }
   return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
@@ -131,6 +136,27 @@ export default class KitsuProvider extends ApiProvider {
       response.data.data[0],
       response.data.included
     );
+  }
+
+  async updateLibraryItem(itemId, patch) {
+    const attributes = _.flow(
+      omitBy(_.isUndefined),
+      omitBy(_.isNaN)
+    )({
+      status: mapStatus(patch.status),
+      progress: patch.progress,
+      notes: patch.notes,
+      finishedAt: patch.completedDate,
+      ratingTwenty: patch.rating * 2,
+    });
+
+    return await this.#client.patch(`/library-entries/${itemId}`, {
+      data: {
+        type: "libraryEntries",
+        id: `${itemId}`,
+        attributes,
+      },
+    });
   }
 
   /**
