@@ -1,88 +1,86 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
 import { Box, LinearProgress, Typography, Input } from "@mui/material";
 import ApiProvider from "../../providers/ApiProvider";
+import { LIST_STATUS } from "../../enums";
+import EditableCell from "./EditableCell";
 
-const Progress = ({ value: { id, current, total, api } }) => {
-  const [isEditing, setEditing] = useState(false);
-  const [isSaving, setSaving] = useState(false);
-  const [error, setError] = useState(false);
-  const [currentValue, setValue] = useState(current);
-  const normalizedTotal = total ? total : current * 12;
-  const progress = (current / normalizedTotal) * 100;
-
-  function onEdit(e) {
-    setSaving(true);
-    (async () => {
-      try {
-        await api.updateLibraryItem(id, { progress: currentValue });
-        setEditing(false);
-        if (error) setError(false);
-      } catch (e) {
-        setError(true);
-      } finally {
-        setSaving(false);
-      }
-    })();
-    e.preventDefault();
-  }
-
-  function onKeyDown(e) {
-    if (e.key === "Escape") {
-      setValue(current);
-      setEditing(false);
-      e.preventDefault();
+const Progress = ({ value: { id, current, total, api, refresh } }) => {
+  async function updateValue(value) {
+    const completed = value === total;
+    const patch = { progress: value };
+    if (completed) {
+      patch.status = LIST_STATUS.COMPLETED;
+      patch.completedDate = new Date();
     }
-    if (e.key === "Enter") {
-      onEdit(e);
+    await api.updateLibraryItem(id, { progress: value });
+    if (completed) {
+      refresh();
     }
-  }
-
-  if (isEditing) {
-    return (
-      <Box>
-        <Input
-          type="number"
-          value={currentValue}
-          inputProps={{ min: 0, max: total }}
-          placeholder="Episode"
-          disabled={isSaving}
-          error={error}
-          onKeyDown={(e) => onKeyDown(e)}
-          onChange={(e) => setValue(e.target.valueAsNumber)}
-          onBlur={(e) => onEdit(e)}
-          autoFocus
-        />
-        / {total}
-      </Box>
-    );
   }
 
   return (
-    <Box
-      css={css`
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-      `}
-      onClick={() => setEditing(true)}
-    >
-      <Typography component="div">
-        {total ? `${currentValue}/${total}` : `${currentValue}`}
-      </Typography>
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        css={css`
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-        `}
-      />
-    </Box>
+    <EditableCell
+      initialValue={current}
+      saveValue={updateValue}
+      renderCell={({ value, onClick }) => {
+        const normalizedTotal = total ? total : current * 12;
+        const progress = (current / normalizedTotal) * 100;
+
+        return (
+          <Box
+            css={css`
+              position: relative;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+            `}
+            onClick={onClick}
+          >
+            <Typography component="div">
+              {total ? `${value}/${total}` : `${value}`}
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              css={css`
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+              `}
+            />
+          </Box>
+        );
+      }}
+      renderEditView={({
+        value,
+        disabled,
+        error,
+        onKeyDown,
+        onChange,
+        onBlur,
+      }) => {
+        return (
+          <Box>
+            <Input
+              type="number"
+              value={value}
+              inputProps={{ min: 0, max: total }}
+              placeholder="Episode"
+              disabled={disabled}
+              error={error}
+              onKeyDown={onKeyDown}
+              onChange={(e) => onChange(e.target.valueAsNumber)}
+              onBlur={onBlur}
+              autoFocus
+            />
+            / {total}
+          </Box>
+        );
+      }}
+    />
   );
 };
 Progress.propTypes = {
@@ -90,7 +88,8 @@ Progress.propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     current: PropTypes.number.isRequired,
     total: PropTypes.number,
-    api: PropTypes.instanceOf(ApiProvider),
+    api: PropTypes.instanceOf(ApiProvider).isRequired,
+    refresh: PropTypes.func.isRequired,
   }),
 };
 

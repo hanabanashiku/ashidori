@@ -12,6 +12,7 @@ const DEFAULT_PAGE_SIZE = 25;
 const AnimeList = ({ status, hide }) => {
   const [api, setApi] = useState(null);
   const [page, setPage] = useState(0);
+  const [listRefresher, refreshList] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [apiState, setApiState] = useState("loading");
   const [items, setItems] = useState([]);
@@ -39,7 +40,20 @@ const AnimeList = ({ status, hide }) => {
         setApiState("error");
       }
     })();
-  }, [api, page, pageSize, status, setItems, setPage, setApiState]);
+  }, [
+    api,
+    page,
+    pageSize,
+    status,
+    listRefresher,
+    setItems,
+    setPage,
+    setApiState,
+  ]);
+
+  function refresh() {
+    refreshList((v) => v + 1);
+  }
 
   const columns = useMemo(() => buildColumns(status), [status]);
 
@@ -52,6 +66,7 @@ const AnimeList = ({ status, hide }) => {
     const common = {
       id: item.id,
       api,
+      refresh,
     };
 
     return {
