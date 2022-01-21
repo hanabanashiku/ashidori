@@ -45,6 +45,13 @@ export default class AnimeSeries {
   }
 
   /**
+   * @returns {string} The cover image of the series.
+   */
+  get coverImageUrl() {
+    return this._coverImage;
+  }
+
+  /**
    * @returns {Date} The date the series started airing.
    */
   get startDate() {
@@ -110,6 +117,7 @@ export default class AnimeSeries {
         _title: data.attributes.canonicalTitle,
         _englishTitle: data.attributes.titles.en,
         _description: data.attributes.synopsis,
+        _coverImage: data.attributes.posterImage?.tiny,
         _startDate: new Date(data.attributes.startDate),
         _endDate: data.attributes.endDate
           ? new Date(data.attributes.endDate)

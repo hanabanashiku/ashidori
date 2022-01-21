@@ -2,27 +2,20 @@ import React, { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
 import { DataGrid } from "@mui/x-data-grid";
+import ApiProvider from "../../providers/ApiProvider";
 import LoadingOverlay from "./LoadingOverlay";
-import { getApiInstance } from "../../providers/builder";
 import buildColumns from "./columns";
 import { LIST_STATUS } from "../../enums";
 
 const DEFAULT_PAGE_SIZE = 25;
 
-const AnimeList = ({ status, hide }) => {
-  const [api, setApi] = useState(null);
+const AnimeList = ({ status, hide, showAnime, api }) => {
   const [page, setPage] = useState(0);
   const [listRefresher, refreshList] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [apiState, setApiState] = useState("loading");
   const [items, setItems] = useState([]);
   const [itemCount, setItemCount] = useState(0);
-
-  useEffect(() => {
-    (async () => {
-      setApi(await getApiInstance());
-    })();
-  }, []);
 
   useEffect(() => {
     setApiState("loading");
@@ -105,6 +98,7 @@ const AnimeList = ({ status, hide }) => {
       rowCount={itemCount}
       pageSize={pageSize}
       onPageSizeChange={(size) => setPageSize(size)}
+      onRowClick={(row) => showAnime(row.id)}
       paginationMode="server"
       onPageChange={(p) => setPage(p)}
       page={page}
@@ -119,6 +113,8 @@ const AnimeList = ({ status, hide }) => {
 AnimeList.propTypes = {
   status: PropTypes.oneOf(Object.values(LIST_STATUS)).isRequired,
   hide: PropTypes.bool.isRequired,
+  showAnime: PropTypes.func.isRequired,
+  api: PropTypes.instanceOf(ApiProvider).isRequired,
 };
 
 export default AnimeList;

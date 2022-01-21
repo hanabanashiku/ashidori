@@ -3,21 +3,25 @@ import { CircularProgress } from "@mui/material";
 import { getApiInstance } from "../providers/builder";
 import Header from "./Header";
 import LogInNotice from "./LogInNotice";
-import ListTabs from './ListTabs';
+import AnimeDetail from "./AnimeDetail";
+import ListTabs from "./ListTabs";
 
 const Popup = () => {
   const [authState, setAuthState] = useState(null);
+  const [selectedAnime, setSelectedAnime] = useState(null);
+  const [api, setApi] = useState(null);
 
   useEffect(() => {
-    getApiInstance().then(async (api) => {
-      if (!api) {
+    (async () => {
+      const apiInstance = await getApiInstance();
+      setApi(apiInstance);
+      if (!apiInstance) {
         setAuthState(false);
         return;
       }
-
-      setAuthState(await api.isAuthenticated());
-    });
-  }, [setAuthState]);
+      setAuthState(await apiInstance.isAuthenticated());
+    })();
+  }, [setAuthState, setApi]);
 
   const Body = () => {
     if (authState === null) {
@@ -28,7 +32,17 @@ const Popup = () => {
       return <LogInNotice />;
     }
 
-    return <ListTabs />;
+    if (selectedAnime) {
+      return (
+        <AnimeDetail
+          selectedAnime={selectedAnime}
+          api={api}
+          close={() => setSelectedAnime(null)}
+        />
+      );
+    }
+
+    return <ListTabs showAnime={(id) => setSelectedAnime(id)} api={api} />;
   };
 
   return (

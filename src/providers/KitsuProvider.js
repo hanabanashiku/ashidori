@@ -107,13 +107,32 @@ export default class KitsuProvider extends ApiProvider {
       total: response.data.meta.statusCounts[kitsuStatus],
     });
   }
-
   /**
    * Get a single library entry for the current user.
    * @param {string} animeId The id of the anime series to search for.
    * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
    */
   async getSingleLibraryEntry(animeId) {
+    if (!this.#userId) {
+      throw "Missing user data";
+    }
+
+    const response = await this.#client.get(
+      `library-entries/${animeId}?include=anime,anime.streamingLinks`
+    );
+
+    return KitsuProvider.#mapLibraryItem(
+      response.data.data,
+      response.data.included
+    );
+  }
+
+  /**
+   * Get a single library entry for the current user.
+   * @param {string} animeId The id of the anime series to search for.
+   * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
+   */
+  async getSingleLibraryEntryByAnime(animeId) {
     if (!this.#userId) {
       throw "Missing user data";
     }

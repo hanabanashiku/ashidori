@@ -33,6 +33,15 @@ export default class ApiProvider {
   }
 
   /**
+   * Get a single library entry for the current user.
+   * @param {string} animeId The id of the anime series to search for.
+   * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
+   */
+  async getSingleLibraryEntry() {
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
    * Updates an anime library entry with a given patch document.
    * @param {string|number} itemId The library entry id.
    * @param {object} patch The patch data.
