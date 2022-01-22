@@ -123,6 +123,13 @@ export default class AnimeSeries {
     return this._link;
   }
 
+  /**
+   * @returns {object} A dictionary of Providers to links.
+   */
+  get streamingLinks() {
+    return this._streamingLinks;
+  }
+
   #mapFromKitsu(data) {
     _.defaultsDeep(
       this,

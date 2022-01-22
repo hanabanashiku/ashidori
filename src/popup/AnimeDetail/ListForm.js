@@ -172,7 +172,7 @@ const ListForm = ({ entry, api, close }) => {
           width: 50%;
           margin: 0 auto;
           margin-top: 16px;
-          & > Button:not(:first-child) {
+          & > Button:not(:first-of-type) {
             margin-left: 8px;
           }
         `}

@@ -21,6 +21,16 @@ export const SERVICES = {
   TUBITV: 6,
 };
 
+export const SERVICE_NAMES = {
+  0: "Crunchyroll",
+  1: "Funimation",
+  2: "Hulu",
+  3: "Netflix",
+  4: "Prime Video",
+  5: "Hidive",
+  6: "TubiTV",
+};
+
 export const NOTIFY_EPSIODE_ANSWERS = {
   NEVER: "never",
   ALWAYS: "always",

@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import { Paper, Box, Typography, Chip, Stack, Link } from "@mui/material";
 import { Link as LinkIcon } from "@mui/icons-material";
 import Description from "./Description";
+import StreamingLinks from "./StreamingLinks";
 import { ANIME_STATUS } from "../../enums";
 import AnimeSeries from "../../models/AnimeSeries";
 
@@ -108,7 +109,7 @@ const AnimeData = ({ anime }) => {
               padding-top: 8px;
             `}
           >
-            {anime.genres.map((genre, i) => (
+            {anime.genres.slice(0, 5).map((genre, i) => (
               <Chip
                 label={genre}
                 size="small"
@@ -120,6 +121,7 @@ const AnimeData = ({ anime }) => {
           </Stack>
         </Box>
       </Box>
+      <StreamingLinks links={anime.streamingLinks} />
     </Paper>
   );
 };
