@@ -1,23 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import { css } from "@emotion/react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Box,
   Stack,
   Button,
+  IconButton,
   FormControl,
   InputLabel,
   InputAdornment,
-  IconButton,
   TextField,
   Select,
   MenuItem,
   Slider,
 } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/lab";
+import { LoadingButton, DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { Delete } from "@mui/icons-material";
+import { Save as SaveIcon, Delete } from "@mui/icons-material";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
 import { LIST_STATUS } from "../../enums";
@@ -27,7 +28,7 @@ const ListForm = ({ entry, api, close }) => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, dirtyFields, isSubmitting },
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -41,7 +42,17 @@ const ListForm = ({ entry, api, close }) => {
     },
   });
 
-  async function onSubmit(values) {}
+  async function onSubmit(values) {
+    if (!isDirty) {
+      close();
+      return;
+    }
+
+    const toPatch = Object.keys(dirtyFields).filter((key) => dirtyFields[key]);
+    const patch = _.pick(values, toPatch);
+    await api.updateLibraryItem(entry.id, patch);
+    close();
+  }
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} padding="8px">
@@ -177,9 +188,16 @@ const ListForm = ({ entry, api, close }) => {
           }
         `}
       >
-        <Button type="submit" color="primary" variant="contained">
+        <LoadingButton
+          type="submit"
+          color="primary"
+          variant="contained"
+          loadingPosition="start"
+          startIcon={<SaveIcon />}
+          loading={isSubmitting}
+        >
           Save
-        </Button>
+        </LoadingButton>
         <Button
           type="cancel"
           color="secondary"

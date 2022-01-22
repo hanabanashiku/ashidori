@@ -156,11 +156,12 @@ export default class AnimeSeries {
 
   #mapStreamingLinks(links = []) {
     const result = {};
-    const regex = /([a-zA-Z-]+\.(com|net|org|io|tv))/g;
+    const regex = /([a-zA-Z-]+\.com|net|org|io|tv)/g;
 
     for (const link of links) {
-      const url = link.attributes.url;
-      const domain = regex.exec(url)?.[1];
+      const domain = regex.exec(link)?.[1];
+      regex.lastIndex = 0;
+
       if (
         !domain ||
         !Object.prototype.hasOwnProperty.call(SERVICE_DOMAINS, domain)
@@ -168,7 +169,7 @@ export default class AnimeSeries {
         continue;
       }
 
-      result[SERVICE_DOMAINS[domain]] = url;
+      result[SERVICE_DOMAINS[domain]] = link;
     }
 
     return result;

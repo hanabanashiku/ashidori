@@ -286,7 +286,8 @@ export default class KitsuProvider extends ApiProvider {
               (inc) => inc.type === "streamingLinks" && inc.id === link.id
             )
           )
-          ?.filter((item) => !!item) ?? []
+          ?.filter((item) => !!item)
+          ?.map((link) => link.attributes.url) ?? []
       : [];
   }
 

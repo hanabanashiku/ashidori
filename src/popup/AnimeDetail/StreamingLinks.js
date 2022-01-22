@@ -8,31 +8,40 @@ const ProviderImage = ({ provider }) => {
   let img;
   switch (provider) {
     case SERVICES.AMAZON_PRIME:
-      img = "../static/images/amazon_prime.png";
+      img = "../static/images/amazon_prime_icon.png";
       break;
     case SERVICES.CRUNCHYROLL:
-      img = "../static/images/crunchyroll.png";
+      img = "../static/images/crunchyroll_icon.png";
       break;
     case SERVICES.FUNIMATION:
-      img = "../static/images/funimation.png";
+      img = "../static/images/funimation_icon.png";
       break;
     case SERVICES.HIDIVE:
-      img = "../static/images/hidive.png";
+      img = "../static/images/hidive_icon.png";
       break;
     case SERVICES.HULU:
-      img = "../static/images/hulu.png";
+      img = "../static/images/hulu_icon.png";
       break;
     case SERVICES.NETFLIX:
-      img = "../static/images/netflix.png";
+      img = "../static/images/netflix_icon.png";
       break;
     case SERVICES.TUBITV:
-      img = "../static/images/tubitv.png";
+      img = "../static/images/tubitv_icon.png";
       break;
     default:
       return null;
   }
 
-  return <img src={img} width="50px" />;
+  return (
+    <img
+      src={img}
+      css={css`
+        display: block;
+        width: 32px;
+        margin: 0 auto;
+      `}
+    />
+  );
 };
 
 const StreamingLink = ({ provider, link }) => {
@@ -40,6 +49,7 @@ const StreamingLink = ({ provider, link }) => {
     <Box>
       <Link
         href={link}
+        target="_blank"
         css={css`
           text-decoration: none;
         `}
