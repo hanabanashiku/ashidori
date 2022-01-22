@@ -170,13 +170,17 @@ export default class KitsuProvider extends ApiProvider {
       ratingTwenty: patch.rating * 2,
     });
 
-    return await this.#client.patch(`/library-entries/${itemId}`, {
+    return this.#client.patch(`/library-entries/${itemId}`, {
       data: {
         type: "libraryEntries",
         id: `${itemId}`,
         attributes,
       },
     });
+  }
+
+  async removeLibraryItem(itemId) {
+    return this.#client.delete(`/library-entries/${itemId}`);
   }
 
   /**

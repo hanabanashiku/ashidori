@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { css } from "@emotion/react";
@@ -19,6 +19,7 @@ import {
 import { LoadingButton, DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { Save as SaveIcon, Delete } from "@mui/icons-material";
+import DeleteModal from "./DeleteModal";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
 import { LIST_STATUS } from "../../enums";
@@ -41,6 +42,7 @@ const ListForm = ({ entry, api, close }) => {
       notes: entry.notes,
     },
   });
+  const modalRef = useRef();
 
   async function onSubmit(values) {
     if (!isDirty) {
@@ -206,10 +208,21 @@ const ListForm = ({ entry, api, close }) => {
         >
           Cancel
         </Button>
-        <IconButton color="error" variant="contained">
+        <IconButton
+          color="error"
+          variant="contained"
+          onClick={() => modalRef.current()}
+        >
           <Delete />
         </IconButton>
       </Box>
+      <DeleteModal
+        entryId={entry.id}
+        anime={entry.anime}
+        api={api}
+        close={close}
+        modalRef={modalRef}
+      />
     </Box>
   );
 };

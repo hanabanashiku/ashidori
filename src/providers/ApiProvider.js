@@ -53,6 +53,15 @@ export default class ApiProvider {
   }
 
   /**
+   * @returns Removes an item from the user's anime list.
+   * @param {string|number} itemId The library entry id.
+   * @returns {Promise<*>} The delete promise.
+   */
+  async removeLibraryItem() {
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
    * Gets data about the currently authenticated user.
    * @returns {Promise<UserData>} A promise containing data about the current user.
    */
