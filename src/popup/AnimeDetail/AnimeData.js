@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { css } from "@emotion/react";
 import { Paper, Box, Typography, Chip, Stack, Link } from "@mui/material";
 import { Link as LinkIcon } from "@mui/icons-material";
-import LibraryEntry from "../../models/LibraryEntry";
 import Description from "./Description";
 import { ANIME_STATUS } from "../../enums";
+import AnimeSeries from "../../models/AnimeSeries";
 
 const AnimeData = ({ anime }) => {
   function animeStatusString(status) {
@@ -27,6 +27,7 @@ const AnimeData = ({ anime }) => {
     <Paper
       css={css`
         margin: 8px;
+        margin-bottom: 24px;
         padding: 8px;
         overflow: auto;
       `}
@@ -42,9 +43,9 @@ const AnimeData = ({ anime }) => {
           margin-bottom: 8px;
         `}
       >
-        {anime.anime.title}{" "}
+        {anime.title}{" "}
         <Link
-          href={anime.anime.externalLink}
+          href={anime.externalLink}
           target="_blank"
           aria-label="External link"
           css={css`
@@ -63,14 +64,14 @@ const AnimeData = ({ anime }) => {
         `}
       >
         <img
-          src={anime.anime.coverImageUrl}
+          src={anime.coverImageUrl}
           css={css`
             float: left;
             padding: 8px;
             height: 156px;
           `}
         />
-        <Description>{anime.anime.description}</Description>
+        <Description>{anime.description}</Description>
         <Box
           component="ul"
           css={css`
@@ -84,19 +85,19 @@ const AnimeData = ({ anime }) => {
           `}
         >
           <li>
-            <strong>Status</strong> {animeStatusString(anime.anime.status)}
+            <strong>Status</strong> {animeStatusString(anime.status)}
           </li>
-          {anime.anime.episodeCount > 0 && (
+          {anime.episodeCount > 0 && (
             <li>
-              <strong>Episodes</strong> {anime.anime.episodeCount}
+              <strong>Episodes</strong> {anime.episodeCount}
             </li>
           )}
           <li>
-            <strong>Aired</strong> {anime.anime.startDate.toDateString()}
-            {anime.anime.endDate && ` to ${anime.anime.endDate.toDateString()}`}
+            <strong>Aired</strong> {anime.startDate.toDateString()}
+            {anime.endDate && ` to ${anime.endDate.toDateString()}`}
           </li>
           <li>
-            <strong>Length</strong> {anime.anime.episodeLength} minutes
+            <strong>Length</strong> {anime.episodeLength} minutes
           </li>
           <Stack
             component="li"
@@ -107,7 +108,7 @@ const AnimeData = ({ anime }) => {
               padding-top: 8px;
             `}
           >
-            {anime.anime.genres.map((genre, i) => (
+            {anime.genres.map((genre, i) => (
               <Chip
                 label={genre}
                 size="small"
@@ -123,7 +124,7 @@ const AnimeData = ({ anime }) => {
   );
 };
 AnimeData.propTypes = {
-  anime: PropTypes.instanceOf(LibraryEntry).isRequired,
+  anime: PropTypes.instanceOf(AnimeSeries).isRequired,
 };
 
 export default AnimeData;

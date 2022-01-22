@@ -62,6 +62,10 @@ export default class LibraryEntry {
     return this._completedDate;
   }
 
+  get rewatchCount() {
+    return this._rewatchCount;
+  }
+
   /**
    * @returns {Date?} The last time the user updated the library entry.
    */
@@ -97,6 +101,7 @@ export default class LibraryEntry {
         _completedDate: data.attributes.finishedAt
           ? new Date(data.attributes.finishedAt)
           : null,
+        _rewatchCount: data.attributes.reconsumeCount,
         _lastUpdated: data.attributes.progressedAt
           ? new Date(data.attributes.progressedAt)
           : null,
@@ -120,7 +125,8 @@ const DEFAULT_VALUES = {
   _notes: "",
   _startDate: null,
   _completionDate: null,
+  _rewatchCount: 0,
   _lastUpdated: null,
   _rating: 0,
-  _anime: null,
+  _anime: new AnimeSeries(),
 };

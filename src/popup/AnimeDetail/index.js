@@ -4,6 +4,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import ApiProvider from "../../providers/ApiProvider";
 import AnimeData from "./AnimeData";
+import ListForm from "./ListForm";
 
 const AnimeDetail = ({ selectedAnime, close, api }) => {
   const [anime, setAnime] = useState(null);
@@ -14,7 +15,6 @@ const AnimeDetail = ({ selectedAnime, close, api }) => {
         const result = await api.getSingleLibraryEntry(selectedAnime);
         setAnime(result);
       } catch (e) {
-        console.error(e);
         setAnime("error");
       }
     })();
@@ -33,7 +33,8 @@ const AnimeDetail = ({ selectedAnime, close, api }) => {
       <Button startIcon={<KeyboardBackspace />} onClick={close}>
         Back
       </Button>
-      <AnimeData anime={anime} />
+      <AnimeData anime={anime.anime} />
+      <ListForm entry={anime} api={api} close={close} />
     </Box>
   );
 };

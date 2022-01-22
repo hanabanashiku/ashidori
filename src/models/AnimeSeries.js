@@ -179,7 +179,9 @@ const DEFAULT_VALUES = {
   _episodeCount: 0,
   _episodeLength: 0,
   _seasonCount: 0,
+  _genres: [],
   _streamingLinks: {},
+  _link: "about:blank",
 };
 
 const KITSU_ANIME_STATUS = {
