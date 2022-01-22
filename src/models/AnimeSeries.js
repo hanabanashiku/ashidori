@@ -109,6 +109,20 @@ export default class AnimeSeries {
     return this._episodeLength;
   }
 
+  /**
+   * @returns {[string]} A list of genres for the anime.
+   */
+  get genres() {
+    return this._genres;
+  }
+
+  /**
+   * @returns {string} A link to open the series on the list website.
+   */
+  get externalLink() {
+    return this._link;
+  }
+
   #mapFromKitsu(data) {
     _.defaultsDeep(
       this,
@@ -125,7 +139,9 @@ export default class AnimeSeries {
         _status: KITSU_ANIME_STATUS[data.attributes.status],
         _episodeCount: data.attributes.episodeCount,
         _episodeLength: data.attributes.episodeLength,
+        _genres: data.genres,
         _streamingLinks: this.#mapStreamingLinks(data.streamingLinks),
+        _link: `https://kitsu.io/anime/${data.id}`,
       },
       DEFAULT_VALUES
     );

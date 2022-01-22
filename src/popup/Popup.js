@@ -8,7 +8,7 @@ import ListTabs from "./ListTabs";
 
 const Popup = () => {
   const [authState, setAuthState] = useState(null);
-  const [selectedAnime, setSelectedAnime] = useState(null);
+  const [selectedAnime, setSelectedAnime] = useState("29377736");
   const [api, setApi] = useState(null);
 
   useEffect(() => {

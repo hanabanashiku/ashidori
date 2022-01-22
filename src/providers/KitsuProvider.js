@@ -64,7 +64,7 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
         this.#userId
-      }&include=anime,anime.streamingLinks`
+      }&include=anime,anime.streamingLinks,anime.genres`
     );
 
     const items = response.data.data.map((entry) =>
@@ -91,7 +91,7 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
         this.#userId
-      }&filter[status]=${kitsuStatus}&include=anime,anime.streamingLinks&page[limit]=${limit}&page[offset]=${
+      }&filter[status]=${kitsuStatus}&include=anime,anime.streamingLinks,anime.genres&page[limit]=${limit}&page[offset]=${
         limit * page
       }`
     );
@@ -118,7 +118,7 @@ export default class KitsuProvider extends ApiProvider {
     }
 
     const response = await this.#client.get(
-      `library-entries/${animeId}?include=anime,anime.streamingLinks`
+      `library-entries/${animeId}?include=anime,anime.streamingLinks,anime.genres`
     );
 
     return KitsuProvider.#mapLibraryItem(
@@ -140,7 +140,7 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
         this.#userId
-      }&filter[animeId]=${animeId}&include=anime,anime.streamingLinks`
+      }&filter[animeId]=${animeId}&include=anime,anime.streamingLinks,anime.genres`
     );
 
     if (response.data.meta.count < 1) {
@@ -186,7 +186,7 @@ export default class KitsuProvider extends ApiProvider {
    */
   async getAnime(animeId) {
     const response = await this.#client.get(
-      `anime?filter[id]=${animeId}&include=streamingLinks`
+      `anime?filter[id]=${animeId}&include=streamingLinks,genres`
     );
 
     if (response.data.meta.count < 1) {
@@ -268,6 +268,7 @@ export default class KitsuProvider extends ApiProvider {
     anime = {
       ...anime,
       streamingLinks: KitsuProvider.#getStreamingLinks(anime, included),
+      genres: KitsuProvider.#getGenres(anime, included),
     };
 
     return new LibraryEntry({
@@ -287,5 +288,15 @@ export default class KitsuProvider extends ApiProvider {
           )
           ?.filter((item) => !!item) ?? []
       : [];
+  }
+
+  static #getGenres(anime, included = []) {
+    return anime.relationships.genres.data
+      .map(
+        (genre) =>
+          included.find((inc) => inc.type === "genres" && inc.id === genre.id)
+            ?.attributes?.name
+      )
+      .filter((genre) => !!genre);
   }
 }
