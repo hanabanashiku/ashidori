@@ -10,15 +10,9 @@
   },
   "options_page": "options/index.html",
   "background": {
-    "scripts": ["background/updateList.js"],
-    "persistent": false
+    "page": "background/fix_popup.html",
+    "persistent": true
   },
-  "content_scripts": [
-    {
-      "matches": ["*://beta.crunchyroll.com/watch/*"],
-      "js": ["content_scripts/crunchyroll/video.js"]
-    }
-  ],
   "browser_action": {
     "default_popup": "popup/index.html",
     "default_title": "Ashidori"
