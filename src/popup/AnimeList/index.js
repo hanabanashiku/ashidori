@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { DataGrid } from "@mui/x-data-grid";
 import ApiProvider from "../../providers/ApiProvider";
 import LoadingOverlay from "./LoadingOverlay";
-import buildColumns from "./columns";
+import { buildColumns, editableColumns } from "./columns";
 import { LIST_STATUS } from "../../enums";
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -25,7 +25,16 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
       }
 
       try {
-        const data = await api.getAnimeListByStatus(status, page, pageSize);
+        const data =
+          status === LIST_STATUS.CURRENT
+            ? await api.getAnimeListByStatus(
+                status,
+                page,
+                pageSize,
+                "lastUpdated",
+                "desc"
+              )
+            : await api.getAnimeListByStatus(status, page, pageSize);
         setApiState("done");
         setItems(data.data);
         setItemCount(data.total);
@@ -46,6 +55,14 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
 
   function refresh() {
     refreshList((v) => v + 1);
+  }
+
+  function onCellClick(params, e) {
+    e.defaultMuiPrevented = true;
+    if (editableColumns.includes(params.field)) {
+      return;
+    }
+    showAnime(params.id);
   }
 
   const columns = useMemo(() => buildColumns(status), [status]);
@@ -84,8 +101,6 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
     return null;
   }
 
-  // TODO
-  // Sorting based on hidden columns? ideally last updated
   return (
     <DataGrid
       css={css`
@@ -98,12 +113,14 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
       rowCount={itemCount}
       pageSize={pageSize}
       onPageSizeChange={(size) => setPageSize(size)}
-      onRowClick={(row) => showAnime(row.id)}
+      onCellClick={onCellClick}
+      onRowDoubleClick={(params) => showAnime(params.id)}
       paginationMode="server"
       onPageChange={(p) => setPage(p)}
       page={page}
       rowsPerPageOptions={[10, 25, 30, 50, 100]}
       disableSelectionOnClick
+      disableColumnFilter
       components={{
         LoadingOverlay: LoadingOverlay,
       }}

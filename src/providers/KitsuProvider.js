@@ -79,9 +79,17 @@ export default class KitsuProvider extends ApiProvider {
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.
    * @param limit {number} The number of items per page.
+   * @param sort {string} The name of the field to sort by.
+   * @param sortBy {string} Ascending or descending.
    * @returns {Promise<PagedData<LibraryEntry>>]} The list of library entries.
    */
-  async getAnimeListByStatus(status, page, limit = 20) {
+  async getAnimeListByStatus(
+    status,
+    page = 0,
+    limit = 20,
+    sort = null,
+    sortBy = "asc"
+  ) {
     if (!this.#userId) {
       throw "Missing user data";
     }
@@ -93,7 +101,7 @@ export default class KitsuProvider extends ApiProvider {
         this.#userId
       }&filter[status]=${kitsuStatus}&include=anime,anime.streamingLinks,anime.genres&page[limit]=${limit}&page[offset]=${
         limit * page
-      }`
+      }${KitsuProvider.#mapSort(sort, sortBy)}`
     );
 
     const items = response.data.data.map((entry) =>
@@ -303,5 +311,37 @@ export default class KitsuProvider extends ApiProvider {
             ?.attributes?.name
       )
       .filter((genre) => !!genre);
+  }
+
+  static #mapSort(field, sortBy) {
+    if (!field) {
+      return "";
+    }
+
+    let kitsuField;
+
+    switch (field) {
+      case "progress":
+      case "notes":
+      case "status":
+        kitsuField = field;
+        break;
+      case "startDate":
+        kitsuField = "startedAt";
+        break;
+      case "completedDate":
+        kitsuField = "finishedAt";
+        break;
+      case "rating":
+        kitsuField = "ratingTwenty";
+        break;
+      case "lastUpdated":
+        kitsuField = "updatedAt";
+        break;
+      default:
+        return "";
+    }
+
+    return `&sort=${sortBy === "desc" ? "-" : ""}${kitsuField}`;
   }
 }

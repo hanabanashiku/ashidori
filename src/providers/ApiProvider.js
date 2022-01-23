@@ -26,6 +26,8 @@ export default class ApiProvider {
    * Gets the user's anime list for a given status.
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.
+   * @param sort {string} The field to sort by.
+   * @param sortBy {string} asc or desc (Ascending or descending sort).
    * @returns {Promise<[LibraryEntry]>} The list of library entries.
    */
   async getAnimeListByStatus() {
