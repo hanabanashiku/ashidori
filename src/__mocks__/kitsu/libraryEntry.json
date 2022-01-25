@@ -1,0 +1,481 @@
+{
+    "data": {
+        "id": "29377736",
+        "type": "libraryEntries",
+        "links": {
+            "self": "https://kitsu.io/api/edge/library-entries/29377736"
+        },
+        "attributes": {
+            "createdAt": "2018-06-16T17:57:10.584Z",
+            "updatedAt": "2022-01-22T21:50:33.628Z",
+            "status": "current",
+            "progress": 38,
+            "volumesOwned": 0,
+            "reconsuming": false,
+            "reconsumeCount": 0,
+            "notes": "note",
+            "private": false,
+            "reactionSkipped": "unskipped",
+            "progressedAt": "2022-01-22T21:50:33.625Z",
+            "startedAt": "2017-10-09T00:00:00.000Z",
+            "finishedAt": null,
+            "rating": "0.0",
+            "ratingTwenty": null
+        },
+        "relationships": {
+            "user": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/user",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/user"
+                }
+            },
+            "anime": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/anime",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/anime"
+                },
+                "data": {
+                    "type": "anime",
+                    "id": "13209"
+                }
+            },
+            "manga": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/manga",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/manga"
+                }
+            },
+            "drama": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/drama",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/drama"
+                }
+            },
+            "review": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/review",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/review"
+                }
+            },
+            "mediaReaction": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/media-reaction",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/media-reaction"
+                }
+            },
+            "media": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/media",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/media"
+                }
+            },
+            "unit": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/unit",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/unit"
+                }
+            },
+            "nextUnit": {
+                "links": {
+                    "self": "https://kitsu.io/api/edge/library-entries/29377736/relationships/next-unit",
+                    "related": "https://kitsu.io/api/edge/library-entries/29377736/next-unit"
+                }
+            }
+        }
+    },
+    "included": [
+        {
+            "id": "13209",
+            "type": "anime",
+            "links": {
+                "self": "https://kitsu.io/api/edge/anime/13209"
+            },
+            "attributes": {
+                "createdAt": "2017-01-22T03:01:59.446Z",
+                "updatedAt": "2022-01-25T01:35:22.514Z",
+                "slug": "black-clover-tv",
+                "synopsis": "In a world where magic is everything, Asta and Yuno are both found abandoned at a church on the same day. While Yuno is gifted with exceptional magical powers, Asta is the only one in this world without any. At the age of fifteen, both receive grimoires, magic books that amplify their holder's magic. Asta's is a rare Grimoire of Anti-Magic that negates and repels his opponent's spells. Being opposite but good rivals, Yuno and Asta are ready for the hardest of challenges to achieve their common dream: to be the Wizard King. Giving up is never an option!\n\n(Source: Crunchyroll)",
+                "description": "In a world where magic is everything, Asta and Yuno are both found abandoned at a church on the same day. While Yuno is gifted with exceptional magical powers, Asta is the only one in this world without any. At the age of fifteen, both receive grimoires, magic books that amplify their holder's magic. Asta's is a rare Grimoire of Anti-Magic that negates and repels his opponent's spells. Being opposite but good rivals, Yuno and Asta are ready for the hardest of challenges to achieve their common dream: to be the Wizard King. Giving up is never an option!\n\n(Source: Crunchyroll)",
+                "coverImageTopOffset": 0,
+                "titles": {
+                    "en": "Black Clover",
+                    "en_jp": "Black Clover",
+                    "ja_jp": "ブラッククローバー"
+                },
+                "canonicalTitle": "Black Clover",
+                "abbreviatedTitles": [],
+                "averageRating": "77.34",
+                "ratingFrequencies": {
+                    "2": "450",
+                    "3": "9",
+                    "4": "222",
+                    "5": "18",
+                    "6": "331",
+                    "7": "27",
+                    "8": "1076",
+                    "9": "43",
+                    "10": "832",
+                    "11": "60",
+                    "12": "1219",
+                    "13": "156",
+                    "14": "4007",
+                    "15": "408",
+                    "16": "2917",
+                    "17": "494",
+                    "18": "2132",
+                    "19": "244",
+                    "20": "5949"
+                },
+                "userCount": 53539,
+                "favoritesCount": 1210,
+                "startDate": "2017-10-03",
+                "endDate": "2021-03-30",
+                "nextRelease": null,
+                "popularityRank": 141,
+                "ratingRank": 1154,
+                "ageRating": "PG",
+                "ageRatingGuide": "Teens 13 or older",
+                "subtype": "TV",
+                "status": "finished",
+                "tba": null,
+                "posterImage": {
+                    "tiny": "https://media.kitsu.io/anime/poster_images/13209/tiny.jpg",
+                    "large": "https://media.kitsu.io/anime/poster_images/13209/large.jpg",
+                    "small": "https://media.kitsu.io/anime/poster_images/13209/small.jpg",
+                    "medium": "https://media.kitsu.io/anime/poster_images/13209/medium.jpg",
+                    "original": "https://media.kitsu.io/anime/poster_images/13209/original.png",
+                    "meta": {
+                        "dimensions": {
+                            "tiny": {
+                                "width": 110,
+                                "height": 156
+                            },
+                            "large": {
+                                "width": 550,
+                                "height": 780
+                            },
+                            "small": {
+                                "width": 284,
+                                "height": 402
+                            },
+                            "medium": {
+                                "width": 390,
+                                "height": 554
+                            }
+                        }
+                    }
+                },
+                "coverImage": {
+                    "tiny": "https://media.kitsu.io/anime/cover_images/13209/tiny.jpg",
+                    "large": "https://media.kitsu.io/anime/cover_images/13209/large.jpg",
+                    "small": "https://media.kitsu.io/anime/cover_images/13209/small.jpg",
+                    "original": "https://media.kitsu.io/anime/cover_images/13209/original.jpg",
+                    "meta": {
+                        "dimensions": {
+                            "tiny": {
+                                "width": 840,
+                                "height": 200
+                            },
+                            "large": {
+                                "width": 3360,
+                                "height": 800
+                            },
+                            "small": {
+                                "width": 1680,
+                                "height": 400
+                            }
+                        }
+                    }
+                },
+                "episodeCount": 170,
+                "episodeLength": 23,
+                "totalLength": 4050,
+                "youtubeVideoId": "5kh7ClVck4Y",
+                "showType": "TV",
+                "nsfw": false
+            },
+            "relationships": {
+                "genres": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/genres",
+                        "related": "https://kitsu.io/api/edge/anime/13209/genres"
+                    },
+                    "data": [
+                        {
+                            "type": "genres",
+                            "id": "3"
+                        },
+                        {
+                            "type": "genres",
+                            "id": "8"
+                        },
+                        {
+                            "type": "genres",
+                            "id": "11"
+                        },
+                        {
+                            "type": "genres",
+                            "id": "1"
+                        }
+                    ]
+                },
+                "categories": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/categories",
+                        "related": "https://kitsu.io/api/edge/anime/13209/categories"
+                    }
+                },
+                "castings": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/castings",
+                        "related": "https://kitsu.io/api/edge/anime/13209/castings"
+                    }
+                },
+                "installments": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/installments",
+                        "related": "https://kitsu.io/api/edge/anime/13209/installments"
+                    }
+                },
+                "mappings": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/mappings",
+                        "related": "https://kitsu.io/api/edge/anime/13209/mappings"
+                    }
+                },
+                "reviews": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/reviews",
+                        "related": "https://kitsu.io/api/edge/anime/13209/reviews"
+                    }
+                },
+                "mediaRelationships": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/media-relationships",
+                        "related": "https://kitsu.io/api/edge/anime/13209/media-relationships"
+                    }
+                },
+                "characters": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/characters",
+                        "related": "https://kitsu.io/api/edge/anime/13209/characters"
+                    }
+                },
+                "staff": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/staff",
+                        "related": "https://kitsu.io/api/edge/anime/13209/staff"
+                    }
+                },
+                "productions": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/productions",
+                        "related": "https://kitsu.io/api/edge/anime/13209/productions"
+                    }
+                },
+                "quotes": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/quotes",
+                        "related": "https://kitsu.io/api/edge/anime/13209/quotes"
+                    }
+                },
+                "episodes": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/episodes",
+                        "related": "https://kitsu.io/api/edge/anime/13209/episodes"
+                    }
+                },
+                "streamingLinks": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/streaming-links",
+                        "related": "https://kitsu.io/api/edge/anime/13209/streaming-links"
+                    },
+                    "data": [
+                        {
+                            "type": "streamingLinks",
+                            "id": "2144"
+                        },
+                        {
+                            "type": "streamingLinks",
+                            "id": "3345"
+                        },
+                        {
+                            "type": "streamingLinks",
+                            "id": "3346"
+                        }
+                    ]
+                },
+                "animeProductions": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/anime-productions",
+                        "related": "https://kitsu.io/api/edge/anime/13209/anime-productions"
+                    }
+                },
+                "animeCharacters": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/anime-characters",
+                        "related": "https://kitsu.io/api/edge/anime/13209/anime-characters"
+                    }
+                },
+                "animeStaff": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/13209/relationships/anime-staff",
+                        "related": "https://kitsu.io/api/edge/anime/13209/anime-staff"
+                    }
+                }
+            }
+        },
+        {
+            "id": "3",
+            "type": "genres",
+            "links": {
+                "self": "https://kitsu.io/api/edge/genres/3"
+            },
+            "attributes": {
+                "createdAt": "2013-02-20T16:00:15.671Z",
+                "updatedAt": "2013-02-20T16:00:15.671Z",
+                "name": "Comedy",
+                "slug": "comedy",
+                "description": null
+            }
+        },
+        {
+            "id": "8",
+            "type": "genres",
+            "links": {
+                "self": "https://kitsu.io/api/edge/genres/8"
+            },
+            "attributes": {
+                "createdAt": "2013-02-20T16:00:18.761Z",
+                "updatedAt": "2013-02-20T16:00:18.761Z",
+                "name": "Magic",
+                "slug": "magic",
+                "description": null
+            }
+        },
+        {
+            "id": "11",
+            "type": "genres",
+            "links": {
+                "self": "https://kitsu.io/api/edge/genres/11"
+            },
+            "attributes": {
+                "createdAt": "2013-02-20T16:00:19.973Z",
+                "updatedAt": "2016-01-10T12:27:18.443Z",
+                "name": "Fantasy",
+                "slug": "fantasy",
+                "description": ""
+            }
+        },
+        {
+            "id": "1",
+            "type": "genres",
+            "links": {
+                "self": "https://kitsu.io/api/edge/genres/1"
+            },
+            "attributes": {
+                "createdAt": "2013-02-20T16:00:15.623Z",
+                "updatedAt": "2016-07-17T19:30:56.164Z",
+                "name": "Action",
+                "slug": "action",
+                "description": ""
+            }
+        },
+        {
+            "id": "2144",
+            "type": "streamingLinks",
+            "links": {
+                "self": "https://kitsu.io/api/edge/streaming-links/2144"
+            },
+            "attributes": {
+                "createdAt": "2017-10-03T22:30:38.732Z",
+                "updatedAt": "2017-10-03T22:30:38.732Z",
+                "url": "http://www.crunchyroll.com/black-clover",
+                "subs": [
+                    "en"
+                ],
+                "dubs": [
+                    "ja"
+                ]
+            },
+            "relationships": {
+                "streamer": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/2144/relationships/streamer",
+                        "related": "https://kitsu.io/api/edge/streaming-links/2144/streamer"
+                    }
+                },
+                "media": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/2144/relationships/media",
+                        "related": "https://kitsu.io/api/edge/streaming-links/2144/media"
+                    }
+                }
+            }
+        },
+        {
+            "id": "3345",
+            "type": "streamingLinks",
+            "links": {
+                "self": "https://kitsu.io/api/edge/streaming-links/3345"
+            },
+            "attributes": {
+                "createdAt": "2018-12-19T15:45:18.620Z",
+                "updatedAt": "2018-12-19T15:45:18.620Z",
+                "url": "https://www.funimation.com/shows/black-clover/",
+                "subs": [
+                    "en"
+                ],
+                "dubs": [
+                    "ja"
+                ]
+            },
+            "relationships": {
+                "streamer": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/3345/relationships/streamer",
+                        "related": "https://kitsu.io/api/edge/streaming-links/3345/streamer"
+                    }
+                },
+                "media": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/3345/relationships/media",
+                        "related": "https://kitsu.io/api/edge/streaming-links/3345/media"
+                    }
+                }
+            }
+        },
+        {
+            "id": "3346",
+            "type": "streamingLinks",
+            "links": {
+                "self": "https://kitsu.io/api/edge/streaming-links/3346"
+            },
+            "attributes": {
+                "createdAt": "2018-12-19T15:45:43.939Z",
+                "updatedAt": "2018-12-19T15:45:43.939Z",
+                "url": "https://www.hulu.com/black-clover",
+                "subs": [
+                    "en"
+                ],
+                "dubs": [
+                    "ja"
+                ]
+            },
+            "relationships": {
+                "streamer": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/3346/relationships/streamer",
+                        "related": "https://kitsu.io/api/edge/streaming-links/3346/streamer"
+                    }
+                },
+                "media": {
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/streaming-links/3346/relationships/media",
+                        "related": "https://kitsu.io/api/edge/streaming-links/3346/media"
+                    }
+                }
+            }
+        }
+    ]
+}

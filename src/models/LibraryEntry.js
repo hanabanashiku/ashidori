@@ -130,7 +130,7 @@ const DEFAULT_VALUES = {
   _progress: 0,
   _notes: "",
   _startDate: null,
-  _completionDate: null,
+  _completedDate: null,
   _rewatchCount: 0,
   _lastUpdated: null,
   _rating: 0,
