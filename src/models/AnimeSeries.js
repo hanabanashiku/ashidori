@@ -69,16 +69,19 @@ export default class AnimeSeries {
    * @returns {string} The season the show was released in.
    */
   get startSeason() {
+    if (!this.startDate) {
+      return "";
+    }
+
     let year = this.startDate.getFullYear();
-    const month = this.startDate.getMonth();
+    const month = this.startDate.getMonth() + 1;
     let season;
 
-    if (month > 11 || month < 4) {
+    if (month >= 1 && month < 4) {
       season = "Winter";
-      if (month === 12) year += 1;
-    } else if (month >= 4 && month < 6) {
+    } else if (month >= 4 && month < 7) {
       season = "Spring";
-    } else if (month >= 6 && month < 9) {
+    } else if (month >= 7 && month < 10) {
       season = "Summer";
     } else {
       season = "Fall";
@@ -110,6 +113,13 @@ export default class AnimeSeries {
   }
 
   /**
+   * @returns {number} The number of seasons.
+   */
+  get seasonCount() {
+    return this._seasonCount;
+  }
+
+  /**
    * @returns {[string]} A list of genres for the anime.
    */
   get genres() {
@@ -131,6 +141,26 @@ export default class AnimeSeries {
   }
 
   #mapFromKitsu(data) {
+    const streamingLinks =
+      data.relationships.streamingLinks.data
+        ?.map((link) =>
+          data.included.find(
+            (inc) => inc.type === "streamingLinks" && inc.id === link.id
+          )
+        )
+        ?.filter((item) => !!item)
+        ?.map((link) => link.attributes.url) ?? [];
+
+    const genres =
+      data.relationships.genres.data
+        ?.map(
+          (genre) =>
+            data.included.find(
+              (inc) => inc.type === "genres" && inc.id === genre.id
+            )?.attributes?.name
+        )
+        .filter((genre) => !!genre) ?? [];
+
     _.defaultsDeep(
       this,
       {
@@ -146,17 +176,22 @@ export default class AnimeSeries {
         _status: KITSU_ANIME_STATUS[data.attributes.status],
         _episodeCount: data.attributes.episodeCount,
         _episodeLength: data.attributes.episodeLength,
-        _genres: data.genres,
-        _streamingLinks: this.#mapStreamingLinks(data.streamingLinks),
+        _genres: genres,
+        _streamingLinks: this.#mapStreamingLinks(streamingLinks),
         _link: `https://kitsu.io/anime/${data.id}`,
       },
       DEFAULT_VALUES
     );
   }
 
+  /**
+   * @param {[string]} links An array of urls
+   * @returns {object} A mapping of PROVIDERs to urls.
+   * @see PROVIDERS
+   */
   #mapStreamingLinks(links = []) {
     const result = {};
-    const regex = /([a-zA-Z-]+\.com|net|org|io|tv)/g;
+    const regex = /([a-zA-Z-]+\.(?:com|net|org|io|tv|co))/g;
 
     for (const link of links) {
       const domain = regex.exec(link)?.[1];
@@ -181,6 +216,7 @@ const DEFAULT_VALUES = {
   _title: "",
   _englishTitle: "",
   _description: "",
+  _coverImage: "data:,",
   _startDate: null,
   _endDate: null,
   _status: ANIME_STATUS.ANNOUNCED,
@@ -208,4 +244,5 @@ const SERVICE_DOMAINS = {
   "netflix.com": SERVICES.NETFLIX,
   "tubitv.com": SERVICES.TUBITV,
   "amazon.com": SERVICES.AMAZON_PRIME,
+  "vrv.co": SERVICES.VRV,
 };

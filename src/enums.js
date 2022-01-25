@@ -19,6 +19,7 @@ export const SERVICES = {
   AMAZON_PRIME: 4,
   HIDIVE: 5,
   TUBITV: 6,
+  VRV: 7,
 };
 
 export const SERVICE_NAMES = {

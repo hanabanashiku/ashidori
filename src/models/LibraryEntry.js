@@ -88,6 +88,11 @@ export default class LibraryEntry {
   }
 
   #mapFromKitsu(data) {
+    const anime = data.included.find(
+      (inc) =>
+        inc.type === "anime" && inc.id === data.relationships.anime.data.id
+    );
+
     _.defaultsDeep(
       this,
       {
@@ -106,9 +111,10 @@ export default class LibraryEntry {
           ? new Date(data.attributes.progressedAt)
           : null,
         _rating: data.attributes.ratingTwenty / 2,
-        _anime: Object.prototype.hasOwnProperty.call(data, "anime")
+        _anime: anime
           ? new AnimeSeries({
-              ...data.anime,
+              ...anime,
+              included: data.included,
               provider: PROVIDERS.KITSU,
             })
           : null,

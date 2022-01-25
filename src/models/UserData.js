@@ -14,9 +14,8 @@ export default class UserData {
         break;
 
       default:
-        _.defaultsDeep(this, {}, defaults);
+        _.defaultsDeep(this, data, DEFAULT_VALUES);
     }
-    this.#populateFromKitsu(data);
   }
 
   /**
@@ -56,13 +55,13 @@ export default class UserData {
   }
 
   #populateFromLocalStorage(data) {
-    _.defaultsDeep(this, data, defaults);
+    _.defaultsDeep(this, data, DEFAULT_VALUES);
   }
 
   #populateFromKitsu(data) {
     const user = data.data[0];
 
-    _.defaultsDeep(this, {
+    _.assign(this, {
       _provider: PROVIDERS.KITSU,
       _id: user.id,
       _name: user.attributes.name,
@@ -72,9 +71,10 @@ export default class UserData {
   }
 }
 
-const defaults = {
+const DEFAULT_VALUES = {
   _id: 0,
   _name: "",
   _url: "",
   _avatarUrl: "",
+  _provider: null,
 };

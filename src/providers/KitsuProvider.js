@@ -68,7 +68,7 @@ export default class KitsuProvider extends ApiProvider {
     );
 
     const items = response.data.data.map((entry) =>
-      KitsuProvider.#mapLibraryItem(entry, response.data.included)
+      KitsuProvider.#mapData(LibraryEntry, entry, response.data.included)
     );
 
     return new Library(items);
@@ -105,7 +105,7 @@ export default class KitsuProvider extends ApiProvider {
     );
 
     const items = response.data.data.map((entry) =>
-      KitsuProvider.#mapLibraryItem(entry, response.data.included)
+      KitsuProvider.#mapData(LibraryEntry, entry, response.data.included)
     );
 
     return new PagedData({
@@ -129,7 +129,8 @@ export default class KitsuProvider extends ApiProvider {
       `library-entries/${animeId}?include=anime,anime.streamingLinks,anime.genres`
     );
 
-    return KitsuProvider.#mapLibraryItem(
+    return KitsuProvider.#mapData(
+      LibraryEntry,
       response.data.data,
       response.data.included
     );
@@ -159,7 +160,8 @@ export default class KitsuProvider extends ApiProvider {
       });
     }
 
-    return KitsuProvider.#mapLibraryItem(
+    return KitsuProvider.#mapData(
+      LibraryEntry,
       response.data.data[0],
       response.data.included
     );
@@ -205,15 +207,11 @@ export default class KitsuProvider extends ApiProvider {
       return null;
     }
 
-    const anime = response.data.data[0];
-    return new AnimeSeries({
-      ...anime,
-      streamingLinks: KitsuProvider.#getStreamingLinks(
-        anime,
-        response.data.included
-      ),
-      provider: PROVIDERS.KITSU,
-    });
+    return KitsuProvider.#mapData(
+      AnimeSeries,
+      response.data.data[0],
+      response.data.included
+    );
   }
 
   async fetchUserData() {
@@ -271,46 +269,12 @@ export default class KitsuProvider extends ApiProvider {
     this._setRefreshToken(response.data["refresh_token"]);
   }
 
-  static #mapLibraryItem(entry, included = []) {
-    let anime = included.find(
-      (inc) =>
-        inc.type === "anime" && inc.id === entry.relationships.anime.data.id
-    );
-
-    anime = {
-      ...anime,
-      streamingLinks: KitsuProvider.#getStreamingLinks(anime, included),
-      genres: KitsuProvider.#getGenres(anime, included),
-    };
-
-    return new LibraryEntry({
-      ...entry,
+  static #mapData(type, data, included = []) {
+    return new type({
+      ...data,
+      included,
       provider: PROVIDERS.KITSU,
-      anime,
     });
-  }
-
-  static #getStreamingLinks(anime, included = []) {
-    return anime
-      ? anime.relationships.streamingLinks.data
-          ?.map((link) =>
-            included.find(
-              (inc) => inc.type === "streamingLinks" && inc.id === link.id
-            )
-          )
-          ?.filter((item) => !!item)
-          ?.map((link) => link.attributes.url) ?? []
-      : [];
-  }
-
-  static #getGenres(anime, included = []) {
-    return anime.relationships.genres.data
-      .map(
-        (genre) =>
-          included.find((inc) => inc.type === "genres" && inc.id === genre.id)
-            ?.attributes?.name
-      )
-      .filter((genre) => !!genre);
   }
 
   static #mapSort(field, sortBy) {

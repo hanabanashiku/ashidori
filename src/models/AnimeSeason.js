@@ -2,7 +2,15 @@ import _ from "lodash";
 
 export default class AnimeSeason {
   constructor(data = {}) {
-    _.defaultsDeep(this, data, DEFAULT_VALUES);
+    _.defaultsDeep(
+      this,
+      {
+        _id: data.id,
+        _name: data.name,
+        _number: data.number,
+      },
+      DEFAULT_VALUES
+    );
   }
 
   /**

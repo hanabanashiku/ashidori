@@ -6,7 +6,8 @@
     "start": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
     "build": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
     "postbuild": "cp -r src/static dist/static",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "cover": "jest --collectCoverage",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
     "format": "prettier --write \"src/**/*.{js,jsx}\""
@@ -46,6 +47,7 @@
   },
   "homepage": "https://github.com/hanabanashiku/ashidori#readme",
   "dependencies": {
+    "@babel/preset-react": "^7.16.7",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
@@ -54,6 +56,7 @@
     "@mui/x-data-grid": "^5.2.2",
     "@types/date-fns": "^2.6.0",
     "axios": "^0.24.0",
+    "babel-jest": "^27.4.6",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.0",
@@ -74,7 +77,9 @@
     "@parcel/babel-preset-env": "^2.0.1",
     "@parcel/config-webextension": "^2.0.1",
     "@parcel/transformer-webmanifest": "^2.0.1",
+    "@testing-library/react": "^12.1.2",
     "@types/firefox-webext-browser": "^94.0.0",
+    "@types/jest": "^27.4.0",
     "babel-plugin-lodash": "^3.3.4",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -82,6 +87,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
+    "jest": "^27.4.7",
     "parcel": "^2.0.1",
     "webextension-polyfill": "^0.8.0"
   },

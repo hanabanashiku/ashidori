@@ -1,0 +1,531 @@
+{
+  "data": {
+    "id": "12",
+    "type": "anime",
+    "links": {
+      "self": "https://kitsu.io/api/edge/anime/12"
+    },
+    "attributes": {
+      "createdAt": "2013-02-20T16:00:25.722Z",
+      "updatedAt": "2022-01-25T01:35:22.277Z",
+      "slug": "one-piece",
+      "synopsis": "Gol D. Roger was known as the \"Pirate King,\" the strongest and most infamous being to have sailed the Grand Line. The capture and death of Roger by the World Government brought a change throughout the world. His last words before his death revealed the existence of the greatest treasure in the world, One Piece. It was this revelation that brought about the Grand Age of Pirates, men who dreamed of finding One Piece—which promises an unlimited amount of riches and fame—and quite possibly the pinnacle of glory and the title of the Pirate King.\nEnter Monkey D. Luffy, a 17-year-old boy who defies your standard definition of a pirate. Rather than the popular persona of a wicked, hardened, toothless pirate ransacking villages for fun, Luffy’s reason for being a pirate is one of pure wonder: the thought of an exciting adventure that leads him to intriguing people and ultimately, the promised treasure. Following in the footsteps of his childhood hero, Luffy and his crew travel across the Grand Line, experiencing crazy adventures, unveiling dark mysteries and battling strong enemies, all in order to reach the most coveted of all fortunes—One Piece.\n[Written by MAL Rewrite]",
+      "description": "Gol D. Roger was known as the \"Pirate King,\" the strongest and most infamous being to have sailed the Grand Line. The capture and death of Roger by the World Government brought a change throughout the world. His last words before his death revealed the existence of the greatest treasure in the world, One Piece. It was this revelation that brought about the Grand Age of Pirates, men who dreamed of finding One Piece—which promises an unlimited amount of riches and fame—and quite possibly the pinnacle of glory and the title of the Pirate King.\nEnter Monkey D. Luffy, a 17-year-old boy who defies your standard definition of a pirate. Rather than the popular persona of a wicked, hardened, toothless pirate ransacking villages for fun, Luffy’s reason for being a pirate is one of pure wonder: the thought of an exciting adventure that leads him to intriguing people and ultimately, the promised treasure. Following in the footsteps of his childhood hero, Luffy and his crew travel across the Grand Line, experiencing crazy adventures, unveiling dark mysteries and battling strong enemies, all in order to reach the most coveted of all fortunes—One Piece.\n[Written by MAL Rewrite]",
+      "coverImageTopOffset": 50,
+      "titles": {
+        "en": "One Piece",
+        "en_jp": "One Piece",
+        "ja_jp": "ONE PIECE"
+      },
+      "canonicalTitle": "One Piece",
+      "abbreviatedTitles": ["ワンピース"],
+      "averageRating": "83.1",
+      "ratingFrequencies": {
+        "2": "7590",
+        "3": "163",
+        "4": "560",
+        "5": "117",
+        "6": "496",
+        "7": "108",
+        "8": "8648",
+        "9": "143",
+        "10": "1611",
+        "11": "219",
+        "12": "2721",
+        "13": "276",
+        "14": "19449",
+        "15": "634",
+        "16": "7321",
+        "17": "1091",
+        "18": "7766",
+        "19": "1050",
+        "20": "81862"
+      },
+      "userCount": 186101,
+      "favoritesCount": 6578,
+      "startDate": "1999-10-20",
+      "endDate": null,
+      "nextRelease": "2022-01-30T09:30:00.000+09:00",
+      "popularityRank": 14,
+      "ratingRank": 33,
+      "ageRating": "PG",
+      "ageRatingGuide": "Teens 13 or older",
+      "subtype": "TV",
+      "status": "current",
+      "tba": null,
+      "posterImage": {
+        "tiny": "https://media.kitsu.io/anime/poster_images/12/tiny.jpg",
+        "large": "https://media.kitsu.io/anime/poster_images/12/large.jpg",
+        "small": "https://media.kitsu.io/anime/poster_images/12/small.jpg",
+        "medium": "https://media.kitsu.io/anime/poster_images/12/medium.jpg",
+        "original": "https://media.kitsu.io/anime/poster_images/12/original.png",
+        "meta": {
+          "dimensions": {
+            "tiny": {
+              "width": 110,
+              "height": 156
+            },
+            "large": {
+              "width": 550,
+              "height": 780
+            },
+            "small": {
+              "width": 284,
+              "height": 402
+            },
+            "medium": {
+              "width": 390,
+              "height": 554
+            }
+          }
+        }
+      },
+      "coverImage": {
+        "tiny": "https://media.kitsu.io/anime/12/cover_image/tiny-cd1b0729d5c15400bfa2441ea3751e86.jpeg",
+        "large": "https://media.kitsu.io/anime/12/cover_image/large-3e72f400a87b5241780c5082f0582611.jpeg",
+        "small": "https://media.kitsu.io/anime/12/cover_image/small-8d0cbc39cac65d5d7c4db5f5b3742ae7.jpeg",
+        "original": "https://media.kitsu.io/anime/12/cover_image/21ecb556255bd46b95aea4779d19789f.jpg",
+        "meta": {
+          "dimensions": {
+            "tiny": {
+              "width": 840,
+              "height": 200
+            },
+            "large": {
+              "width": 3360,
+              "height": 800
+            },
+            "small": {
+              "width": 1680,
+              "height": 400
+            }
+          }
+        }
+      },
+      "episodeCount": null,
+      "episodeLength": 24,
+      "totalLength": 27960,
+      "youtubeVideoId": "CmTeYj2FmRc",
+      "showType": "TV",
+      "nsfw": false
+    },
+    "relationships": {
+      "genres": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/genres",
+          "related": "https://kitsu.io/api/edge/anime/12/genres"
+        },
+        "data": [
+          {
+            "type": "genres",
+            "id": "1"
+          },
+          {
+            "type": "genres",
+            "id": "2"
+          },
+          {
+            "type": "genres",
+            "id": "3"
+          },
+          {
+            "type": "genres",
+            "id": "11"
+          },
+          {
+            "type": "genres",
+            "id": "23"
+          },
+          {
+            "type": "genres",
+            "id": "4"
+          },
+          {
+            "type": "genres",
+            "id": "63"
+          }
+        ]
+      },
+      "categories": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/categories",
+          "related": "https://kitsu.io/api/edge/anime/12/categories"
+        }
+      },
+      "castings": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/castings",
+          "related": "https://kitsu.io/api/edge/anime/12/castings"
+        }
+      },
+      "installments": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/installments",
+          "related": "https://kitsu.io/api/edge/anime/12/installments"
+        }
+      },
+      "mappings": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/mappings",
+          "related": "https://kitsu.io/api/edge/anime/12/mappings"
+        }
+      },
+      "reviews": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/reviews",
+          "related": "https://kitsu.io/api/edge/anime/12/reviews"
+        }
+      },
+      "mediaRelationships": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/media-relationships",
+          "related": "https://kitsu.io/api/edge/anime/12/media-relationships"
+        }
+      },
+      "characters": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/characters",
+          "related": "https://kitsu.io/api/edge/anime/12/characters"
+        }
+      },
+      "staff": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/staff",
+          "related": "https://kitsu.io/api/edge/anime/12/staff"
+        }
+      },
+      "productions": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/productions",
+          "related": "https://kitsu.io/api/edge/anime/12/productions"
+        }
+      },
+      "quotes": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/quotes",
+          "related": "https://kitsu.io/api/edge/anime/12/quotes"
+        }
+      },
+      "episodes": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/episodes",
+          "related": "https://kitsu.io/api/edge/anime/12/episodes"
+        }
+      },
+      "streamingLinks": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/streaming-links",
+          "related": "https://kitsu.io/api/edge/anime/12/streaming-links"
+        },
+        "data": [
+          {
+            "type": "streamingLinks",
+            "id": "3696"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "3697"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "3698"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "4263"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "4264"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "4265"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "4266"
+          },
+          {
+            "type": "streamingLinks",
+            "id": "4267"
+          }
+        ]
+      },
+      "animeProductions": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/anime-productions",
+          "related": "https://kitsu.io/api/edge/anime/12/anime-productions"
+        }
+      },
+      "animeCharacters": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/anime-characters",
+          "related": "https://kitsu.io/api/edge/anime/12/anime-characters"
+        }
+      },
+      "animeStaff": {
+        "links": {
+          "self": "https://kitsu.io/api/edge/anime/12/relationships/anime-staff",
+          "related": "https://kitsu.io/api/edge/anime/12/anime-staff"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "1",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/1"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:15.623Z",
+        "updatedAt": "2016-07-17T19:30:56.164Z",
+        "name": "Action",
+        "slug": "action",
+        "description": ""
+      }
+    },
+    {
+      "id": "2",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/2"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:15.657Z",
+        "updatedAt": "2017-04-22T16:11:16.077Z",
+        "name": "Adventure",
+        "slug": "adventure",
+        "description": ""
+      }
+    },
+    {
+      "id": "3",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/3"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:15.671Z",
+        "updatedAt": "2013-02-20T16:00:15.671Z",
+        "name": "Comedy",
+        "slug": "comedy",
+        "description": null
+      }
+    },
+    {
+      "id": "11",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/11"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:19.973Z",
+        "updatedAt": "2016-01-10T12:27:18.443Z",
+        "name": "Fantasy",
+        "slug": "fantasy",
+        "description": ""
+      }
+    },
+    {
+      "id": "23",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/23"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:25.609Z",
+        "updatedAt": "2013-02-20T16:00:25.609Z",
+        "name": "Super Power",
+        "slug": "super-power",
+        "description": null
+      }
+    },
+    {
+      "id": "4",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/4"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:00:15.686Z",
+        "updatedAt": "2016-06-10T11:23:00.431Z",
+        "name": "Drama",
+        "slug": "drama",
+        "description": ""
+      }
+    },
+    {
+      "id": "63",
+      "type": "genres",
+      "links": {
+        "self": "https://kitsu.io/api/edge/genres/63"
+      },
+      "attributes": {
+        "createdAt": "2017-03-12T06:24:28.657Z",
+        "updatedAt": "2017-03-21T15:25:24.849Z",
+        "name": "Friendship",
+        "slug": "friendship",
+        "description": ""
+      }
+    },
+    {
+      "id": "3696",
+      "type": "streamingLinks",
+      "links": {
+        "self": "https://kitsu.io/api/edge/streaming-links/3696"
+      },
+      "attributes": {
+        "createdAt": "2019-07-18T19:08:28.510Z",
+        "updatedAt": "2019-07-18T19:09:33.816Z",
+        "url": "https://www.funimation.com/shows/one-piece/#videos",
+        "subs": ["en"],
+        "dubs": ["ja", "en"]
+      },
+      "relationships": {
+        "streamer": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3696/relationships/streamer",
+            "related": "https://kitsu.io/api/edge/streaming-links/3696/streamer"
+          }
+        },
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3696/relationships/media",
+            "related": "https://kitsu.io/api/edge/streaming-links/3696/media"
+          }
+        }
+      }
+    },
+    {
+      "id": "3697",
+      "type": "streamingLinks",
+      "links": {
+        "self": "https://kitsu.io/api/edge/streaming-links/3697"
+      },
+      "attributes": {
+        "createdAt": "2019-07-18T19:09:27.864Z",
+        "updatedAt": "2019-07-18T19:09:33.879Z",
+        "url": "https://www.crunchyroll.com/one-piece",
+        "subs": ["en"],
+        "dubs": ["ja", "en"]
+      },
+      "relationships": {
+        "streamer": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3697/relationships/streamer",
+            "related": "https://kitsu.io/api/edge/streaming-links/3697/streamer"
+          }
+        },
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3697/relationships/media",
+            "related": "https://kitsu.io/api/edge/streaming-links/3697/media"
+          }
+        }
+      }
+    },
+    {
+      "id": "3698",
+      "type": "streamingLinks",
+      "links": {
+        "self": "https://kitsu.io/api/edge/streaming-links/3698"
+      },
+      "attributes": {
+        "createdAt": "2019-07-18T19:10:59.730Z",
+        "updatedAt": "2019-07-18T19:11:06.778Z",
+        "url": "https://www.hulu.com/series/one-piece-c7a08df6-d0d5-4dd3-afff-d1f90133cd4e",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      },
+      "relationships": {
+        "streamer": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3698/relationships/streamer",
+            "related": "https://kitsu.io/api/edge/streaming-links/3698/streamer"
+          }
+        },
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/3698/relationships/media",
+            "related": "https://kitsu.io/api/edge/streaming-links/3698/media"
+          }
+        }
+      }
+    },
+    {
+      "id": "4263",
+      "type": "streamingLinks",
+      "links": {
+        "self": "https://kitsu.io/api/edge/streaming-links/4263"
+      },
+      "attributes": {
+        "createdAt": "2020-04-08T22:19:26.627Z",
+        "updatedAt": "2020-04-08T22:19:31.201Z",
+        "url": "https://vrv.co/series/GRMG8ZQZR/One-Piece",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      },
+      "relationships": {
+        "streamer": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/4263/relationships/streamer",
+            "related": "https://kitsu.io/api/edge/streaming-links/4263/streamer"
+          }
+        },
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/streaming-links/4263/relationships/media",
+            "related": "https://kitsu.io/api/edge/streaming-links/4263/media"
+          }
+        }
+      }
+    },
+    {
+      "id": "4264",
+      "type": "streamingLinks",
+      "attributes": {
+        "createdAt": "2020-04-08T22:19:26.627Z",
+        "updatedAt": "2020-04-08T22:19:31.201Z",
+        "url": "https://netflix.com/one-piece",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      }
+    },
+    {
+      "id": "4265",
+      "type": "streamingLinks",
+      "attributes": {
+        "createdAt": "2020-04-08T22:19:26.627Z",
+        "updatedAt": "2020-04-08T22:19:31.201Z",
+        "url": "https://amazon.com/one-piece",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      }
+    },
+    {
+      "id": "4266",
+      "type": "streamingLinks",
+      "attributes": {
+        "createdAt": "2020-04-08T22:19:26.627Z",
+        "updatedAt": "2020-04-08T22:19:31.201Z",
+        "url": "https://hidive.com/one-piece",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      }
+    },
+    {
+      "id": "4267",
+      "type": "streamingLinks",
+      "attributes": {
+        "createdAt": "2020-04-08T22:19:26.627Z",
+        "updatedAt": "2020-04-08T22:19:31.201Z",
+        "url": "https://tubitv.com/one-piece",
+        "subs": ["en"],
+        "dubs": ["ja"]
+      }
+    }
+  ]
+}
