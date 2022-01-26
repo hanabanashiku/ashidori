@@ -88,6 +88,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "jest-webextension-mock": "^3.7.19",
     "parcel": "^2.0.1",
     "sinon-chrome": "^3.0.1",
     "webextension-polyfill": "^0.8.0"
@@ -111,6 +112,9 @@
     "*.{js,css,md}": "prettier --write"
   },
   "jest": {
-    "testEnvironment": "./test_environment.js"
+    "testEnvironment": "./test_environment.js",
+    "setupFiles": [
+      "jest-webextension-mock"
+    ]
   }
 }
