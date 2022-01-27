@@ -5,6 +5,7 @@ import { LIST_STATUS, PROVIDERS } from "../../enums";
 // mock data
 import userData from "../../__mocks__/kitsu/user.json";
 import libraryEntry from "../../__mocks__/kitsu/libraryEntry.json";
+import animeData from "../../__mocks__/kitsu/anime.json";
 
 describe("Kitsu api provider", () => {
   const userId = "30000";
@@ -30,11 +31,9 @@ describe("Kitsu api provider", () => {
   });
 
   it("fetch user data gets data for the user", async () => {
-    axios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: userData,
-      })
-    );
+    axios.get.mockResolvedValueOnce({
+      data: userData,
+    });
 
     const actual = await kitsu.fetchUserData();
 
@@ -47,19 +46,17 @@ describe("Kitsu api provider", () => {
 
   describe("getAnimeListByStatus", () => {
     beforeEach(() => {
-      axios.get.mockImplementationOnce(() =>
-        Promise.resolve({
-          data: {
-            data: [libraryEntry.data],
-            included: libraryEntry.included,
-            meta: {
-              statusCounts: {
-                current: 1,
-              },
+      axios.get.mockResolvedValueOnce({
+        data: {
+          data: [libraryEntry.data],
+          included: libraryEntry.included,
+          meta: {
+            statusCounts: {
+              current: 1,
             },
           },
-        })
-      );
+        },
+      });
     });
 
     it("returns the anime list data for current status", async () => {
@@ -150,5 +147,125 @@ describe("Kitsu api provider", () => {
       expect(actual.total).toBe(1);
       expect(actual.limit).toBe(30);
     });
+  });
+
+  it("getSingleLibraryEntry grabs a library item", async () => {
+    const entryId = "29377736";
+    axios.get.mockResolvedValueOnce({
+      data: {
+        data: libraryEntry.data,
+        included: libraryEntry.included,
+      },
+    });
+
+    const actual = await kitsu.getSingleLibraryEntry(entryId);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenLastCalledWith(
+      `library-entries/${entryId}?include=anime,anime.streamingLinks,anime.genres`
+    );
+    expect(actual).not.toBeNull();
+    expect(actual.id).toBe(entryId);
+    expect(actual.status).toBe(LIST_STATUS.CURRENT);
+    expect(actual.anime.id).toBe(libraryEntry.included[0].id);
+  });
+
+  describe("getSingleLibraryByAnime", () => {
+    it("grabs a library item", async () => {
+      const entryId = "29377736";
+      axios.get.mockResolvedValueOnce({
+        data: {
+          data: libraryEntry.data,
+          included: libraryEntry.included,
+        },
+      });
+
+      const actual = await kitsu.getSingleLibraryEntry(entryId);
+
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenLastCalledWith(
+        `library-entries/${entryId}?include=anime,anime.streamingLinks,anime.genres`
+      );
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(entryId);
+      expect(actual.status).toBe(LIST_STATUS.CURRENT);
+      expect(actual.anime.id).toBe(libraryEntry.included[0].id);
+    });
+
+    it("returns the anime with a blank list item if the anime was not found", async () => {
+      const animeId = "12";
+      axios.get.mockImplementation((url) => {
+        if (url.match(/^library-entries/)) {
+          return Promise.resolve({
+            data: {
+              data: [],
+              included: {},
+              meta: {
+                count: 0,
+              },
+            },
+          });
+        }
+        if (url.match(/^anime/)) {
+          return Promise.resolve({
+            data: animeData,
+          });
+        }
+        return Promise.reject({
+          response: {
+            status: 404,
+          },
+        });
+      });
+
+      const actual = await kitsu.getSingleLibraryEntryByAnime(animeId);
+
+      expect(axios.get).toHaveBeenCalledTimes(2);
+      expect(axios.get).toHaveBeenNthCalledWith(
+        1,
+        `library-entries?filter[kind]=anime&filter[userId]=${userId}&filter[animeId]=${animeId}&include=anime,anime.streamingLinks,anime.genres`
+      );
+      expect(axios.get).toHaveBeenNthCalledWith(2, `anime/${animeId}?include=streamingLinks,genres`);
+      expect(actual).not.toBeNull();
+      expect(actual.anime).not.toBeNull();
+      expect(actual.anime.id).toBe(animeId);
+      expect(actual.anime.title).toBe("One Piece");
+      expect(actual.status).toBe(LIST_STATUS.NOT_WATCHING);
+      expect(actual.progress).toBe(0);
+      expect(actual.startDate).toBeNull();
+    });
+
+    it('returns null if the anime does not exist', async () => {
+      const animeId = "13";
+      axios.get.mockImplementation((url) => {
+        if (url.match(/^library-entries/)) {
+          return Promise.resolve({
+            data: {
+              data: [],
+              included: {},
+              meta: {
+                count: 0,
+              },
+            },
+          });
+        }
+        return Promise.reject({
+          response: {
+            status: 404,
+          },
+        });
+      });
+
+      const actual = await kitsu.getSingleLibraryEntryByAnime(animeId);
+
+      expect(axios.get).toHaveBeenCalledTimes(2);
+      expect(actual).toBeNull();
+    });
+  });
+
+  describe('getAnime returns anime data', async () => {
+    axios.get.mockResolvedValueOnce({
+      data: animeData,
+    })
   });
 });

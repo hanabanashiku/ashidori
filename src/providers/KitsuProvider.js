@@ -117,16 +117,16 @@ export default class KitsuProvider extends ApiProvider {
   }
   /**
    * Get a single library entry for the current user.
-   * @param {string} animeId The id of the anime series to search for.
+   * @param {string} entryId The id of the library entry.
    * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
    */
-  async getSingleLibraryEntry(animeId) {
+  async getSingleLibraryEntry(entryId) {
     if (!this.#userId) {
       throw "Missing user data";
     }
 
     const response = await this.#client.get(
-      `library-entries/${animeId}?include=anime,anime.streamingLinks,anime.genres`
+      `library-entries/${entryId}?include=anime,anime.streamingLinks,anime.genres`
     );
 
     return KitsuProvider.#mapData(
@@ -155,9 +155,9 @@ export default class KitsuProvider extends ApiProvider {
     if (response.data.meta.count < 1) {
       const anime = await this.getAnime(animeId);
 
-      return new LibraryEntry({
-        anime,
-      });
+      return anime ? new LibraryEntry({
+        _anime: anime,
+      }) : null;
     }
 
     return KitsuProvider.#mapData(
@@ -199,19 +199,24 @@ export default class KitsuProvider extends ApiProvider {
    * @returns {Promise<AnimeSeries?>} The anime series, or null if not found.
    */
   async getAnime(animeId) {
-    const response = await this.#client.get(
-      `anime?filter[id]=${animeId}&include=streamingLinks,genres`
-    );
+    try {
+      const response = await this.#client.get(
+        `anime/${animeId}?include=streamingLinks,genres`
+      );
 
-    if (response.data.meta.count < 1) {
-      return null;
+      return KitsuProvider.#mapData(
+        AnimeSeries,
+        response.data.data,
+        response.data.included
+      );
     }
 
-    return KitsuProvider.#mapData(
-      AnimeSeries,
-      response.data.data[0],
-      response.data.included
-    );
+    catch(e) {
+      if(e.response?.status === 404) {
+        return null;
+      }
+      throw e;
+    }
   }
 
   async fetchUserData() {
