@@ -30,6 +30,82 @@ describe("Kitsu api provider", () => {
     jest.clearAllMocks();
   });
 
+  it("authorize calls to authorize the user", async () => {
+    const username = "testAccount";
+    const password = "password1";
+    const bearer = "abc12345";
+    const refresh = "abc123456";
+
+    browser.storage.local.set({ userData: null });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        access_token: bearer,
+        created_at: 1643398928,
+        expires_in: 2591963,
+        refresh_token: refresh,
+        scope: "public",
+        token_type: "bearer",
+      },
+    });
+    axios.get.mockResolvedValueOnce({ data: userData });
+
+    const expected = new URLSearchParams();
+    expected.append("grant_type", "password");
+    expected.append("username", username);
+    expected.append("password", password);
+    expected.append("scope", "");
+
+    const actual = await kitsu.authorize(username, password);
+
+    expect(actual).toBe(true);
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(axios.post).toHaveBeenCalledWith(
+      "https://kitsu.io/api/oauth/token",
+      expected
+    );
+
+    expect(await kitsu.getAuthToken()).toBe(bearer);
+    expect(await kitsu.getRefreshToken()).toBe(refresh);
+    expect(
+      (await browser.storage.local.get({ access_token_expires_on: null }))
+        .access_token_expires_on
+    ).toBe(1645990891);
+    const user = await kitsu.getUserData();
+    expect(user.id).toBe("30000");
+  });
+
+  it("refresh feches a new bearer token", async () => {
+    const oldRefresh = "abc123456";
+    const bearer = "defg1576";
+    const refresh = "xyz786";
+    browser.storage.local.set({
+      access_token: "abc12345",
+      refresh_token: oldRefresh,
+    });
+    axios.post.mockResolvedValueOnce({ data: {
+      access_token: bearer,
+      created_at: 1643398931,
+      expires_in: 2591963,
+      refresh_token: refresh,
+      scope: "public",
+      token_type: "bearer",
+    }
+  });
+    const expected = new URLSearchParams();
+    expected.append("grant_type", "refresh_token");
+    expected.append("refresh_token", oldRefresh);
+
+    const actual = await kitsu.refresh();
+
+    expect(actual).toBe(true);
+    expect(await kitsu.getAuthToken()).toBe(bearer);
+    expect(await kitsu.getRefreshToken()).toBe(refresh);
+    expect(
+      (await browser.storage.local.get({ access_token_expires_on: null }))
+        .access_token_expires_on
+    ).toBe(1645990894);
+  });
+
   it("fetch user data gets data for the user", async () => {
     axios.get.mockResolvedValueOnce({
       data: userData,
@@ -274,9 +350,9 @@ describe("Kitsu api provider", () => {
       axios.get.mockResolvedValueOnce({
         data: animeData,
       });
-  
+
       const actual = await kitsu.getAnime(animeId);
-  
+
       expect(actual).not.toBeNull();
       expect(actual).anim;
     });
@@ -286,12 +362,12 @@ describe("Kitsu api provider", () => {
         response: {
           data: null,
           status: 404,
-        }
+        },
       });
 
       const actual = await kitsu.getAnime(animeId);
 
-      expect(actual).toBeNull()
+      expect(actual).toBeNull();
     });
   });
 });
