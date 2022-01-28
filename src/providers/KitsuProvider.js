@@ -49,7 +49,10 @@ export default class KitsuProvider extends ApiProvider {
     });
     this._setProvider(PROVIDERS.KITSU);
 
-    this.getUserData().then((data) => (this.#userId = data?.id ?? null));
+    this.getUserData().then((data) => {
+      const userId = data?.id ?? null;
+      this.#userId = userId;
+    });
   }
 
   /**
@@ -155,9 +158,11 @@ export default class KitsuProvider extends ApiProvider {
     if (response.data.meta.count < 1) {
       const anime = await this.getAnime(animeId);
 
-      return anime ? new LibraryEntry({
-        _anime: anime,
-      }) : null;
+      return anime
+        ? new LibraryEntry({
+            _anime: anime,
+          })
+        : null;
     }
 
     return KitsuProvider.#mapData(
@@ -209,10 +214,8 @@ export default class KitsuProvider extends ApiProvider {
         response.data.data,
         response.data.included
       );
-    }
-
-    catch(e) {
-      if(e.response?.status === 404) {
+    } catch (e) {
+      if (e.response?.status === 404) {
         return null;
       }
       throw e;

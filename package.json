@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --host localhost --target webext-dev",
+    "start": "parcel src/manifest.json src/options/index.html",
     "build": "npm run postbuild && parcel src/manifest.json src/**/*.{js,jsx,html} --target webext-prod",
     "postbuild": "cp -r src/static dist/static",
     "test": "jest",
@@ -76,7 +76,7 @@
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/eslint-plugin": "^11.7.0",
     "@parcel/babel-preset-env": "^2.0.1",
-    "@parcel/config-webextension": "^2.0.1",
+    "@parcel/config-webextension": "^2.2.1",
     "@parcel/transformer-webmanifest": "^2.0.1",
     "@testing-library/react": "^12.1.2",
     "@types/firefox-webext-browser": "^94.0.0",
@@ -90,7 +90,8 @@
     "husky": "^7.0.4",
     "jest": "^27.4.7",
     "jest-webextension-mock": "^3.7.19",
-    "parcel": "^2.0.1",
+    "parcel": "^2.2.1",
+    "parcel-plugin-web-extension": "^1.6.1",
     "sinon-chrome": "^3.0.1",
     "webextension-polyfill": "^0.8.0"
   },
@@ -113,7 +114,10 @@
     "*.{js,css,md}": "prettier --write"
   },
   "jest": {
-    "testEnvironment": "./test_environment.js",
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ],
     "setupFiles": [
       "jest-webextension-mock"
     ]
