@@ -3,7 +3,8 @@ import axios from "../../__mocks__/axios";
 import { LIST_STATUS, PROVIDERS } from "../../enums";
 
 // mock data
-import userData from "../../__mocks__/kitsu/user.json";
+import userData from "../../__mocks__/userData.json";
+import kitsuUserData from "../../__mocks__/kitsu/user.json";
 import libraryEntry from "../../__mocks__/kitsu/libraryEntry.json";
 import animeData from "../../__mocks__/kitsu/anime.json";
 
@@ -15,10 +16,7 @@ describe("Kitsu api provider", () => {
   beforeEach(() => {
     browser.storage.local.set({
       userData: {
-        _id: userId,
-        _username: "john.doe",
-        _url: "https://kitsu.io/users/3000",
-        _avatarUrl: "about:blank",
+        ...userData,
         _provider: PROVIDERS.KITSU,
       },
     });
@@ -47,7 +45,7 @@ describe("Kitsu api provider", () => {
         token_type: "bearer",
       },
     });
-    axios.get.mockResolvedValueOnce({ data: userData });
+    axios.get.mockResolvedValueOnce({ data: kitsuUserData });
 
     const expected = new URLSearchParams();
     expected.append("grant_type", "password");
@@ -82,15 +80,16 @@ describe("Kitsu api provider", () => {
       access_token: "abc12345",
       refresh_token: oldRefresh,
     });
-    axios.post.mockResolvedValueOnce({ data: {
-      access_token: bearer,
-      created_at: 1643398931,
-      expires_in: 2591963,
-      refresh_token: refresh,
-      scope: "public",
-      token_type: "bearer",
-    }
-  });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        access_token: bearer,
+        created_at: 1643398931,
+        expires_in: 2591963,
+        refresh_token: refresh,
+        scope: "public",
+        token_type: "bearer",
+      },
+    });
     const expected = new URLSearchParams();
     expected.append("grant_type", "refresh_token");
     expected.append("refresh_token", oldRefresh);
@@ -108,7 +107,7 @@ describe("Kitsu api provider", () => {
 
   it("fetch user data gets data for the user", async () => {
     axios.get.mockResolvedValueOnce({
-      data: userData,
+      data: kitsuUserData,
     });
 
     const actual = await kitsu.fetchUserData();
@@ -369,5 +368,45 @@ describe("Kitsu api provider", () => {
 
       expect(actual).toBeNull();
     });
+  });
+
+  it("update item updates a library item", async () => {
+    axios.patch.mockResolvedValueOnce();
+    const itemId = "12345";
+    const patch = {
+      status: LIST_STATUS.CURRENT,
+      progress: 5,
+      notes: undefined,
+      startDate: new Date("Jan 20 2022"),
+      completedDate: null,
+      rating: 8.5,
+    };
+
+    expect(
+      async () => await kitsu.updateLibraryItem(itemId, patch)
+    ).not.toThrow();
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(axios.patch).toHaveBeenCalledWith(`/library-entries/${itemId}`, {
+      data: {
+        type: "libraryEntries",
+        id: `${itemId}`,
+        attributes: {
+          status: "current",
+          progress: 5,
+          startedAt: patch.startDate.toISOString(),
+          finishedAt: null,
+          ratingTwenty: 17,
+        },
+      },
+    });
+  });
+
+  it("removeLibraryItem deletes the library item from the list", async () => {
+    const itemId = "12345";
+
+    expect(async () => await kitsu.removeLibraryItem(itemId)).not.toThrow();
+
+    expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(axios.delete).toHaveBeenCalledWith(`/library-entries/${itemId}`);
   });
 });

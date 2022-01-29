@@ -180,8 +180,14 @@ export default class KitsuProvider extends ApiProvider {
       status: mapStatus(patch.status),
       progress: patch.progress,
       notes: patch.notes,
-      startedAt: patch.startDate?.toISOString() ?? undefined,
-      finishedAt: patch.completedDate?.toISOString() ?? undefined,
+      startedAt:
+        patch.startDate === null
+          ? null
+          : patch.startDate?.toISOString() ?? undefined,
+      finishedAt:
+        patch.completedDate === null
+          ? null
+          : patch.completedDate?.toISOString() ?? undefined,
       ratingTwenty: patch.rating * 2,
     });
 

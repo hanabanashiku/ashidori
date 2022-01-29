@@ -5,7 +5,14 @@
     "plugin:import/errors",
     "prettier"
   ],
-  "plugins": ["@babel", "react", "import", "react-hooks"],
+  "plugins": [
+    "@babel",
+    "react",
+    "import",
+    "react-hooks",
+    "jest",
+    "testing-library"
+  ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "sourceType": "module",
@@ -20,7 +27,8 @@
     "webextensions": true,
     "node": true,
     "es6": true,
-    "jest": true
+    "jest": true,
+    "jest/globals": true
   },
   "settings": {
     "react": {

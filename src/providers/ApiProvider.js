@@ -105,7 +105,7 @@ export default class ApiProvider {
     const data = await browser.storage.local.get({
       access_token_expires_on: 0,
     });
-    const currentTime = Math.floor(new Date().getTime() / 1000);
+    const currentTime = new Date().getTime();
 
     return currentTime > data["access_token_expires_on"] - 600;
   }

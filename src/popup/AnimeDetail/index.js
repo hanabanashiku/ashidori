@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Alert } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import ApiProvider from "../../providers/ApiProvider";
 import AnimeData from "./AnimeData";
@@ -25,7 +25,11 @@ const AnimeDetail = ({ selectedAnime, close, api }) => {
   }
 
   if (anime === "error") {
-    return "error";
+    return (
+      <Alert serverity="error">
+        An error occurred getting the details for the selected anime.
+      </Alert>
+    );
   }
 
   return (

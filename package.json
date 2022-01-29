@@ -70,6 +70,7 @@
     "@babel/eslint-plugin": "^7.16.5",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-private-methods": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@emotion/babel-plugin": "^11.7.2",
@@ -85,8 +86,10 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jest": "^26.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-testing-library": "^5.0.4",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
     "jest-webextension-mock": "^3.7.19",
@@ -114,7 +117,7 @@
     "*.{js,css,md}": "prettier --write"
   },
   "jest": {
-    "testEnvironment": "jsdom",
+    "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ],

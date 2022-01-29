@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import NodeEnvironment from "jest-environment-node";
 import chrome from "sinon-chrome";
 
