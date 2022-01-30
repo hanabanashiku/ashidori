@@ -26,7 +26,7 @@ describe("Anime detail display", () => {
   });
 
   it("shows loading spinner while loading", () => {
-    api.getSingleLibraryEntry.mockReturnValue(new Promise());
+    api.getSingleLibraryEntry.mockReturnValue(new Promise(() => {}));
 
     const { container } = render(<AnimeDetail {...props} />);
 
