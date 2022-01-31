@@ -3,7 +3,26 @@
     "lodash",
     "@emotion",
     "@babel/plugin-proposal-private-methods",
-    "@babel/plugin-proposal-class-properties"
+    "@babel/plugin-proposal-class-properties",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "enums": "./src/enums",
+          "mocks": "./src/__mocks__",
+          "providers": "./src/providers",
+          "static": "./src/static"
+        }
+      }
+    ],
+    [
+      "babel-plugin-jsx-pragmatic",
+      { "export": "jsx", "module": "@emotion/react", "import": "___EmotionJSX" }
+    ],
+    [
+      "@babel/plugin-transform-react-jsx",
+      { "pragma": "___EmotionJSX", "pragmaFrag": "React.Fragment" }
+    ]
   ],
   "env": {
     "test": {

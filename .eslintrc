@@ -9,6 +9,7 @@
     "@babel",
     "react",
     "import",
+    "module-resolver",
     "react-hooks",
     "jest",
     "testing-library"
@@ -33,6 +34,9 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "babel-module": {}
     }
   },
   "rules": {

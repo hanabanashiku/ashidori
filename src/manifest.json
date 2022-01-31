@@ -2,7 +2,7 @@
   "name": "Ashidori",
   "description": "An anime scrobbler built into your web browser.",
   "version": "0.0.1",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "icons": {
     "16": "static/icons/icon16.png",
     "48": "static/icons/icon48.png",
@@ -11,16 +11,14 @@
   "options_ui": {
     "page": "options/index.html"
   },
-  "action": {
+  "browser_action": {
     "default_popup": "popup/index.html",
     "default_title": "Ashidori"
   },
   "permissions": [
     "storage",
     "activeTab",
-    "notifications"
-  ],
-  "host_permissions": [
+    "notifications",
     "*://*.crunchyroll.com/*"
   ]
 }
