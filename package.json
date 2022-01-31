@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel src/manifest.json",
-    "build": "parcel src/manifest.json src/**/*.{js,jsx,html}",
+    "start": "parcel watch src/manifest.json src/options/**/**.html --target webext-dev",
+    "build": "parcel build src/manifest.json src/options/**/**.html --target webext-prod",
     "test": "jest",
     "cover": "jest --collectCoverage",
     "clear-build-cache": "rm -rf .cache/ dist/",
@@ -95,6 +95,7 @@
     "eslint-plugin-testing-library": "^5.0.4",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "jest-axe": "^5.0.1",
     "jest-webextension-mock": "^3.7.19",
     "parcel": "^2.2.1",
     "parcel-reporter-static-files-copy": "^1.3.4",
@@ -103,6 +104,7 @@
   },
   "targets": {
     "webext-dev": {
+      "distDir": "./dist",
       "sourceMap": {
         "inline": true,
         "inlineSources": true

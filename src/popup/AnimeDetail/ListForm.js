@@ -57,7 +57,12 @@ const ListForm = ({ entry, api, close }) => {
   }
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} padding="8px">
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      padding="8px"
+      data-testid="detail-form"
+    >
       <Stack spacing={4} direction="column">
         <Controller
           name="status"

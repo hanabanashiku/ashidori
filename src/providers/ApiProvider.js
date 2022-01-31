@@ -103,11 +103,13 @@ export default class ApiProvider {
    */
   async shouldRefresh() {
     const data = await browser.storage.local.get({
-      access_token_expires_on: 0,
+      access_token_expires_on: null,
     });
-    const currentTime = new Date().getTime();
-
-    return currentTime > data["access_token_expires_on"] - 600;
+    const expirationDate = data["access_token_expires_on"];
+    return (
+      expirationDate != null &&
+      new Date().getTime() / 1000 > data["access_token_expires_on"] - 600
+    );
   }
 
   /**

@@ -33,6 +33,7 @@ const AnimeData = ({ anime }) => {
         overflow: auto;
       `}
       elevation={3}
+      data-testid="detail-staticdata"
     >
       <Typography
         variant="h1"

@@ -42,7 +42,7 @@ describe("Generic api provider", () => {
   describe("shouldRefresh", () => {
     it("returns true if the token has expired", async () => {
       browser.storage.local.set({
-        access_token_expires_on: currentTime - 1,
+        access_token_expires_on: currentTime / 1000 - 1,
       });
 
       const actual = await kitsu.shouldRefresh();
@@ -51,7 +51,7 @@ describe("Generic api provider", () => {
 
     it("returns false if the token has not expired", async () => {
       browser.storage.local.set({
-        access_token_expires_on: currentTime + 700,
+        access_token_expires_on: currentTime / 1000 + 700,
       });
 
       const actual = await kitsu.shouldRefresh();
@@ -60,7 +60,7 @@ describe("Generic api provider", () => {
 
     it("returns true if the token will expire in 10 minutes", async () => {
       browser.storage.local.set({
-        access_token_expires_on: currentTime + 599,
+        access_token_expires_on: currentTime / 1000 + 599,
       });
 
       const actual = await kitsu.shouldRefresh();

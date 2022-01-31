@@ -10,6 +10,7 @@
         "alias": {
           "enums": "./src/enums",
           "mocks": "./src/__mocks__",
+          "models": "./src/models",
           "providers": "./src/providers",
           "static": "./src/static"
         }
