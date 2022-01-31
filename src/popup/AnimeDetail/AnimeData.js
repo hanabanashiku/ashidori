@@ -49,7 +49,7 @@ const AnimeData = ({ anime }) => {
         <Link
           href={anime.externalLink}
           target="_blank"
-          aria-label="External link"
+          aria-label="External page"
           css={css`
             display: inline-block;
             position: relative;
@@ -72,6 +72,8 @@ const AnimeData = ({ anime }) => {
             padding: 8px;
             height: 156px;
           `}
+          alt={anime.title}
+          data-testid="detail-cover"
         />
         <Description>{anime.description}</Description>
         <Box
@@ -95,8 +97,8 @@ const AnimeData = ({ anime }) => {
             </li>
           )}
           <li>
-            <strong>Aired</strong> {anime.startDate.toDateString()}
-            {anime.endDate && ` to ${anime.endDate.toDateString()}`}
+            {anime.startDate && <><strong>Aired</strong> {anime.startDate.toDateString()}
+            {anime.endDate && ` to ${anime.endDate.toDateString()}`}</>}
           </li>
           <li>
             <strong>Length</strong> {anime.episodeLength} minutes

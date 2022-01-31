@@ -40,7 +40,7 @@ exports[`Anime detail display matches snapshot 1`] = `
         ONE PIECE
          
         <a
-          aria-label="External link"
+          aria-label="External page"
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-l5tjyk-MuiTypography-root-MuiLink-root-AnimeData"
           href="https://kitsu.io/anime/12"
           target="_blank"
@@ -62,11 +62,14 @@ exports[`Anime detail display matches snapshot 1`] = `
         class="MuiBox-root css-uxi4gc-AnimeData"
       >
         <img
+          alt="ONE PIECE"
           class="css-v7ktw6-AnimeData"
+          data-testid="detail-cover"
           src="data:,"
         />
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-paragraph css-6f2xxf-MuiTypography-root-style"
+          id="detail-synopsis"
         >
           Gol D. Roger was known as the "Pirate King," the strongest and most infamous being to have sailed the Grand Line.
         </p>
@@ -142,16 +145,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-0"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://www.crunchyroll.com/one-piece"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Crunchyroll"
+              class="css-48xgr-ServiceImage"
               src="../static/images/crunchyroll_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-0"
             >
               Crunchyroll
             </p>
@@ -161,16 +167,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-1"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://www.funimation.com/shows/one-piece/#videos"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Funimation"
+              class="css-48xgr-ServiceImage"
               src="../static/images/funimation_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-1"
             >
               Funimation
             </p>
@@ -180,16 +189,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-2"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://www.hulu.com/series/one-piece-c7a08df6-d0d5-4dd3-afff-d1f90133cd4e"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Hulu"
+              class="css-48xgr-ServiceImage"
               src="../static/images/hulu_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-2"
             >
               Hulu
             </p>
@@ -199,16 +211,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-3"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://netflix.com/one-piece"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Netflix"
+              class="css-48xgr-ServiceImage"
               src="../static/images/netflix_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-3"
             >
               Netflix
             </p>
@@ -218,16 +233,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-4"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://amazon.com/one-piece"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Prime Video"
+              class="css-48xgr-ServiceImage"
               src="../static/images/amazon_prime_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-4"
             >
               Prime Video
             </p>
@@ -237,16 +255,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-5"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://hidive.com/one-piece"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on Hidive"
+              class="css-48xgr-ServiceImage"
               src="../static/images/hidive_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-5"
             >
               Hidive
             </p>
@@ -256,16 +277,19 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-6"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://tubitv.com/one-piece"
             target="_blank"
           >
             <img
-              class="css-zebilo-ProviderImage"
+              alt="Watch on TubiTV"
+              class="css-48xgr-ServiceImage"
               src="../static/images/tubitv_icon.png"
             />
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-6"
             >
               TubiTV
             </p>
@@ -275,13 +299,17 @@ exports[`Anime detail display matches snapshot 1`] = `
           class="MuiBox-root css-0"
         >
           <a
+            aria-labelledby="streamingLink-7"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
             href="https://vrv.co/series/GRMG8ZQZR/One-Piece"
             target="_blank"
           >
             <p
               class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
-            />
+              id="streamingLink-7"
+            >
+              VRV
+            </p>
           </a>
         </div>
       </div>

@@ -30,7 +30,7 @@ const Description = ({ children }) => {
 
   return (
     <>
-      <Typography paragraph css={style()}>
+      <Typography paragraph css={style()} id="detail-synopsis">
         {children}
       </Typography>
       {!allVisible && (
@@ -43,6 +43,8 @@ const Description = ({ children }) => {
             text-decoration: none;
             cursor: pointer;
           `}
+          aria-expanded={expanded}
+          aria-controls="detail-synopsis"
         >
           {expanded ? `See less` : `See more`}
         </Link>

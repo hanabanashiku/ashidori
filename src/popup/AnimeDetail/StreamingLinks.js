@@ -4,9 +4,10 @@ import { css } from "@emotion/react";
 import { Stack, Box, Link, Typography } from "@mui/material";
 import { SERVICES, SERVICE_NAMES } from "../../enums";
 
-const ProviderImage = ({ provider }) => {
+const ServiceImage = ({ service }) => {
   let img;
-  switch (provider) {
+  let alt = `Watch on ${SERVICE_NAMES[service]}`;
+  switch (service) {
     case SERVICES.AMAZON_PRIME:
       img = "../static/images/amazon_prime_icon.png";
       break;
@@ -40,11 +41,13 @@ const ProviderImage = ({ provider }) => {
         width: 32px;
         margin: 0 auto;
       `}
+      alt={alt}
     />
   );
 };
 
-const StreamingLink = ({ provider, link }) => {
+const StreamingLink = ({ service, link }) => {
+  const id = `streamingLink-${service}`;
   return (
     <Box>
       <Link
@@ -53,10 +56,11 @@ const StreamingLink = ({ provider, link }) => {
         css={css`
           text-decoration: none;
         `}
+        aria-labelledby={id}
       >
-        <ProviderImage provider={provider} />
-        <Typography textAlign="center" fontSize="14px">
-          {SERVICE_NAMES[provider]}
+        <ServiceImage service={service} />
+        <Typography textAlign="center" fontSize="14px" id={id}>
+          {SERVICE_NAMES[service]}
         </Typography>
       </Link>
     </Box>
@@ -66,10 +70,10 @@ const StreamingLink = ({ provider, link }) => {
 const StreamingLinks = ({ links }) => {
   return (
     <Stack direction="row" spacing={2} justifyContent="center">
-      {Object.keys(links).map((provider, i) => (
+      {Object.keys(links).map((service, i) => (
         <StreamingLink
-          provider={parseInt(provider)}
-          link={links[provider]}
+          service={parseInt(service)}
+          link={links[service]}
           key={i}
         />
       ))}
@@ -77,11 +81,11 @@ const StreamingLinks = ({ links }) => {
   );
 };
 
-ProviderImage.propTypes = {
-  provider: PropTypes.oneOf(Object.values(SERVICES)).isRequired,
+ServiceImage.propTypes = {
+  service: PropTypes.oneOf(Object.values(SERVICES)).isRequired,
 };
 StreamingLink.propTypes = {
-  provider: PropTypes.oneOf(Object.values(SERVICES)).isRequired,
+  service: PropTypes.oneOf(Object.values(SERVICES)).isRequired,
   link: PropTypes.string.isRequired,
 };
 StreamingLinks.propTypes = {

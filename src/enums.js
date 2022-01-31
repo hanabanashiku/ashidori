@@ -30,6 +30,7 @@ export const SERVICE_NAMES = {
   4: "Prime Video",
   5: "Hidive",
   6: "TubiTV",
+  7: "VRV",
 };
 
 export const NOTIFY_EPSIODE_ANSWERS = {

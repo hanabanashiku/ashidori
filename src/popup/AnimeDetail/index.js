@@ -26,7 +26,7 @@ const AnimeDetail = ({ selectedAnime, close, api }) => {
 
   if (anime === "error") {
     return (
-      <Alert serverity="error">
+      <Alert severity="error">
         An error occurred getting the details for the selected anime.
       </Alert>
     );
