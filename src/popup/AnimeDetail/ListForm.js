@@ -68,6 +68,7 @@ const ListForm = ({ entry, api, close }) => {
           name="status"
           control={control}
           defaultValue={entry.status}
+          rules={{valueAsNumber: true}}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormControl fullWidth>
               <InputLabel id={`${name}-label`}>Library status</InputLabel>
@@ -119,6 +120,7 @@ const ListForm = ({ entry, api, close }) => {
                 ? entry.anime.episodeCount
                 : undefined,
             pattern: /^\d*$/,
+            valueAsNumber: true,
           })}
           error={!!errors.progress}
           helperText={errors.progress?.message}
@@ -127,6 +129,7 @@ const ListForm = ({ entry, api, close }) => {
         <Controller
           name="rating"
           control={control}
+          rules={{ valueAsNumber: true }}
           render={({ field: { onChange, onBlur, value, name } }) => (
             <FormControl fullWidth>
               <InputLabel

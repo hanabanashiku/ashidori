@@ -50,7 +50,7 @@ const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} autoFocus>
+        <Button onClick={handleClose} autoFocus data-testid='delete-modal-cancel'>
           Cancel
         </Button>
         <LoadingButton
