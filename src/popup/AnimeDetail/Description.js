@@ -30,7 +30,7 @@ const Description = ({ children }) => {
 
   return (
     <>
-      <Typography paragraph css={style()} id="detail-synopsis">
+      <Typography paragraph css={style()} data-testid="detail-synopsis">
         {children}
       </Typography>
       {!allVisible && (

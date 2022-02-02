@@ -67,6 +67,7 @@ const ListForm = ({ entry, api, close }) => {
         <Controller
           name="status"
           control={control}
+          defaultValue={entry.status}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormControl fullWidth>
               <InputLabel id={`${name}-label`}>Library status</InputLabel>
@@ -128,7 +129,14 @@ const ListForm = ({ entry, api, close }) => {
           control={control}
           render={({ field: { onChange, onBlur, value, name } }) => (
             <FormControl fullWidth>
-              <InputLabel id={`${name}-label`}>Rating</InputLabel>
+              <InputLabel
+                id={`${name}-label`}
+                css={css`
+                  padding-top: 8px;
+                `}
+              >
+                ⭐ &nbsp; Rating
+              </InputLabel>
               <Slider
                 id={name}
                 name={name}
@@ -139,6 +147,7 @@ const ListForm = ({ entry, api, close }) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 valueLabelDisplay="auto"
+                aria-labelledby={`${name}-label`}
               />
             </FormControl>
           )}
@@ -217,6 +226,7 @@ const ListForm = ({ entry, api, close }) => {
           color="error"
           variant="contained"
           onClick={() => modalRef.current()}
+          aria-label="Remove from list"
         >
           <Delete />
         </IconButton>

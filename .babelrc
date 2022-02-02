@@ -12,7 +12,8 @@
           "mocks": "./src/__mocks__",
           "models": "./src/models",
           "providers": "./src/providers",
-          "static": "./src/static"
+          "static": "./src/static",
+          "utils": "./src/utils"
         }
       }
     ],

@@ -29,6 +29,9 @@ const ServiceImage = ({ service }) => {
     case SERVICES.TUBITV:
       img = "../static/images/tubitv_icon.png";
       break;
+    case SERVICES.VRV:
+      img = "../static/images/vrv_icon.png";
+      break;
     default:
       return null;
   }

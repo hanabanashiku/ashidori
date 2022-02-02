@@ -5,6 +5,7 @@ import { LIST_STATUS, ANIME_STATUS } from "enums";
 export default new LibraryEntry({
   _id: "12345",
   _status: LIST_STATUS.CURRENT,
+  _progress: 1008,
   _notes: "note",
   _startDate: new Date("Jan 30, 2022"),
   _rating: 8,

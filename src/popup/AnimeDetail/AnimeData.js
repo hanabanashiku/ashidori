@@ -96,13 +96,18 @@ const AnimeData = ({ anime }) => {
               <strong>Episodes</strong> {anime.episodeCount}
             </li>
           )}
-          <li>
-            {anime.startDate && <><strong>Aired</strong> {anime.startDate.toDateString()}
-            {anime.endDate && ` to ${anime.endDate.toDateString()}`}</>}
-          </li>
-          <li>
-            <strong>Length</strong> {anime.episodeLength} minutes
-          </li>
+          {anime.startDate && (
+            <li>
+              <strong>Aired</strong> {anime.startDate.toDateString()}
+              {anime.endDate && ` to ${anime.endDate.toDateString()}`}
+            </li>
+          )}
+          {anime.episodeLength > 0 && (
+            <li>
+              <strong>Length</strong> {anime.episodeLength} minutes
+            </li>
+          )}
+
           <Stack
             component="li"
             direction="row"
