@@ -10,7 +10,7 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import ListForm from "../ListForm";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
-import libraryEntry from "./__mocks__/libraryItem";
+import libraryEntry from "../../../__mocks__/libraryItem";
 import { LIST_STATUS } from "enums";
 
 describe("Anime list form", () => {

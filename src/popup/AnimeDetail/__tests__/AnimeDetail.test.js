@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import AnimeDetail from "..";
 import ApiProvider from "../../../__mocks__/MockApiProvider";
-import libraryItem from "./__mocks__/libraryItem";
+import libraryItem from "../../../__mocks__/libraryItem";
 
 describe("Anime detail display", () => {
   const entryId = "12345";

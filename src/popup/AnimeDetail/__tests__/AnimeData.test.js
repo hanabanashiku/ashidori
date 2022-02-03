@@ -7,7 +7,7 @@ import {
   queryByTextContent,
 } from "../../../utils/testFunctions";
 import AnimeData from "../AnimeData";
-import libraryEntry from "./__mocks__/libraryItem";
+import libraryEntry from "../../../__mocks__/libraryItem";
 import AnimeSeries from "../../../models/AnimeSeries";
 import { ANIME_STATUS } from "../../../enums";
 

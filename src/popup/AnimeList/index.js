@@ -18,6 +18,9 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
   const [itemCount, setItemCount] = useState(0);
 
   useEffect(() => {
+    if(hide) {
+      return;
+    }
     setApiState("loading");
     (async () => {
       if (!api) {
@@ -44,6 +47,7 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
     })();
   }, [
     api,
+    hide,
     page,
     pageSize,
     status,
