@@ -22,6 +22,7 @@ const Header = () => {
           margin-right: 8px;
         `}
         onClick={() => browser.runtime.openOptionsPage()}
+        aria-label="Settings"
       >
         <Settings />
       </IconButton>

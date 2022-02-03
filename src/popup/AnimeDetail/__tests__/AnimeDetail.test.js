@@ -1,5 +1,5 @@
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import AnimeDetail from "..";
@@ -78,7 +78,7 @@ describe("Anime detail display", () => {
     await waitForData(container);
     const button = getByText("Back");
     expect(button).toBeDefined();
-    userEvent.click(button);
+    act(() => userEvent.click(button));
 
     expect(close).toHaveBeenCalledTimes(1);
   });

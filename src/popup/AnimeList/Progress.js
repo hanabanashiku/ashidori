@@ -14,7 +14,7 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
       patch.status = LIST_STATUS.COMPLETED;
       patch.completedDate = new Date();
     }
-    await api.updateLibraryItem(id, { progress: value });
+    await api.updateLibraryItem(id, patch);
     if (completed) {
       refresh();
     }
@@ -38,6 +38,8 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
               align-items: center;
             `}
             onClick={onClick}
+            role="button"
+            aria-expanded="false"
           >
             <Typography component="div">
               {total ? `${value}/${total}` : `${value}`}
@@ -75,6 +77,7 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
               onChange={(e) => onChange(e.target.valueAsNumber)}
               onBlur={onBlur}
               autoFocus
+              aria-label="Current episode"
             />
             / {total}
           </Box>

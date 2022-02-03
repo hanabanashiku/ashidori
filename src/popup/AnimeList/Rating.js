@@ -66,6 +66,7 @@ const Rating = ({ value: { id, rating, api } }) => {
                 max: 10,
                 step: 0.5,
               }}
+              aria-label="Series rating"
               autoFocus
             />
           </Box>

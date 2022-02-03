@@ -19,7 +19,7 @@ export default [
         'Gol D. Roger was known as the "Pirate King," the strongest and most infamous being to have sailed the Grand Line.',
       _startDate: new Date("Oct 20 1999"),
       _status: ANIME_STATUS.AIRING,
-      _episodeCount: 1008,
+      _episodeCount: null,
       _episodeLength: 24,
       _genres: ["Adventure", "Drama", "Piracy"],
       _streamingLinks: {
@@ -41,7 +41,7 @@ export default [
       _id: "13",
       _title: "SONO BISQUE DOLL WA KOI WO SURU",
       _description:
-        'Wakana Gojo is a high school boy who wants to become a kashirashi--a master craftsman who makes traditional Japanese Hina dolls',
+        "Wakana Gojo is a high school boy who wants to become a kashirashi--a master craftsman who makes traditional Japanese Hina dolls",
       _startDate: new Date("Jan 8 2022"),
       _status: ANIME_STATUS.AIRING,
       _episodeCount: 4,
