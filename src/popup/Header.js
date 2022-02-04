@@ -3,6 +3,7 @@ import browser from "webextension-polyfill";
 import { css } from "@emotion/react";
 import { Box, IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
+import lang from "lang";
 
 const Header = () => {
   return (
@@ -22,7 +23,7 @@ const Header = () => {
           margin-right: 8px;
         `}
         onClick={() => browser.runtime.openOptionsPage()}
-        aria-label="Settings"
+        aria-label={lang.settingsButton}
       >
         <Settings />
       </IconButton>

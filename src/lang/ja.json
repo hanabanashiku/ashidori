@@ -1,0 +1,59 @@
+{
+  "logInButton": "ログイン",
+  "settingsButton": "設定",
+  "seeMore": "もっと見る",
+  "seeLess": "しめる",
+  "saveButton": "保存する",
+  "deleteButton": "削除する",
+  "cancelButton": "キャンセル",
+  "removeFromList": "リストから外す",
+
+  "title": "タイトル",
+  "progress": "進み",
+  "episodes": "話数",
+  "rating": "評価",
+  "season": "シーゾン",
+
+  "currentEpisode": "現在のエピソード",
+  "seriesRating": "シリーズ評価",
+  "status": "ステータス",
+  "aired": "放送日",
+  "length": "時間",
+  "libraryStatus": "ライブラリステータス",
+  "startedDate": "開始日",
+  "finishedDate": "完成日",
+  "notes": "ノート",
+  "deletingIndicator": "削除中",
+
+  "episode": "話",
+  "rate": "評価して",
+
+  "to": "から",
+  "minutes": "分",
+
+  "watching": "現行中",
+  "watchingLong": "現行中",
+  "completed": "完成",
+  "completedLong": "完成",
+  "planned": "予定",
+  "plannedLong": "予定",
+  "onHold": "休止",
+  "dropped": "放棄",
+
+  "airing": "放送中",
+  "announced": "発表された",
+  "finished": "完成",
+  "unreleased": "未発表",
+  "upcoming": "近刊",
+
+  "fall": "秋",
+  "winter": "冬",
+  "summer": "夏",
+  "spring": "春",
+
+  "logInToContinue": "ログインして続行",
+  "logInBody": "MAL、Kitsu、AniListなどでログインしたらアニメリストを見て、アップデートすることができるようになるます。",
+
+  "deleteModalTitle": "ライブラリエントリを解除しますか？",
+  "deleteModalBody": "続いて削除した場合は「%s」の進みデータを服せられません。"
+}

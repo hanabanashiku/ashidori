@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import util from "util";
 import {
   Dialog,
   DialogTitle,
@@ -11,6 +12,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import AnimeSeries from "../../models/AnimeSeries";
 import ApiProvider from "../../providers/ApiProvider";
+import lang from "lang";
 
 const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
   const [isOpen, setOpen] = useState(false);
@@ -42,23 +44,27 @@ const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
       aria-describedby="delete-dialog-description"
     >
       <DialogTitle id="delete-dialog-title">
-        Delete this library entry?
+        {lang.deleteModalTitle}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="delete-dialog-description">
-          Continuing will permanently delete {anime.title} from your anime list.
+          {util.format(lang.deleteModalBody, anime.title)}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} autoFocus data-testid='delete-modal-cancel'>
-          Cancel
+        <Button
+          onClick={handleClose}
+          autoFocus
+          data-testid="delete-modal-cancel"
+        >
+          {lang.cancel}
         </Button>
         <LoadingButton
           onClick={() => onDelete()}
           loading={isSaving}
-          loadingIndicator="Deleting..."
+          loadingIndicator={lang.deletingIndicator}
         >
-          Delete
+          {lang.deleteButton}
         </LoadingButton>
       </DialogActions>
     </Dialog>

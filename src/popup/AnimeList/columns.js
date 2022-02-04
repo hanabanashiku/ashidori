@@ -3,6 +3,7 @@ import Title from "./Title";
 import Progress from "./Progress";
 import Rating from "./Rating";
 import { LIST_STATUS } from "../../enums";
+import lang from "lang";
 
 export const editableColumns = ["progress", "rating"];
 
@@ -12,28 +13,28 @@ export function buildColumns(status) {
       return [
         {
           field: "title",
-          headerName: "Title",
+          headerName: lang.title,
           width: 220,
           renderCell: ({ value }) => <Title value={value} />,
           sortable: false,
         },
         {
           field: "progress",
-          headerName: "Progress",
+          headerName: lang.progress,
           width: 90,
           renderCell: ({ value }) => <Progress value={value} />,
           sortable: false,
         },
         {
           field: "rating",
-          headerName: "Rating",
+          headerName: lang.rating,
           width: 80,
           renderCell: ({ value }) => <Rating value={value} />,
           sortable: false,
         },
         {
           field: "startSeason",
-          headerName: "Season",
+          headerName: lang.season,
           width: 110,
           sortable: false,
         },
@@ -43,27 +44,27 @@ export function buildColumns(status) {
       return [
         {
           field: "title",
-          headerName: "Title",
+          headerName: lang.title,
           width: 220,
           renderCell: ({ value }) => <Title value={value} />,
           sortable: false,
         },
         {
           field: "episodeCount",
-          headerName: "Episodes",
+          headerName: lang.episodes,
           width: 90,
           sortable: false,
         },
         {
           field: "rating",
-          headerName: "Rating",
+          headerName: lang.rating,
           width: 70,
           renderCell: ({ value }) => <Rating value={value} />,
           sortable: false,
         },
         {
           field: "startSeason",
-          headerName: "Season",
+          headerName: lang.season,
           width: 110,
           sortable: false,
         },
@@ -73,21 +74,21 @@ export function buildColumns(status) {
       return [
         {
           field: "title",
-          headerName: "Title",
+          headerName: lang.title,
           width: 280,
           renderCell: ({ value }) => <Title value={value} />,
           sortable: false,
         },
         {
           field: "progress",
-          headerName: "Progress",
+          headerName: lang.progress,
           width: 90,
           renderCell: ({ value }) => <Progress value={value} />,
           sortable: false,
         },
         {
           field: "startSeason",
-          headerName: "Season",
+          headerName: lang.season,
           width: 100,
           sortable: false,
         },
@@ -97,20 +98,20 @@ export function buildColumns(status) {
       return [
         {
           field: "title",
-          headerName: "Title",
+          headerName: lang.title,
           width: 280,
           renderCell: ({ value }) => <Title value={value} />,
           sortable: false,
         },
         {
           field: "episodeCount",
-          headerName: "Episodes",
+          headerName: lang.episodes,
           width: 90,
           sortable: false,
         },
         {
           field: "startSeason",
-          headerName: "Season",
+          headerName: lang.season,
           width: 100,
           sortable: false,
         },

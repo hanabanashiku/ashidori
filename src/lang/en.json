@@ -1,0 +1,59 @@
+{
+  "logInButton": "Log In",
+  "settingsButton": "Settings",
+  "seeMore": "See more",
+  "seeLess": "See less",
+  "saveButton": "Save",
+  "deleteButton": "Delete",
+  "cancelButton": "Cancel",
+  "removeFromList": "Remove from list",
+
+  "title": "Title",
+  "progress": "Progress",
+  "episodes": "Episodes",
+  "rating": "Rating",
+  "season": "Season",
+
+  "currentEpisode": "Current episode",
+  "seriesRating": "Series rating",
+  "status": "Status",
+  "aired": "Aired",
+  "length": "Length",
+  "libraryStatus": "Library status",
+  "startedDate": "Started",
+  "finishedDate": "Finished",
+  "notes": "Notes",
+  "deletingIndicator": "Deleting...",
+
+  "episode": "Episode",
+  "rate": "Rate",
+
+  "to": "to",
+  "minutes": " minutes",
+
+  "watching": "Watching",
+  "watchingLong": "Currently watching",
+  "completed": "Completed",
+  "completedLong": "Finished watching",
+  "planned": "Planned",
+  "plannedLong": "Want to watch",
+  "onHold": "On hold",
+  "dropped": "Dropped",
+
+  "airing": "Airing",
+  "announced": "Announced",
+  "finished": "Finished",
+  "unreleased": "Unreleased",
+  "upcoming": "Upcoming",
+
+  "fall": "Fall",
+  "winter": "Winter",
+  "summer": "Summer",
+  "spring": "Spring",
+
+  "logInToContinue": "Log in to continue",
+  "logInBody": "Logging into your MAL, Kitsu, or AniList account will allow you to view and update your anime list.",
+
+  "deleteModalTitle": "Delete this library entry?",
+  "deleteModalBody": "Continuing will permanently delete %s from your anime list."
+}

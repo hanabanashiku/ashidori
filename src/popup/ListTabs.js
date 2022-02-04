@@ -4,6 +4,7 @@ import { Tabs, Tab } from "@mui/material";
 import ApiProvider from "../providers/ApiProvider";
 import AnimeList from "./AnimeList";
 import { LIST_STATUS } from "../enums";
+import lang from "lang";
 
 export const TABS = {
   ...LIST_STATUS,
@@ -26,11 +27,11 @@ const ListTabs = ({ showAnime, api }) => {
         variant="scrollable"
         scrollButtons
       >
-        <Tab value={TABS.CURRENT} label="Watching" />
-        <Tab value={TABS.COMPLETED} label="Completed" />
-        <Tab value={TABS.PLANNED} label="Planned" />
-        <Tab value={TABS.ON_HOLD} label="On hold" />
-        <Tab value={TABS.DROPPED} label="Dropped" />
+        <Tab value={TABS.CURRENT} label={lang.watching} />
+        <Tab value={TABS.COMPLETED} label={lang.completed} />
+        <Tab value={TABS.PLANNED} label={lang.planned} />
+        <Tab value={TABS.ON_HOLD} label={lang.onHold} />
+        <Tab value={TABS.DROPPED} label={lang.dropped} />
       </Tabs>
       <AnimeList {...tabProps(TABS.CURRENT)} status={LIST_STATUS.CURRENT} />
       <AnimeList {...tabProps(TABS.COMPLETED)} status={LIST_STATUS.COMPLETED} />

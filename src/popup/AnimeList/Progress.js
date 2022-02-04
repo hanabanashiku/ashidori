@@ -5,6 +5,7 @@ import { Box, LinearProgress, Typography, Input } from "@mui/material";
 import ApiProvider from "../../providers/ApiProvider";
 import { LIST_STATUS } from "../../enums";
 import EditableCell from "./EditableCell";
+import lang from "lang";
 
 const Progress = ({ value: { id, current, total, api, refresh } }) => {
   async function updateValue(value) {
@@ -70,14 +71,14 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
               type="number"
               value={value}
               inputProps={{ min: 0, max: total }}
-              placeholder="Episode"
+              placeholder={lang.episode}
               disabled={disabled}
               error={error}
               onKeyDown={onKeyDown}
               onChange={(e) => onChange(e.target.valueAsNumber)}
               onBlur={onBlur}
               autoFocus
-              aria-label="Current episode"
+              aria-label={lang.currentEpisode}
             />
             / {total}
           </Box>

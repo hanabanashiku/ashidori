@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Link } from "@mui/material";
 import { css } from "@emotion/react";
+import lang from "lang";
 
 const Description = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
@@ -46,7 +47,7 @@ const Description = ({ children }) => {
           aria-expanded={expanded}
           aria-controls="detail-synopsis"
         >
-          {expanded ? `See less` : `See more`}
+          {expanded ? lang.seeLess : lang.seeMore}
         </Link>
       )}
     </>

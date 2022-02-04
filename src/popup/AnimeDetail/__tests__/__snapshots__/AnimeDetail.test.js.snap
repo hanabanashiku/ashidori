@@ -348,7 +348,7 @@ exports[`Anime detail display matches snapshot 1`] = `
               role="button"
               tabindex="0"
             >
-              Currently watching
+              Watching
             </div>
             <input
               aria-hidden="true"
@@ -436,7 +436,8 @@ exports[`Anime detail display matches snapshot 1`] = `
             data-shrink="false"
             id="rating-label"
           >
-            ⭐   Rating
+            ⭐   
+            Rating
           </label>
           <span
             class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-187mznn-MuiSlider-root"

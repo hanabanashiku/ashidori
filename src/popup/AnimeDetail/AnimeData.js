@@ -7,20 +7,21 @@ import Description from "./Description";
 import StreamingLinks from "./StreamingLinks";
 import { ANIME_STATUS } from "../../enums";
 import AnimeSeries from "../../models/AnimeSeries";
+import lang from "lang";
 
 const AnimeData = ({ anime }) => {
   function animeStatusString(status) {
     switch (status) {
       case ANIME_STATUS.AIRING:
-        return "Airing";
+        return lang.airing;
       case ANIME_STATUS.ANNOUNCED:
-        return "Announced";
+        return lang.announced;
       case ANIME_STATUS.FINISHED:
-        return "Finished";
+        return lang.finished;
       case ANIME_STATUS.UNRELEASED:
-        return "Unreleased";
+        return lang.unreleased;
       case ANIME_STATUS.UPCOMING:
-        return "Upcoming";
+        return lang.upcoming;
     }
   }
 
@@ -89,22 +90,23 @@ const AnimeData = ({ anime }) => {
           `}
         >
           <li>
-            <strong>Status</strong> {animeStatusString(anime.status)}
+            <strong>{lang.status}</strong> {animeStatusString(anime.status)}
           </li>
           {anime.episodeCount > 0 && (
             <li>
-              <strong>Episodes</strong> {anime.episodeCount}
+              <strong>{lang.episodes}</strong> {anime.episodeCount}
             </li>
           )}
           {anime.startDate && (
             <li>
-              <strong>Aired</strong> {anime.startDate.toDateString()}
-              {anime.endDate && ` to ${anime.endDate.toDateString()}`}
+              <strong>{lang.aired}</strong> {anime.startDate.toDateString()}
+              {anime.endDate && ` ${lang.to} ${anime.endDate.toDateString()}`}
             </li>
           )}
           {anime.episodeLength > 0 && (
             <li>
-              <strong>Length</strong> {anime.episodeLength} minutes
+              <strong>{lang.length}</strong> {anime.episodeLength}
+              {lang.minutes}
             </li>
           )}
 

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { PROVIDERS, ANIME_STATUS, SERVICES } from "../enums";
+import lang from "lang";
 
 /**
  * An anime series.
@@ -78,13 +79,13 @@ export default class AnimeSeries {
     let season;
 
     if (month >= 1 && month < 4) {
-      season = "Winter";
+      season = lang.winter;
     } else if (month >= 4 && month < 7) {
-      season = "Spring";
+      season = lang.spring;
     } else if (month >= 7 && month < 10) {
-      season = "Summer";
+      season = lang.summer;
     } else {
-      season = "Fall";
+      season = lang.fall;
     }
 
     return `${season} ${year}`;

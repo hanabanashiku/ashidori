@@ -23,6 +23,7 @@ import DeleteModal from "./DeleteModal";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
 import { LIST_STATUS } from "../../enums";
+import lang from "lang";
 
 const ListForm = ({ entry, api, close }) => {
   const {
@@ -68,10 +69,10 @@ const ListForm = ({ entry, api, close }) => {
           name="status"
           control={control}
           defaultValue={entry.status}
-          rules={{valueAsNumber: true}}
+          rules={{ valueAsNumber: true }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormControl fullWidth>
-              <InputLabel id={`${name}-label`}>Library status</InputLabel>
+              <InputLabel id={`${name}-label`}>{lang.libraryStatus}</InputLabel>
               <Select
                 labelId={`${name}-label`}
                 id={name}
@@ -80,15 +81,15 @@ const ListForm = ({ entry, api, close }) => {
                 onBlur={onBlur}
                 inputRef={ref}
               >
-                <MenuItem value={LIST_STATUS.CURRENT}>
-                  Currently watching
+                <MenuItem value={LIST_STATUS.CURRENT}>{lang.watching}</MenuItem>
+                <MenuItem value={LIST_STATUS.PLANNED}>
+                  {lang.plannedLong}
                 </MenuItem>
-                <MenuItem value={LIST_STATUS.PLANNED}>Want to watch</MenuItem>
                 <MenuItem value={LIST_STATUS.COMPLETED}>
-                  Finished watching
+                  {lang.completedLong}
                 </MenuItem>
-                <MenuItem value={LIST_STATUS.ON_HOLD}>On hold</MenuItem>
-                <MenuItem value={LIST_STATUS.DROPPED}>Dropped</MenuItem>
+                <MenuItem value={LIST_STATUS.ON_HOLD}>{lang.onHold}</MenuItem>
+                <MenuItem value={LIST_STATUS.DROPPED}>{lang.dropped}</MenuItem>
               </Select>
             </FormControl>
           )}
@@ -97,7 +98,7 @@ const ListForm = ({ entry, api, close }) => {
         <TextField
           id="progress"
           type="number"
-          label="Progress"
+          label={lang.progress}
           variant="outlined"
           InputProps={{
             min: 0,
@@ -138,7 +139,7 @@ const ListForm = ({ entry, api, close }) => {
                   padding-top: 8px;
                 `}
               >
-                ⭐ &nbsp; Rating
+                ⭐ &nbsp; {lang.rating}
               </InputLabel>
               <Slider
                 id={name}
@@ -162,7 +163,7 @@ const ListForm = ({ entry, api, close }) => {
           render={({ field: { onChange, onBlur, value } }) => (
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                label="Started"
+                label={lang.startedDate}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -178,7 +179,7 @@ const ListForm = ({ entry, api, close }) => {
           render={({ field: { onChange, onBlur, value } }) => (
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                label="Finished"
+                label={lang.finishedDate}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -190,7 +191,7 @@ const ListForm = ({ entry, api, close }) => {
 
         <TextField
           id="notes"
-          label="Notes"
+          label={lang.notes}
           maxRows={4}
           multiline
           fullWidth
@@ -215,7 +216,7 @@ const ListForm = ({ entry, api, close }) => {
           startIcon={<SaveIcon />}
           loading={isSubmitting}
         >
-          Save
+          {lang.saveButton}
         </LoadingButton>
         <Button
           type="cancel"
@@ -229,7 +230,7 @@ const ListForm = ({ entry, api, close }) => {
           color="error"
           variant="contained"
           onClick={() => modalRef.current()}
-          aria-label="Remove from list"
+          aria-label={lang.removeFromList}
         >
           <Delete />
         </IconButton>

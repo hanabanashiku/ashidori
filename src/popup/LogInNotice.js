@@ -2,6 +2,7 @@ import React from "react";
 import browser from "webextension-polyfill";
 import { css } from "@emotion/react";
 import { Box, Typography, Button } from "@mui/material";
+import lang from "lang";
 
 const LogInNotice = () => {
   return (
@@ -15,11 +16,10 @@ const LogInNotice = () => {
       `}
     >
       <Typography textAlign="center" variant="h1" fontSize="18px">
-        Log in to continue
+        {lang.logInToContinue}
       </Typography>
       <Typography textAlign="center" fontSize="12px">
-        Logging into your MAL, Kitsu, or AniList account will allow you to view
-        and update your anime list.
+        {lang.logInBody}
       </Typography>
       <Button
         onClick={() => browser.runtime.openOptionsPage()}
@@ -28,7 +28,7 @@ const LogInNotice = () => {
           bottom: 16px;
         `}
       >
-        Log In
+        {lang.logInButton}
       </Button>
     </Box>
   );

@@ -5,6 +5,7 @@ import { Box, Typography, Input } from "@mui/material";
 import { Star, StarBorder } from "@mui/icons-material";
 import ApiProvider from "../../providers/ApiProvider";
 import EditableCell from "./EditableCell";
+import lang from "lang";
 
 const Rating = ({ value: { id, rating, api } }) => {
   async function updateValue(value) {
@@ -34,7 +35,7 @@ const Rating = ({ value: { id, rating, api } }) => {
               <>
                 <StarBorder />
                 <Typography variant="caption" component="div" marginTop={1}>
-                  Rate
+                  {lang.rate}
                 </Typography>
               </>
             )}
@@ -55,7 +56,7 @@ const Rating = ({ value: { id, rating, api } }) => {
             <Input
               type="number"
               value={value}
-              placeholder="Rating"
+              placeholder={lang.rating}
               disabled={disabled}
               error={error}
               onKeyDown={onKeyDown}
@@ -66,7 +67,7 @@ const Rating = ({ value: { id, rating, api } }) => {
                 max: 10,
                 step: 0.5,
               }}
-              aria-label="Series rating"
+              aria-label={lang.seriesRating}
               autoFocus
             />
           </Box>
