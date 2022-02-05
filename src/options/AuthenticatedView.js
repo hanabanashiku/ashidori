@@ -2,9 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
 import { Card, Typography, Avatar, Link, Button } from "@mui/material";
+import util from "util";
 import UserData from "../models/UserData";
 import { getApiInstance } from "../providers/builder";
 import { PROVIDER_NAMES } from "../enums";
+import lang from "lang";
 
 const AuthenticatedView = ({ userData }) => {
   const signOut = async () => {
@@ -27,7 +29,7 @@ const AuthenticatedView = ({ userData }) => {
         fontWeight="semi-bold"
         marginBottom="8px"
       >
-        You are logged in using {PROVIDER_NAMES[userData.apiSource]}.
+        {util.format(lang.loggedInUsing, PROVIDER_NAMES[userData.apiSource])}
       </Typography>
       <Avatar
         variant="rounded"
@@ -60,10 +62,10 @@ const AuthenticatedView = ({ userData }) => {
           font-weight: 16px;
         `}
       >
-        View profile
+        {lang.viewProfile}
       </Link>
       <Button size="small" variant="outlined" onClick={() => signOut()}>
-        Sign Out
+        {lang.signOut}
       </Button>
     </Card>
   );

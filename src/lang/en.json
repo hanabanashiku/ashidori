@@ -1,6 +1,7 @@
 {
   "logInButton": "Log In",
   "signInButton": "Sign In",
+  "signOut": "Sign Out",
   "settingsButton": "Settings",
   "seeMore": "See more",
   "seeLess": "See less",
@@ -13,6 +14,7 @@
   "never": "Never",
   "always": "Always",
   "latestEpisodeRadio": "When on latest episode",
+  "viewProfile": "View profile",
 
   "email": "Email address",
   "password": "Password",
@@ -64,6 +66,7 @@
 
   "logInToContinue": "Log in to continue",
   "logInBody": "Logging into your MAL, Kitsu, or AniList account will allow you to view and update your anime list.",
+  "loggedInUsing": "You are logged in using %s",
 
   "deleteModalTitle": "Delete this library entry?",
   "deleteModalBody": "Continuing will permanently delete %s from your anime list.",

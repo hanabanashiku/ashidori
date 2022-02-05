@@ -1,6 +1,7 @@
 {
   "logInButton": "ログイン",
   "signInButton": "ログイン",
+  "signOut": "ログアウト",
   "settingsButton": "設定",
   "seeMore": "もっと見る",
   "seeLess": "しめる",
@@ -13,6 +14,7 @@
   "never": "しない",
   "always": "いつも",
   "latestEpisodeRadio": "最新エピソードの後",
+  "viewProfile": "プロファイルを見る",
 
   "email": "メールアドレス",
   "password": "パスワード",
@@ -64,6 +66,7 @@
 
   "logInToContinue": "ログインして続行",
   "logInBody": "MAL、Kitsu、AniListなどでログインしたらアニメリストを見て、アップデートすることができるようになるます。",
+  "loggedInUsing": "%sでログインされています。",
 
   "deleteModalTitle": "ライブラリエントリを解除しますか？",
   "deleteModalBody": "続いて削除した場合は「%s」の進みデータを服せられません。",
