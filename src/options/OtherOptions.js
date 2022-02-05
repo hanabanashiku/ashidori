@@ -1,7 +1,18 @@
 import React, { useReducer, useEffect } from "react";
 import { css } from "@emotion/react";
+import {
+  Box,
+  Typography,
+  FormGroup,
+  InputLabel,
+  Input,
+  Checkbox,
+  RadioGroup,
+  Radio,
+} from "@mui/material";
 import Settings from "./Settings";
 import { NOTIFY_EPSIODE_ANSWERS } from "../enums";
+import lang from "lang";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -85,7 +96,7 @@ const OtherOptions = () => {
   }
 
   return (
-    <div
+    <Box
       css={css`
         position: absolute;
         top: 32px;
@@ -101,51 +112,50 @@ const OtherOptions = () => {
         }
       `}
     >
-      <h2>Options</h2>
-      <label>
+      <Typography variant="h2" fontSize="18px">
+        {lang.options}
+      </Typography>
+      <InputLabel>
         Wait&nbsp;
-        <input
+        <Input
           type="number"
+          variant="outlined"
           min="0"
           max="25"
           value={state.updateDelay}
           onChange={(e) => setUpdateMinutes(e.target.value)}
-          css={css`
-            width: 3rem;
-          `}
+          sx={{ width: "3.5rem" }}
         />
         minutes before updating episode count.
-      </label>
-      <label
+      </InputLabel>
+      <InputLabel
         css={css`
           margin-left: 16px;
         `}
       >
-        <input
-          type="checkbox"
+        <Checkbox
           name="should-show-update-poppup"
           checked={state.shouldShowUpdatePopup}
           onChange={(e) => toggleUpdatePopup(e.target.checked)}
+          size="small"
         />
-        Ask before updating episode count
-      </label>
-      <div>
-        <p>
-          Send a notification when a new epsiode is released for a current
-          series
-        </p>
-        <div
+        {lang.askBeforeUpdating}
+      </InputLabel>
+      <FormGroup>
+        <Typography>{lang.newEpisodeNotification}</Typography>
+        <RadioGroup
           css={css`
             padding-left: 16px;
             & > label {
               padding-right: 12px;
             }
           `}
+          row
         >
-          <label>
-            <input
+          <InputLabel>
+            <Radio
               name="notify-for-new-epsiode"
-              type="radio"
+              size="small"
               checked={
                 state.shouldNotifiyForNewEpisodes ===
                 NOTIFY_EPSIODE_ANSWERS.NEVER
@@ -154,12 +164,12 @@ const OtherOptions = () => {
                 setEpisodeNotifications(NOTIFY_EPSIODE_ANSWERS.NEVER)
               }
             />
-            Never
-          </label>
-          <label>
-            <input
+            {lang.never}
+          </InputLabel>
+          <InputLabel>
+            <Radio
               name="notify-for-new-epsiode"
-              type="radio"
+              size="small"
               checked={
                 state.shouldNotifiyForNewEpisodes ===
                 NOTIFY_EPSIODE_ANSWERS.ALWAYS
@@ -168,12 +178,11 @@ const OtherOptions = () => {
                 setEpisodeNotifications(NOTIFY_EPSIODE_ANSWERS.ALWAYS)
               }
             />
-            Always
-          </label>
-          <label>
-            <input
+            {lang.always}
+          </InputLabel>
+          <InputLabel>
+            <Radio
               name="notify-for-new-epsiode"
-              type="radio"
               checked={
                 state.shouldNotifiyForNewEpisodes ===
                 NOTIFY_EPSIODE_ANSWERS.LATEST
@@ -182,11 +191,11 @@ const OtherOptions = () => {
                 setEpisodeNotifications(NOTIFY_EPSIODE_ANSWERS.LATEST)
               }
             />
-            When on latest epsiode
-          </label>
-        </div>
-      </div>
-    </div>
+            {lang.latestEpisodeRadio}
+          </InputLabel>
+        </RadioGroup>
+      </FormGroup>
+    </Box>
   );
 };
 

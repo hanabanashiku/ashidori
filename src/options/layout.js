@@ -1,46 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
+import { Container, Box, Paper } from "@mui/material";
 
 const Layout = ({ children }) => (
-  <div
+  <Container
     css={css`
       width: 80rem;
       margin: 32px auto;
-      padding: 16px 32px;
-      border: 2px solid black;
-      box-shadow: 3px 2px 5px grey;
     `}
   >
-    <div>
-      <div
-        css={css`
-          height: 128px;
-          width: 512px;
-          margin: auto;
-          background: url("/static/images/logo.png") no-repeat;
-        `}
-      />
-      <p
-        css={css`
-          font-size: 14px;
-          font-style: italic;
-          text-align: center;
-          line-height: 0.2;
-        `}
-      >
-        An anime tracker in your browser.
-      </p>
-      <hr />
-    </div>
-    <div
-      css={css`
-        padding: 8px 16px;
-      `}
-    >
-      {children}
-    </div>
-  </div>
+    <Paper elevation={6}>
+      <Box>
+        <Box
+          css={css`
+            height: 128px;
+            width: 512px;
+            margin: auto;
+            background: url("/static/images/logo.png") no-repeat;
+          `}
+        />
+        <p
+          css={css`
+            font-size: 14px;
+            font-style: italic;
+            text-align: center;
+            line-height: 0.2;
+          `}
+        >
+          An anime tracker in your browser.
+        </p>
+        <hr />
+      </Box>
+      <Box padding="16px 36px">{children}</Box>
+    </Paper>
+  </Container>
 );
 Layout.propTypes = {
   children: PropTypes.any,

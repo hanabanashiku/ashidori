@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
+import {
+  Box,
+  Typography,
+  InputLabel,
+  Switch,
+  Button,
+  ButtonGroup,
+} from "@mui/material";
 import _ from "lodash";
 import Settings from "./Settings";
 import { SERVICES } from "../enums";
+import lang from "lang";
 
 const Services = () => {
   const [selection, setSelection] = useState(null);
@@ -27,7 +36,7 @@ const Services = () => {
   };
 
   const ServiceCheckbox = ({ name, image, value }) => (
-    <label
+    <InputLabel
       css={css`
         display: block;
         width: 15rem;
@@ -35,12 +44,13 @@ const Services = () => {
         padding-bottom: 4px;
       `}
     >
-      <input
-        type="checkbox"
-        name={`service-${name}`}
+      <Switch
         value={value}
         checked={selection.includes(value)}
         onChange={(e) => onChange(value, e.target.checked)}
+        inputProps={{
+          name: `service-${name}`,
+        }}
         css={css`
           position: relative;
           vertical-align: middle;
@@ -49,7 +59,7 @@ const Services = () => {
         `}
       />
       <img src={image} alt={name} title={name} height="48px" />
-    </label>
+    </InputLabel>
   );
   ServiceCheckbox.propTypes = {
     name: PropTypes.string.isRequired,
@@ -62,19 +72,21 @@ const Services = () => {
   }
 
   return (
-    <div
+    <Box
       css={css`
         position: relative;
         width: 30rem;
       `}
     >
-      <h2>Enable integrations on</h2>
-      <div
+      <Typography vaariant="h2" fontSize="18px">
+        {lang.enableIntegrations}
+      </Typography>
+      <Box
         css={css`
           column-count: 2;
         `}
       >
-        <div>
+        <Box>
           <ServiceCheckbox
             name="Crunchyroll"
             image="../static/images/crunchyroll.png"
@@ -105,23 +117,21 @@ const Services = () => {
             image="../static/images/hidive.png"
             value={SERVICES.HIDIVE}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
 
-      <div
+      <ButtonGroup
+        size="small"
         css={css`
           position: absolute;
           right: 4rem;
           top: 0;
-          & > button:not(:last-child) {
-            margin-right: 8px;
-          }
         `}
       >
-        <button onClick={() => setAll(true)}>Enable all</button>
-        <button onClick={() => setAll(false)}>Disable all</button>
-      </div>
-    </div>
+        <Button onClick={() => setAll(true)}>{lang.enableAll}</Button>
+        <Button onClick={() => setAll(false)}>{lang.disableAll}</Button>
+      </ButtonGroup>
+    </Box>
   );
 };
 

@@ -1,9 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
+import { Box, Button, Typography } from "@mui/material";
+import lang from "lang";
 
 const ProviderButton = ({ name, logo, onClick }) => (
-  <div
+  <Box
     css={css`
       padding: 0px 24px;
       & > img,
@@ -20,8 +22,10 @@ const ProviderButton = ({ name, logo, onClick }) => (
         max-width: 12rem;
       `}
     />
-    <button onClick={onClick}>Sign In</button>
-  </div>
+    <Button variant="outlined" size="small" onClick={onClick}>
+      {lang.signInButton}
+    </Button>
+  </Box>
 );
 
 ProviderButton.propTypes = {
@@ -32,9 +36,11 @@ ProviderButton.propTypes = {
 
 const SignInButtons = () => {
   return (
-    <div>
-      <h2>Choose your anime list provider below.</h2>
-      <div
+    <Box>
+      <Typography variant="h2" fontSize="18px">
+        {lang.chooseProvider}
+      </Typography>
+      <Box
         css={css`
           display: flex;
           justify-content: center;
@@ -60,8 +66,8 @@ const SignInButtons = () => {
           logo="../../static/images/anilist.png"
           onClick={() => {}}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

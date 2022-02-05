@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
+import { Card, Typography, Avatar, Link, Button } from "@mui/material";
 import UserData from "../models/UserData";
 import { getApiInstance } from "../providers/builder";
 import { PROVIDER_NAMES } from "../enums";
@@ -13,15 +14,25 @@ const AuthenticatedView = ({ userData }) => {
   };
 
   return (
-    <div
+    <Card
       css={css`
         width: 30rem;
         margin: 0 auto;
+        padding: 8px 16px 16px 32px;
       `}
     >
-      <h2>You are logged in using {PROVIDER_NAMES[userData.apiSource]}.</h2>
-      <img
+      <Typography
+        variant="h2"
+        fontSize="16px"
+        fontWeight="semi-bold"
+        marginBottom="8px"
+      >
+        You are logged in using {PROVIDER_NAMES[userData.apiSource]}.
+      </Typography>
+      <Avatar
+        variant="rounded"
         src={userData.avatarUrl}
+        alt={userData.username}
         css={css`
           float: left;
           padding-right: 16px;
@@ -29,7 +40,7 @@ const AuthenticatedView = ({ userData }) => {
           width: 64px;
         `}
       />
-      <p
+      <Typography
         css={css`
           font-weight: bold;
           font-size: 18px;
@@ -37,26 +48,24 @@ const AuthenticatedView = ({ userData }) => {
         `}
       >
         {userData.username}
-      </p>
-      <a
+      </Typography>
+      <Link
         target="_blank"
         rel="noreferrer"
         href={userData.url}
+        underline="hover"
         css={css`
           display: block;
           padding-bottom: 4px;
           font-weight: 16px;
-          text-decoration: none;
-          color: blue;
-          &:hover {
-            text-decoration: underline;
-          }
         `}
       >
         View profile
-      </a>
-      <button onClick={() => signOut()}>Sign Out</button>
-    </div>
+      </Link>
+      <Button size="small" variant="outlined" onClick={() => signOut()}>
+        Sign Out
+      </Button>
+    </Card>
   );
 };
 AuthenticatedView.propTypes = {

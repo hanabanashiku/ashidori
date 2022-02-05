@@ -1,5 +1,6 @@
 {
   "logInButton": "Log In",
+  "signInButton": "Sign In",
   "settingsButton": "Settings",
   "seeMore": "See more",
   "seeLess": "See less",
@@ -7,12 +8,22 @@
   "deleteButton": "Delete",
   "cancelButton": "Cancel",
   "removeFromList": "Remove from list",
+  "enableAll": "Enable all",
+  "disableAll": "Disable all",
+  "never": "Never",
+  "always": "Always",
+  "latestEpisodeRadio": "When on latest episode",
+
+  "email": "Email address",
+  "password": "Password",
 
   "title": "Title",
   "progress": "Progress",
   "episodes": "Episodes",
   "rating": "Rating",
   "season": "Season",
+
+  "options": "Options",
 
   "currentEpisode": "Current episode",
   "seriesRating": "Series rating",
@@ -55,5 +66,15 @@
   "logInBody": "Logging into your MAL, Kitsu, or AniList account will allow you to view and update your anime list.",
 
   "deleteModalTitle": "Delete this library entry?",
-  "deleteModalBody": "Continuing will permanently delete %s from your anime list."
+  "deleteModalBody": "Continuing will permanently delete %s from your anime list.",
+
+  "chooseProvider": "Choose your anime list provider below.",
+  "enableIntegrations": "Enable integrations on",
+  "waitMinutes": "Wait %s minutes before updating episode count.",
+  "askBeforeUpdating": "Ask before updating episode count",
+  "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
+
+  "kitsuLogIn": "Sign in to Kitsu",
+  "logInAfter": "After, you will be returned to Ashidori. Your password will not be saved.",
+  "invalidCredentials": "Invalid username or password."
 }

@@ -1,5 +1,6 @@
 {
   "logInButton": "ログイン",
+  "signInButton": "ログイン",
   "settingsButton": "設定",
   "seeMore": "もっと見る",
   "seeLess": "しめる",
@@ -7,12 +8,22 @@
   "deleteButton": "削除する",
   "cancelButton": "キャンセル",
   "removeFromList": "リストから外す",
+  "enableAll": "全て可能",
+  "disableAll": "全て無効",
+  "never": "しない",
+  "always": "いつも",
+  "latestEpisodeRadio": "最新エピソードの後",
+
+  "email": "メールアドレス",
+  "password": "パスワード",
 
   "title": "タイトル",
   "progress": "進み",
   "episodes": "話数",
   "rating": "評価",
   "season": "シーゾン",
+
+  "options": "オプション",
 
   "currentEpisode": "現在のエピソード",
   "seriesRating": "シリーズ評価",
@@ -55,5 +66,14 @@
   "logInBody": "MAL、Kitsu、AniListなどでログインしたらアニメリストを見て、アップデートすることができるようになるます。",
 
   "deleteModalTitle": "ライブラリエントリを解除しますか？",
-  "deleteModalBody": "続いて削除した場合は「%s」の進みデータを服せられません。"
+  "deleteModalBody": "続いて削除した場合は「%s」の進みデータを服せられません。",
+
+  "chooseProvider": "この下、アニメリストのプロバイダーを選んでください。",
+  "enableIntegrations": "ストリーミング・インテグレーションを効果にする",
+  "askBeforeUpdating": "進みを自動的にアップデートする前の確認",
+  "newEpisodeNotification": "新しいエピソードが放送するたび、お知らせを送る",
+
+  "kitsuLogIn": "KITSUへログイン",
+  "logInAfter": "その後、足取りに戻ります。 パスワードはご保存されてございません。",
+  "invalidCredentials": "ユーザーネームやパスワードは無効です。"
 }

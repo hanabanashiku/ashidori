@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { css } from "@emotion/react";
+import {
+  Paper,
+  Box,
+  Stack,
+  Typography,
+  TextField,
+  ButtonGroup,
+  Button,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { createApiInstance, getApiInstance } from "../../../providers/builder";
 import { PROVIDERS } from "../../../enums";
+import lang from "lang";
 
 const KitsuLogin = () => {
   const { register, handleSubmit } = useForm();
@@ -25,21 +35,22 @@ const KitsuLogin = () => {
       window.location.href = "/options/index.html";
     } catch (e) {
       setFormEnabled(true);
-      alert("Invalid username or password.");
+      alert(lang.invalidCredentials);
     }
   };
 
   return (
-    <div
+    <Paper
+      elevation={6}
       css={css`
         width: 80rem;
         margin: 32px auto;
         padding: 16px 32px;
-        border: 2px solid black;
-        box-shadow: 3px 2px 5px grey;
       `}
     >
-      <div
+      <Box
+        aria-label="Kitsu"
+        role="img"
         css={css`
           height: 135px;
           width: 454px;
@@ -48,90 +59,63 @@ const KitsuLogin = () => {
           background-size: cover;
         `}
       />
-      <div
+      <Box
         css={css`
           text-align: center;
-          line-height: 0.7;
         `}
       >
-        <h1>Sign In to Kitsu</h1>
-        <h2>
-          After, you will be returned to Ashidori. Your password will not be
-          saved.
-        </h2>
-      </div>
+        <Typography variant="h1" fontSize="20px">
+          {lang.kitsuLogIn}
+        </Typography>
+        <Typography variant="v2" fontSize="18px">
+          {lang.logInAfter}
+        </Typography>
+      </Box>
 
-      <form
+      <Stack
+        component="form"
         onSubmit={handleSubmit(onSubmit)}
         disabled={!formEnabled}
+        spacing={4}
         css={css`
           width: 30rem;
           margin: 0 auto;
-          padding-top: 16px;
-          font-size: 18px;
-          & > div {
-            padding-bottom: 16px;
-          }
-          & label {
-            display: block;
-            padding-bottom: 4px;
-          }
-
-          & input {
-            width: 100%;
-            padding: 8px;
-            font-size: 16px;
-            border-radius: 6px;
-          }
+          padding-top: 32px;
         `}
       >
-        <div>
-          <label htmlFor="username">Email Address</label>
-          <input
-            type="email"
-            name="username"
-            placeholder="Email"
-            autoComplete="off"
-            {...register("username", { required: true })}
-          />
-        </div>
+        <TextField
+          label={lang.email}
+          type="email"
+          autoComplete="off"
+          fullWidth
+          {...register("username", { required: true })}
+        />
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            {...register("password", { required: true })}
-          />
-        </div>
+        <TextField
+          label={lang.password}
+          type="password"
+          fullWidth
+          {...register("password", { required: true })}
+        />
 
-        <div
+        <ButtonGroup
           css={css`
-            width: max-content;
             margin: 0 auto;
-            padding-top: 16px;
-            & > button {
-              font-size: 14px;
-              height: 32px;
-            }
-            & > button:first-of-type {
-              margin-right: 16px;
-            }
+            justify-content: center;
           `}
         >
-          <button type="submit" disabled={!formEnabled}>
-            Log In
-          </button>
-          <button
+          <Button type="submit" disabled={!formEnabled}>
+            {lang.logInButton}
+          </Button>
+          <Button
             type="button"
             onClick={() => (window.location.href = "/options/index.html")}
           >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+            {lang.cancelButton}
+          </Button>
+        </ButtonGroup>
+      </Stack>
+    </Paper>
   );
 };
 
