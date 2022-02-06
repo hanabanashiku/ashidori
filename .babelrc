@@ -13,7 +13,8 @@
           "models": "./src/models",
           "providers": "./src/providers",
           "static": "./src/static",
-          "utils": "./src/utils"
+          "utils": "./src/utils",
+          "lang": "./src/lang"
         }
       }
     ],
