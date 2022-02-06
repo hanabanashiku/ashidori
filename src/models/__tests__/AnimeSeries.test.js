@@ -1,8 +1,9 @@
-import { ANIME_STATUS, PROVIDERS } from "../../enums";
+import { ANIME_STATUS, PROVIDERS, SERVICES } from "../../enums";
 import AnimeSeries from "../AnimeSeries";
 
 // mock data
 import kitsu_anime from "../../__mocks__/kitsu/anime.json";
+import crunchyroll_series from "../../__mocks__/crunchyroll/series.json";
 
 describe("Anime series model", () => {
   it("loads default values from constructor", () => {
@@ -16,8 +17,7 @@ describe("Anime series model", () => {
     expect(actual.startDate).toBeNull();
     expect(actual.endDate).toBeNull();
     expect(actual.startSeason).toBe("");
-    expect(actual.status).toBe(ANIME_STATUS.ANNOUNCED),
-      expect(actual.episodeCount).toBe(0);
+    expect(actual.status).toBeNull(), expect(actual.episodeCount).toBe(0);
     expect(actual.episodeLength).toBe(0);
     expect(actual.seasonCount).toBe(0);
     expect(actual.genres).toStrictEqual([]);
@@ -66,6 +66,38 @@ describe("Anime series model", () => {
       5: "https://hidive.com/one-piece",
       6: "https://tubitv.com/one-piece",
       7: "https://vrv.co/series/GRMG8ZQZR/One-Piece",
+    });
+  });
+
+  it("loads data from Crunchyroll", () => {
+    const actual = new AnimeSeries({
+      ...crunchyroll_series,
+      service: SERVICES.CRUNCHYROLL,
+    });
+
+    expect(actual.id).toBe("G6NQ5DWZ6");
+    expect(actual.title).toBe("My Hero Academia");
+    expect(actual.englishTitle).toBe(actual.title);
+    expect(actual.description).toBe(crunchyroll_series.description);
+    expect(actual.coverImageUrl).toBe(
+      crunchyroll_series.images.poster_tall[0][0].source
+    );
+    expect(actual.startDate).toBeNull();
+    expect(actual.endDate).toBeNull();
+    expect(actual.status).toBeNull();
+    expect(actual.episodeCount).toBe(116);
+    expect(actual.genres).toStrictEqual([
+      "my hero academia",
+      "boku no hero academia",
+      "action",
+      "fantasy",
+      "shonen",
+    ]);
+    expect(actual.externalLink).toBe(
+      "https://beta-api.crunchyroll.com/cms/v2/US/M3/crunchyroll/series/G6NQ5DWZ6"
+    );
+    expect(actual.streamingLinks).toStrictEqual({
+      0: "https://beta.crunchyroll.com/series/G6NQ5DWZ6",
     });
   });
 

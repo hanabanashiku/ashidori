@@ -7,6 +7,12 @@ import lang from "lang";
  */
 export default class AnimeSeries {
   constructor(data = {}) {
+    switch (data.service) {
+      case SERVICES.CRUNCHYROLL:
+        this.#mapFromCrunchyroll(data);
+        return;
+    }
+
     switch (data.provider) {
       case PROVIDERS.KITSU:
         this.#mapFromKitsu(data);
@@ -185,6 +191,27 @@ export default class AnimeSeries {
     );
   }
 
+  #mapFromCrunchyroll(data) {
+    _.defaultsDeep(
+      this,
+      {
+        _id: data.id,
+        _title: data.title,
+        _englishTitle: data.title,
+        _description: data.description,
+        _coverImage: data.images.poster_tall?.[0]?.[0]?.source,
+        _status: data.is_simulcast ? ANIME_STATUS.AIRING : null,
+        _episodeCount: data.episode_count,
+        _genres: data.keywords,
+        _streamingLinks: {
+          [SERVICES.CRUNCHYROLL]: `https://beta.crunchyroll.com/series/${data.id}`,
+        },
+        _link: `https://beta-api.crunchyroll.com${data.__href__}`,
+      },
+      DEFAULT_VALUES
+    );
+  }
+
   /**
    * @param {[string]} links An array of urls
    * @returns {object} A mapping of PROVIDERs to urls.
@@ -220,7 +247,7 @@ const DEFAULT_VALUES = {
   _coverImage: "data:,",
   _startDate: null,
   _endDate: null,
-  _status: ANIME_STATUS.ANNOUNCED,
+  _status: null,
   _episodeCount: 0,
   _episodeLength: 0,
   _seasonCount: 0,

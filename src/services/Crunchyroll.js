@@ -2,6 +2,7 @@ import axios from "axios";
 import AnimeEpisode from "../models/AnimeEpisode";
 import { ANIME_STATUS, SERVICES } from "../enums";
 import AnimeSeries from "../models/AnimeSeries";
+import AnimeSeason from "../models/AnimeSeason";
 
 const AUTH_URL = "https://beta-api.crunchyroll.com/auth/v1/token";
 const BASE_URL = "https://beta-api.crunchyroll.com";
@@ -51,15 +52,20 @@ export default class CrunchyrollService {
   async getEpisodeData(episodeId) {
     const episode = await this.#getObject(episodeId);
     const seriesId = CrunchyrollService.#parseLink(
-      episode.__links__["episode/series"].href,
+      episode.__links__["episode/series"]?.href,
       "series"
+    );
+    const seasonId = CrunchyrollService.#parseLink(
+      episode.__links["episode/season"]
     );
 
     const series = this.getSeriesData(seriesId);
+    const season = this.getSeasonData(seasonId);
 
     return new AnimeEpisode({
       ...episode,
       series: await series,
+      season: await season,
       service: SERVICES.CRUNCHYROLL,
     });
   }
@@ -70,18 +76,41 @@ export default class CrunchyrollService {
    * @returns {Promise<AnimeSeries>} The anime series data.
    */
   async getSeriesData(seriesId) {
+    if (!seriesId) {
+      return null;
+    }
+
     const series = await this.#getObject(seriesId);
-    const { series_metadata: metadata } = series;
+
+    if (!series.__class__ !== "series") {
+      return null;
+    }
 
     return new AnimeSeries({
-      _id: series.id,
-      _title: series.title,
-      _description: series.description,
-      _episodeCount: metadata.episode_count,
-      _seasonCount: metadata.season_count,
-      _status: metadata.is_simulcast
-        ? ANIME_STATUS.AIRING
-        : ANIME_STATUS.FINISHED,
+      ...series,
+      service: SERVICES.CRUNCHYROLL,
+    });
+  }
+
+  /**
+   * Gets season data for a season given a season id.
+   * @param {string} seasonId The id of the series.
+   * @returns {Promise<AnimeSeason>} The anime season data.
+   */
+  async getSeasonData(seasonId) {
+    if (!seasonId) {
+      return null;
+    }
+
+    const season = await this.#getObject(seasonId);
+
+    if (!season.__class__ !== "season") {
+      return null;
+    }
+
+    return new AnimeSeason({
+      ...season,
+      service: SERVICES.CRUNCHYROLL,
     });
   }
 
@@ -102,6 +131,10 @@ export default class CrunchyrollService {
   }
 
   static #parseLink(link, type) {
+    if (!link) {
+      return null;
+    }
+
     const regex = new RegExp(`${type}/(.+?)$`);
     return regex.exec(link)[1];
   }

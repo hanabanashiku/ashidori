@@ -70,26 +70,24 @@ export default class AnimeEpisode {
    * @returns {Date} The date and time the episode aired.
    */
   get airDate() {
-    return new Date(this._airDate);
+    return this._airDate;
   }
 
   #populateFromCrunchyroll(data) {
-    const { episode_metadata: episode, series_metadata: series } = data;
+    const episode = data.items[0];
+    const { episode_metadata } = episode;
+
     _.defaultsDeep(
       this,
       {
-        _id: data.id,
-        _title: data.title,
-        _description: data.description,
-        _number: episode.episode_number,
-        _duration: episode.duration_ms,
-        _airDate: episode.episode_air_date,
-        _season: new AnimeSeason({
-          _id: episode.season_id,
-          _number: episode.season_number,
-          _name: episode.season_title,
-        }),
-        _series: series,
+        _id: episode.id,
+        _title: episode.title,
+        _description: episode.description,
+        _number: episode_metadata.episode_number,
+        _duration: episode_metadata.duration_ms,
+        _airDate: new Date(episode_metadata.episode_air_date),
+        _season: data.season,
+        _series: data.series,
       },
       DEFAULT_VALUES
     );
@@ -104,5 +102,5 @@ const DEFAULT_VALUES = {
   _duration: 0,
   _season: new AnimeSeason(),
   _series: new AnimeSeries(),
-  _airDate: "",
+  _airDate: null,
 };
