@@ -1,5 +1,4 @@
 import browser from "webextension-polyfill";
-import $ from "jquery";
 import Settings from "../../options/Settings";
 import { SERVICES } from "../../enums";
 import CrunchyrollService from "../../services/Crunchyroll";
@@ -9,6 +8,7 @@ import MESSAGE_TYPES from "../../messageTypes";
 let episodeData;
 let loadTime;
 let userData;
+let listEntry;
 
 Settings.getEnabledServices().then((enabledServices) => {
   if (!enabledServices.includes(SERVICES.CRUNCHYROLL)) {
@@ -16,32 +16,44 @@ Settings.getEnabledServices().then((enabledServices) => {
   }
 
   init();
+
+  // unload if the user clicks a link in the CrunchyRoll SPA
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.type !== MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
+      return false;
+    }
+
+    onUnload();
+    return true;
+  });
 });
 
 function init() {
   loadTime = new Date();
+  let api;
 
-  getEpisodeData().then((data) => {
-    episodeData = data;
-  });
-
-  getApiInstance().then((instance) => {
-    instance.getUserData().then((data) => {
+  getApiInstance()
+    .then((value) => {
+      api = value;
+      return getEpisodeData();
+    })
+    .then((data) => {
+      episodeData = data;
+      return api.getUserData();
+    })
+    .then((data) => {
       userData = data;
+      return api.resolveLibraryEntryFromAnimeEpisode(episodeData);
+    })
+    .then((data) => {
+      listEntry = data;
+      console.log(data);
+      alert(data?.anime?.title);
     });
-  });
-
-  browser.runtime.onMessage.addListener((message) => {
-    if (message.type === MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
-      onUnload();
-      return true;
-    }
-    return false;
-  });
 }
 
 function onUnload() {
-  if (!episodeData || !userData) {
+  if (!listEntry || !userData) {
     console.error("Missing episode or user data");
     return;
   }
@@ -53,6 +65,7 @@ function onUnload() {
       episodeData,
       loadTime,
       userData,
+      listEntry,
     },
   });
 }

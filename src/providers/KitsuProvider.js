@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { omitBy } from "lodash/fp";
+import levenshtein from "js-levenshtein";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
@@ -9,7 +10,6 @@ import Library from "../models/Library";
 import AnimeSeries from "../models/AnimeSeries";
 import PagedData from "../models/PagedData";
 import { LIST_STATUS } from "../enums";
-
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
 
@@ -172,6 +172,56 @@ export default class KitsuProvider extends ApiProvider {
     );
   }
 
+  /**
+   * Resolves a library entry from an anime episode object retrieved from a streaming service.
+   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
+   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
+   */
+  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
+    if (!animeEpisode) {
+      return null;
+    }
+
+    const searchBySeason = await this.findAnime(animeEpisode.season.name, 0, 5);
+    let result = searchBySeason.data.find((anime) =>
+      KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
+    );
+
+    if (!result) {
+      const searchBySeries = await this.findAnime(
+        animeEpisode.series.title,
+        0,
+        5
+      );
+      result = searchBySeries.data.find((anime) =>
+        KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
+      );
+    }
+
+    if (!result) {
+      return null;
+    }
+
+    return this.getSingleLibraryEntryByAnime(result.id);
+  }
+
+  /**
+
+   * @param {AnimeSeries} series 
+   * @param {AnimeEpisode} episode 
+   */
+  static verifyResolvedAnime(series, episode) {
+    // TODO anime 86
+    const STRING_THRESHOLD = 5;
+    return (
+      levenshtein(episode.series.title, series.englishTitle) <
+        STRING_THRESHOLD ||
+      levenshtein(episode.series.title, series.title) < STRING_THRESHOLD ||
+      levenshtein(episode.season.name, series.title) < STRING_THRESHOLD ||
+      levenshtein(episode.season.name, series.englishTitle) < STRING_THRESHOLD
+    );
+  }
+
   async updateLibraryItem(itemId, patch) {
     const attributes = _.flow(
       omitBy(_.isUndefined),
@@ -226,6 +276,26 @@ export default class KitsuProvider extends ApiProvider {
       }
       throw e;
     }
+  }
+
+  async findAnime(text, page = 0, limit = 30) {
+    const response = await this.#client.get(
+      `anime?filter[text]=${encodeURIComponent(
+        text
+      )}?include=streamingLinks,genres&page[limit]=${limit}&page[offset]=${
+        limit * page
+      }`
+    );
+    const shows = response.data.data.map((item) =>
+      KitsuProvider.#mapData(AnimeSeries, item, response.data.included)
+    );
+
+    return new PagedData({
+      data: shows,
+      page,
+      limit,
+      total: response.data.meta.count,
+    });
   }
 
   async fetchUserData() {

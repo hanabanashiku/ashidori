@@ -64,6 +64,26 @@ export default class ApiProvider {
   }
 
   /**
+   * Find an anime from the api.
+   * @param {string} text The search text.
+   * @param {number} page The page to load.
+   * @param {number} limit The number per page.
+   * @returns {[AnimeSeries]} The list of found series.
+   */
+  async findAnime() {
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
+   * Resolves a library entry from an anime episode object retrieved from a streaming service.
+   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
+   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
+   */
+  async resolveLibraryEntryFromAnimeEpisode() {
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
    * Gets data about the currently authenticated user.
    * @returns {Promise<UserData>} A promise containing data about the current user.
    */

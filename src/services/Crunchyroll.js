@@ -55,17 +55,19 @@ export default class CrunchyrollService {
       episode.__links__["episode/series"]?.href,
       "series"
     );
+
     const seasonId = CrunchyrollService.#parseLink(
-      episode.__links["episode/season"]
+      episode.__links__["episode/season"]?.href,
+      "seasons"
     );
 
-    const series = this.getSeriesData(seriesId);
-    const season = this.getSeasonData(seasonId);
+    const series = await this.getSeriesData(seriesId);
+    const season = await this.getSeasonData(seasonId);
 
     return new AnimeEpisode({
       ...episode,
-      series: await series,
-      season: await season,
+      series,
+      season,
       service: SERVICES.CRUNCHYROLL,
     });
   }
@@ -81,10 +83,6 @@ export default class CrunchyrollService {
     }
 
     const series = await this.#getObject(seriesId);
-
-    if (!series.__class__ !== "series") {
-      return null;
-    }
 
     return new AnimeSeries({
       ...series,
@@ -103,10 +101,6 @@ export default class CrunchyrollService {
     }
 
     const season = await this.#getObject(seasonId);
-
-    if (!season.__class__ !== "season") {
-      return null;
-    }
 
     return new AnimeSeason({
       ...season,
