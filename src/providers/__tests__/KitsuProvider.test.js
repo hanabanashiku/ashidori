@@ -7,6 +7,7 @@ import userData from "../../__mocks__/userData.json";
 import kitsuUserData from "../../__mocks__/kitsu/user.json";
 import libraryEntry from "../../__mocks__/kitsu/libraryEntry.json";
 import animeData from "../../__mocks__/kitsu/anime.json";
+import resolveLibraryEntryMocks from "./__mocks__/resolveLibraryEntryFromAnimeEpisode/kitsu";
 
 describe("Kitsu api provider", () => {
   const userId = "30000";
@@ -408,5 +409,95 @@ describe("Kitsu api provider", () => {
 
     expect(axios.delete).toHaveBeenCalledTimes(1);
     expect(axios.delete).toHaveBeenCalledWith(`/library-entries/${itemId}`);
+  });
+
+  describe("resolveLibraryEntryFromAnimeEpisode", () => {
+    const cases = Object.keys(resolveLibraryEntryMocks.Scenarios).map((key) => {
+      const idx = resolveLibraryEntryMocks.Scenarios[key];
+
+      return [
+        key,
+        resolveLibraryEntryMocks.ScrapedEpisodeData[idx],
+        resolveLibraryEntryMocks.SeasonResults[idx],
+        resolveLibraryEntryMocks.SeriesResults[idx],
+        resolveLibraryEntryMocks.ListResults[idx],
+        resolveLibraryEntryMocks.Expected[idx],
+      ];
+    });
+
+    function buildFindAnimeUrl(text) {
+      return `anime?filter[text]=${encodeURIComponent(
+        text
+      )}?include=streamingLinks,genres&page[limit]=5&page[offset]=0`;
+    }
+
+    it("returns nulls if the episode didn't resolve", async () => {
+      const actual = await kitsu.resolveLibraryEntryFromAnimeEpisode(null);
+
+      expect(actual).toBeNull();
+    });
+
+    test.each(cases)(
+      "%p",
+      async (
+        scenario,
+        episode,
+        seasonResult,
+        seriesResult,
+        listResult,
+        expected
+      ) => {
+        let impl = axios.get
+          .mockRejectedValue({
+            response: {
+              status: 404,
+            },
+          })
+          .mockResolvedValueOnce({
+            data: seasonResult,
+          });
+
+        if (expected.calledTimes === 3) {
+          impl = impl.mockResolvedValueOnce({
+            data: seriesResult,
+          });
+        }
+
+        impl.mockImplementationOnce((url) => {
+          if (url.includes(`filter[animeId]=${expected.animeId}`)) {
+            return Promise.resolve({
+              data: listResult,
+            });
+          }
+
+          return Promise.reject({
+            response: {
+              status: 404,
+              data: "Wrong anime id",
+            },
+          });
+        });
+
+        const actual = await kitsu.resolveLibraryEntryFromAnimeEpisode(episode);
+
+        expect(actual).not.toBeNull();
+        expect(axios.get).toHaveBeenCalledTimes(expected.calledTimes);
+        expect(axios.get).toHaveBeenNthCalledWith(
+          1,
+          buildFindAnimeUrl(episode.season.name)
+        );
+
+        if (expected.calledTimes === 4) {
+          expect(axios.get).toHaveBeenNthCalledWith(
+            2,
+            buildFindAnimeUrl(episode.series.name)
+          );
+        }
+
+        expect(axios.get).toHaveBeenLastCalledWith(
+          `library-entries?filter[kind]=anime&filter[userId]=${userId}&filter[animeId]=${expected.animeId}&include=anime,anime.streamingLinks,anime.genres`
+        );
+      }
+    );
   });
 });

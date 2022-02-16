@@ -1,6 +1,6 @@
 import axios from "axios";
 import AnimeEpisode from "../models/AnimeEpisode";
-import { ANIME_STATUS, SERVICES } from "../enums";
+import { SERVICES } from "../enums";
 import AnimeSeries from "../models/AnimeSeries";
 import AnimeSeason from "../models/AnimeSeason";
 

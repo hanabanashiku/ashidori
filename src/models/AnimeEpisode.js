@@ -94,7 +94,7 @@ export default class AnimeEpisode {
 }
 
 const DEFAULT_VALUES = {
-  _id: "0",
+  _id: "",
   _title: "",
   _description: "",
   _number: 0,
