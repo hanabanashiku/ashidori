@@ -474,6 +474,7 @@ describe("Kitsu api provider", () => {
             response: {
               status: 404,
               data: "Wrong anime id",
+              resource: url,
             },
           });
         });
