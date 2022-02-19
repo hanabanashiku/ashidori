@@ -4,9 +4,10 @@ import MESSAGE_TYPES from "../messageTypes";
 // used to inject scripts on pages reached using history.pushState()
 function injectScript(details) {
   // Crunchyroll video
-  if (/^https?:\/\/beta.crunchyroll.com\/watch\//.test(details.url)) {
+  if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
     browser.tabs.executeScript(details.tabId, {
       file: "/content_scripts/crunchyroll/video.js",
+      frameId: details.frameId,
     });
     return;
   }

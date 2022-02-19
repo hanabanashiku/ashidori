@@ -47,8 +47,6 @@ function init() {
     })
     .then((data) => {
       listEntry = data;
-      console.log(data);
-      alert(data?.anime?.title);
     });
 }
 

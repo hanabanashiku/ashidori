@@ -27,6 +27,7 @@
   },
   "permissions": [
     "storage",
+    "tabs",
     "activeTab",
     "webNavigation",
     "notifications",

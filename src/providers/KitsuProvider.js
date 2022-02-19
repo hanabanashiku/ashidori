@@ -182,7 +182,11 @@ export default class KitsuProvider extends ApiProvider {
       return null;
     }
 
-    const searchBySeason = await this.findAnime(animeEpisode.season.name, 0, 5);
+    const searchBySeason = await this.findAnime(
+      `${animeEpisode.season.name}`,
+      0,
+      5
+    );
     let result = searchBySeason.data.find((anime) =>
       KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
     );
@@ -211,8 +215,7 @@ export default class KitsuProvider extends ApiProvider {
    * @param {AnimeEpisode} episode 
    */
   static verifyResolvedAnime(series, episode) {
-    // TODO anime 86
-    const STRING_THRESHOLD = 5;
+    const STRING_THRESHOLD = 7;
     return (
       levenshtein(episode.series.title, series.englishTitle) <
         STRING_THRESHOLD ||

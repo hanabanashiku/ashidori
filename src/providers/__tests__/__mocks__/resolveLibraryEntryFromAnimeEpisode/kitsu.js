@@ -7,7 +7,7 @@ const Scenarios = {
   "resolves for long running series compiled to one season": 0,
   "resolves for one season anime": 1,
   "resolves for season of a not-airing multi-season anime": 2,
-  "resolves for season of an anime where the season names don't match extracted data": 3,
+  // "resolves for season of an anime where the season names don't match extracted data": 3,
 };
 
 const ScrapedEpisodeData = {
