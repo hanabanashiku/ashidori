@@ -21,6 +21,13 @@ const reducer = (state, action) => {
         ...action.payload,
       };
 
+    case "enableUpdating":
+      Settings.setListUpdatingEnabled(action.payload);
+      return {
+        ...state,
+        listUpdatingEnabled: action.payload,
+      };
+
     case "setUpdatePopup":
       Settings.setShouldShowUpdatePopup(action.payload);
       return {
@@ -54,6 +61,7 @@ const OtherOptions = () => {
   useEffect(() => {
     (async () => {
       // Get settings
+      const listUpdatingEnabled = Settings.listUpdatingEnabled();
       const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
       const shouldNotifiyForNewEpisodes =
         Settings.shouldNotifiyForNewEpisodes();
@@ -62,6 +70,7 @@ const OtherOptions = () => {
       dispatch({
         type: "init",
         payload: {
+          listUpdatingEnabled: await listUpdatingEnabled,
           shouldShowUpdatePopup: await shouldShowUpdatePopup,
           shouldNotifiyForNewEpisodes: await shouldNotifiyForNewEpisodes,
           updateDelay: await updateDelay,
@@ -69,6 +78,13 @@ const OtherOptions = () => {
       });
     })();
   }, [dispatch]);
+
+  const toggleListUpdatEnabled = (value) => {
+    dispatch({
+      type: "enableUpdating",
+      payload: value,
+    });
+  };
 
   const toggleUpdatePopup = (value) => {
     dispatch({
@@ -116,6 +132,19 @@ const OtherOptions = () => {
         {lang.options}
       </Typography>
       <InputLabel>
+        <Checkbox
+          name="enable-list-update"
+          checked={state.listUpdatingEnabled}
+          onChange={(e) => toggleListUpdatEnabled(e.target.checked)}
+          size="small"
+        />
+        Automatically update my anime list after watching an episode.
+      </InputLabel>
+      <InputLabel
+        css={css`
+          margin-left: 24px;
+        `}
+      >
         Wait&nbsp;
         <Input
           type="number"
@@ -125,6 +154,7 @@ const OtherOptions = () => {
           value={state.updateDelay}
           onChange={(e) => setUpdateMinutes(e.target.value)}
           sx={{ width: "3.5rem" }}
+          disabled={!state.listUpdatingEnabled}
         />
         minutes before updating episode count.
       </InputLabel>
@@ -138,6 +168,7 @@ const OtherOptions = () => {
           checked={state.shouldShowUpdatePopup}
           onChange={(e) => toggleUpdatePopup(e.target.checked)}
           size="small"
+          disabled={!state.listUpdatingEnabled}
         />
         {lang.askBeforeUpdating}
       </InputLabel>

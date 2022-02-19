@@ -38,6 +38,23 @@ export default class Settings {
   }
 
   /**
+   * Gets whether or not the user's list should be updated after watching an episode.
+   * @returns {Promise<boolean>} Whether to enable the automatically update list feature.
+   */
+  static async listUpdatingEnabled() {
+    return this.#getStoredKey("update_enabled", true);
+  }
+
+  /**
+   * Set whether to enable the automatic list update feature.
+   * @param {bool} value
+   * @returns {Promise<void>}
+   */
+  static async setListUpdatingEnabled(value) {
+    return this.#setStoredKey("update_enabled", Boolean(value));
+  }
+
+  /**
    * Get the number of minutes that should be waited before triggering an update.
    * @returns {Promise<number>} A number of minutes.
    */

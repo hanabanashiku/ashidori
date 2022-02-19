@@ -15,6 +15,9 @@
   "always": "いつも",
   "latestEpisodeRadio": "最新エピソードの後",
   "viewProfile": "プロファイルを見る",
+  "update": "アップデートしよう",
+  "noThanks": "結構です",
+  "seeAnime": "アニメで見る",
 
   "email": "メールアドレス",
   "password": "パスワード",
@@ -78,5 +81,12 @@
 
   "kitsuLogIn": "KITSUへログイン",
   "logInAfter": "その後、足取りに戻ります。 パスワードはご保存されてございません。",
-  "invalidCredentials": "ユーザーネームやパスワードは無効です。"
+  "invalidCredentials": "ユーザーネームやパスワードは無効です。",
+
+  "episodeCompletedPopupTitle": "一話終了後",
+  "episodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストでアップデートしましょう。",
+  "episodeUpdatedPopupTitle": "リストがアップデートされました。",
+  "episodeUpdatedPopupBody": "%sは%s話にアップデートされました。",
+  "episodeUpdatedCompleteBody": "%sは完成として記録されました。",
+  "episodeUpdatedCurrentBody": "%sは現行中として記録されました。"
 }

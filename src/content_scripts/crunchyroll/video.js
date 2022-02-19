@@ -52,7 +52,6 @@ function init() {
 
 function onUnload() {
   if (!listEntry || !userData) {
-    console.error("Missing episode or user data");
     return;
   }
 
