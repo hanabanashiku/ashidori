@@ -47,7 +47,7 @@ export default class AnimeSeason {
         _id: data.id,
         _name: data.title,
         _number: data.season_number,
-        _isAiring: !data.is_complete,
+        _isAiring: data.is_simulcast,
       },
       DEFAULT_VALUES
     );

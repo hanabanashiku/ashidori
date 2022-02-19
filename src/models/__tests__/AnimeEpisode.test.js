@@ -12,7 +12,7 @@ describe("Anime episode model", () => {
   it("has default values by default", () => {
     const actual = new AnimeEpisode();
 
-    expect(actual.id).toBe("0");
+    expect(actual.id).toBe("");
     expect(actual.title).toBe("");
     expect(actual.description).toBe("");
     expect(actual.number).toBe(0);

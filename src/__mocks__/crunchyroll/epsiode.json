@@ -1,123 +1,109 @@
 {
-  "__class__": "collection",
-  "__href__": "/cms/v2/US/M3/crunchyroll/objects/GX9UQK711",
-  "__resource_key__": "cms:/objects/GX9UQK711",
-  "__links__": {},
-  "__actions__": {},
-  "total": 1,
-  "items": [
-    {
-      "__class__": "panel",
-      "__href__": "",
-      "__links__": {
-        "episode/season": {
-          "href": "/cms/v2/US/M3/crunchyroll/seasons/GR2PCVZEW"
-        },
-        "episode/series": {
-          "href": "/cms/v2/US/M3/crunchyroll/series/G6NQ5DWZ6"
-        },
-        "resource": {
-          "href": "/cms/v2/US/M3/crunchyroll/episodes/GX9UQK711"
-        },
-        "resource/channel": {
-          "href": "/cms/v2/US/M3/crunchyroll/channels/crunchyroll"
-        },
-        "streams": {
-          "href": "/cms/v2/US/M3/crunchyroll/videos/GJKF2JXNN/streams"
-        }
-      },
-      "__actions__": {},
-      "id": "GX9UQK711",
-      "external_id": "EPI.814572",
-      "channel_id": "crunchyroll",
-      "title": "The High, Deep Blue Sky",
-      "description": "Both sides prepare for the confrontation between the heroes and the Paranormal Liberation Front as Class 1-A finishes their first year of high school.",
-      "promo_title": "",
-      "promo_description": "",
-      "type": "episode",
-      "slug": "",
-      "slug_title": "the-high-deep-blue-sky",
-      "images": {
-        "thumbnail": [
-          [
-            {
-              "width": 320,
-              "height": 180,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 600,
-              "height": 338,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 640,
-              "height": 360,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 800,
-              "height": 450,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 1200,
-              "height": 675,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 1440,
-              "height": 810,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 1600,
-              "height": 900,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            },
-            {
-              "width": 1920,
-              "height": 1080,
-              "type": "thumbnail",
-              "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
-            }
-          ]
-        ]
-      },
-      "episode_metadata": {
-        "series_id": "G6NQ5DWZ6",
-        "series_title": "My Hero Academia",
-        "series_slug_title": "my-hero-academia",
-        "season_id": "GR2PCVZEW",
-        "season_title": "My Hero Academia Season 5",
-        "season_slug_title": "my-hero-academia-season-5",
-        "season_number": 5,
-        "episode_number": 113,
-        "episode": "113",
-        "sequence_number": 113,
-        "duration_ms": 1396424,
-        "episode_air_date": "2021-09-25T17:30:00+09:00",
-        "is_premium_only": false,
-        "is_mature": false,
-        "mature_blocked": false,
-        "is_subbed": true,
-        "is_dubbed": false,
-        "is_clip": false,
-        "available_offline": true,
-        "tenant_categories": ["Action", "Fantasy", "Shonen"],
-        "maturity_ratings": ["TV-14"],
-        "subtitle_locales": ["en-US", "es-419", "es-ES"],
-        "availability_notes": ""
-      },
-      "playback": "https://pl.crunchyroll.com/asset/392c404e58b752d636b717b0db96e225/v/8ec5d680502efd677d878a5c85a81f05/languages/en-US,es-419,es-ES,es-LA?*&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cCo6Ly9wbC5jcnVuY2h5cm9sbC5jb20vYXNzZXQvMzkyYzQwNGU1OGI3NTJkNjM2YjcxN2IwZGI5NmUyMjUvdi84ZWM1ZDY4MDUwMmVmZDY3N2Q4NzhhNWM4NWE4MWYwNS8~KiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTY0NDM0NjUxNn19fV19&Signature=jPSkwBjeScbaeziHyGDF5D0JHG7wMbcvGyZK8EJfHlX6XwnRmGp3qUcPNBhYZHyeLcE-NG~aiAr86HdQLpY0mVNuYax8wb0~9ic88LIPQhggN06JwPSQRLw4V9EcWzZDsbMbvThSKVXu8rRn2CYkB9Xn1o3t4u0A2sk0qFpfWuh5xphkxuhOekyBFVTRA7mjnAjb2GLTkKSDVAn1DfDNRu2r2GZdvWZMixDnpChPnKc4S0Ky1-x2QbNo0P-Eq0QCriTQCIE9MKHSo7jtu9InNFZnD0EWyH0F5B5oxIHESz4l-2wnQaPT74J5TygKtvVflD7e72mxvbbBgxBmKWmzNA__&Key-Pair-Id=APKAJMWSQ5S7ZB3MF5VA",
-      "linked_resource_key": "cms:/episodes/GX9UQK711"
+  "__class__": "episode",
+  "__href__": "/cms/v2/US/M3/crunchyroll/episodes/GX9UQK711",
+  "__resource_key__": "cms:/episodes/GX9UQK711",
+  "__links__": {
+    "episode/channel": {
+      "href": "/cms/v2/US/M3/crunchyroll/channels/crunchyroll"
+    },
+    "episode/season": {
+      "href": "/cms/v2/US/M3/crunchyroll/seasons/GR2PCVZEW"
+    },
+    "episode/series": {
+      "href": "/cms/v2/US/M3/crunchyroll/series/G6NQ5DWZ6"
+    },
+    "streams": {
+      "href": "/cms/v2/US/M3/crunchyroll/videos/GJKF2JXNN/streams"
     }
-  ]
+  },
+  "__actions__": {},
+  "id": "GX9UQK711",
+  "channel_id": "crunchyroll",
+  "series_id": "G6NQ5DWZ6",
+  "series_title": "My Hero Academia",
+  "series_slug_title": "my-hero-academia",
+  "season_id": "GR2PCVZEW",
+  "season_title": "My Hero Academia Season 5",
+  "season_slug_title": "my-hero-academia-season-5",
+  "season_number": 5,
+  "episode": "113",
+  "episode_number": 113,
+  "sequence_number": 113,
+  "production_episode_id": "",
+  "title": "The High, Deep Blue Sky",
+  "slug_title": "the-high-deep-blue-sky",
+  "description": "Both sides prepare for the confrontation between the heroes and the Paranormal Liberation Front as Class 1-A finishes their first year of high school.",
+  "hd_flag": true,
+  "is_mature": false,
+  "mature_blocked": false,
+  "episode_air_date": "2021-09-25T17:30:00+09:00",
+  "is_subbed": true,
+  "is_dubbed": false,
+  "is_clip": false,
+  "seo_title": "",
+  "seo_description": "",
+  "season_tags": ["winter-2021", "spring-2021", "summer-2021"],
+  "available_offline": true,
+  "media_type": "episode",
+  "slug": "",
+  "images": {
+    "thumbnail": [
+      [
+        {
+          "width": 320,
+          "height": 180,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 600,
+          "height": 338,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 640,
+          "height": 360,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 800,
+          "height": 450,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 1200,
+          "height": 675,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 1440,
+          "height": 810,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 1600,
+          "height": 900,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        },
+        {
+          "width": 1920,
+          "height": 1080,
+          "type": "thumbnail",
+          "source": "https://beta.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/crunchyroll/09a1b0cdc05404d0357a77b3c66158fb.jpeg"
+        }
+      ]
+    ]
+  },
+  "duration_ms": 1396424,
+  "is_premium_only": false,
+  "listing_id": "",
+  "subtitle_locales": ["en-US", "es-419", "es-ES"],
+  "playback": "https://pl.crunchyroll.com/asset/392c404e58b752d636b717b0db96e225/v/8ec5d680502efd677d878a5c85a81f05/languages/en-US,es-419,es-ES,es-LA?*&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cCo6Ly9wbC5jcnVuY2h5cm9sbC5jb20vYXNzZXQvMzkyYzQwNGU1OGI3NTJkNjM2YjcxN2IwZGI5NmUyMjUvdi84ZWM1ZDY4MDUwMmVmZDY3N2Q4NzhhNWM4NWE4MWYwNS8~KiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTY0NTQxODMwN319fV19&Signature=cKbdnRX0UO2qsqtw4pNwus5D9bIAvL8se-4rn1DhYBEmQ1OJC0HQeCuGvOx29Oip0KKwsTI1jSDvLaBlR~jUPx1LLQq47rTQ5TScJI1a8BDKsHqIkBbMPSqHLJwT7rQYnXvwTMBLe2Ji~L7EpsvXkH~SHLi8snp~YZwZ7Z7yk8OmCKR-dxJOTHIMq9W8-jZhP3gpHwzmuRbBeBg2VRZ7VVn3H9ONfWTQV7nRoMnSjngdIPYHGP19HSo-sOmGr~sS1fuFvizbMftt~93lmdgtg-VwsIkGNAFwX1ri9U8G68-h8~o5X7YSc6pby2fYD5huMcA9ZjoFHZrswqpPpbh0VA__&Key-Pair-Id=APKAJMWSQ5S7ZB3MF5VA",
+  "availability_notes": ""
 }

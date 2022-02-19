@@ -50,7 +50,7 @@ export default class CrunchyrollService {
    * @returns {AnimeEpisode} The anime episode data.
    */
   async getEpisodeData(episodeId) {
-    const episode = await this.#getObject(episodeId);
+    const episode = await this.#getObject(episodeId, "episodes");
     const seriesId = CrunchyrollService.#parseLink(
       episode.__links__["episode/series"]?.href,
       "series"
@@ -82,7 +82,7 @@ export default class CrunchyrollService {
       return null;
     }
 
-    const series = await this.#getObject(seriesId);
+    const series = await this.#getObject(seriesId, "series");
 
     return new AnimeSeries({
       ...series,
@@ -100,7 +100,7 @@ export default class CrunchyrollService {
       return null;
     }
 
-    const season = await this.#getObject(seasonId);
+    const season = await this.#getObject(seasonId, "seasons");
 
     return new AnimeSeason({
       ...season,
@@ -108,9 +108,9 @@ export default class CrunchyrollService {
     });
   }
 
-  async #getObject(objectId) {
+  async #getObject(objectId, type) {
     const response = await axios.get(
-      `${BASE_URL}/cms/v2${this.#bucket}/objects/${objectId}`,
+      `${BASE_URL}/cms/v2${this.#bucket}/${type}/${objectId}`,
       {
         params: {
           locale: "en-US",
@@ -121,7 +121,7 @@ export default class CrunchyrollService {
       }
     );
 
-    return response.data.items[0];
+    return response.data;
   }
 
   static #parseLink(link, type) {
