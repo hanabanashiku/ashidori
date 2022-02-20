@@ -2,8 +2,8 @@ import browser from "webextension-polyfill";
 import util from "util";
 import Settings from "../options/Settings";
 import MESSAGE_TYPES from "../messageTypes";
-import { v4 as uuid } from "uuid";
 import { getApiInstance } from "../providers/builder";
+import { sendNotification } from "../helpers/extensionHelpers";
 import UserData from "../models/UserData";
 import AnimeEpisode from "../models/AnimeEpisode";
 import LibraryEntry from "../models/LibraryEntry";
@@ -54,7 +54,7 @@ async function canUpdateAsync(loadTime, payload) {
     LIST_STATUS.CURRENT,
     LIST_STATUS.ON_HOLD,
   ].includes(listEntry.status);
-  const isValidEpisodeNumber = episodeData.number < listEntry.progress;
+  const isValidEpisodeNumber = episodeData.number > listEntry.progress;
 
   return meetsDelay && isValidStatus && isValidEpisodeNumber;
 }
@@ -62,34 +62,8 @@ async function canUpdateAsync(loadTime, payload) {
 async function showUpdatePopupAsync(payload) {
   const { episodeData, listEntry, userData } = payload;
 
-  const notificationId = uuid();
-  await browser.notifications.create(notificationId, {
-    type: "basic",
-    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
-    title: lang.episodeCompletedPopupBody,
-    message: util.format(
-      lang.episodeCompletedPopupBody,
-      episodeData.number,
-      listEntry.anime.title,
-      userData.username
-    ),
-    buttons: [
-      {
-        title: lang.update,
-      },
-      {
-        title: lang.noThanks,
-      },
-    ],
-  });
-
-  function listener(e) {
-    if (e.notificationId !== notificationId) {
-      return;
-    }
-    browser.notifications.onButtonClicked.removeListener(listener);
-
-    if (e.buttonIndex !== 0) {
+  function listener(buttonIndex) {
+    if (buttonIndex !== 0) {
       // Clicked no
       return;
     }
@@ -97,7 +71,24 @@ async function showUpdatePopupAsync(payload) {
     updateAnimeAsync(payload);
   }
 
-  browser.notifications.onButtonClicked.addListener(listener);
+  await sendNotification(
+    lang.episodeCompletedPopupTitle,
+    util.format(
+      lang.episodeCompletedPopupBody,
+      episodeData.number,
+      listEntry.anime.title,
+      userData.username
+    ),
+    [
+      {
+        title: lang.update,
+      },
+      {
+        title: lang.noThanks,
+      },
+    ],
+    listener
+  );
 }
 
 async function showUpdatedPopupAsync(payload, isComplete) {
@@ -125,32 +116,23 @@ async function showUpdatedPopupAsync(payload, isComplete) {
     );
   }
 
-  const notificationId = uuid();
-  await browser.notifications.create(notificationId, {
-    type: "basic",
-    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
-    title: lang.episodeUpdated,
-    message,
-    buttons: [
-      {
-        title: util.format(lang.seeAnime, PROVIDER_NAMES[userData.apiSource]),
-      },
-    ],
-  });
-
-  function listener(e) {
-    if (e.notificationId !== notificationId) {
-      return;
-    }
-
+  function listener() {
     browser.tabs.create({
       url: listEntry.anime.externalLink,
       selected: true,
     });
-
-    browser.notifications.onButtonClicked.removeListener(listener);
   }
-  browser.notifications.onButtonClicked.addListener(listener);
+
+  await sendNotification(
+    lang.episodeUpdatedPopupTitle,
+    message,
+    [
+      {
+        title: util.format(lang.seeAnime, PROVIDER_NAMES[userData.apiSource]),
+      },
+    ],
+    listener
+  );
 }
 
 async function updateAnimeAsync(payload) {

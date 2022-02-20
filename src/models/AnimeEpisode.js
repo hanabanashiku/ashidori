@@ -13,7 +13,16 @@ export default class AnimeEpisode {
         this.#populateFromCrunchyroll(data);
         break;
       default:
-        _.defaultsDeep(this, data, DEFAULT_VALUES);
+        _.defaultsDeep(
+          this,
+          {
+            ...data,
+            _season: new AnimeSeason(data._season ?? {}),
+            _series: new AnimeSeries(data._series ?? {}),
+            _airDate: data._airDate ? new Date(data._airDate) : null,
+          },
+          DEFAULT_VALUES
+        );
     }
   }
 

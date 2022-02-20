@@ -14,7 +14,21 @@ export default class LibraryEntry {
         break;
 
       default:
-        _.defaultsDeep(this, data, DEFAULT_VALUES);
+        _.defaultsDeep(
+          this,
+          {
+            ...data,
+            _anime: new AnimeSeries(data._anime ?? {}),
+            _startDate: data._startDate ? new Date(data._startDate) : null,
+            _completedDate: data._completedDate
+              ? new Date(data._completedDate)
+              : null,
+            _lastUpdated: data._lastUpdated
+              ? new Date(data._lastUpdated)
+              : null,
+          },
+          DEFAULT_VALUES
+        );
         break;
     }
   }
