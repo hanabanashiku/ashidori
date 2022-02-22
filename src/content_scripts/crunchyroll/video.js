@@ -1,8 +1,12 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import browser from "webextension-polyfill";
+import $ from "jquery";
+import ListDisplay from "./ListDisplay";
 import Settings from "../../options/Settings";
-import { SERVICES } from "../../enums";
 import CrunchyrollService from "../../services/Crunchyroll";
 import { getApiInstance } from "../../providers/builder";
+import { SERVICES } from "../../enums";
 import MESSAGE_TYPES from "../../messageTypes";
 
 let episodeData;
@@ -47,7 +51,22 @@ function init() {
     })
     .then((data) => {
       listEntry = data;
+      renderListDisplay(listEntry, api);
     });
+}
+
+function renderListDisplay(listEntry, api) {
+  if (!listEntry || !api) {
+    return;
+  }
+  const container = $("<div/>", {
+    id: "ashidori-list-info",
+  }).appendTo(".erc-current-media-info");
+
+  ReactDOM.render(
+    <ListDisplay libraryEntry={listEntry} api={api} />,
+    container[0]
+  );
 }
 
 function onUnload() {
