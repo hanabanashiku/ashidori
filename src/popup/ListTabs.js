@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Tabs, Tab } from "@mui/material";
 import ApiProvider from "../providers/ApiProvider";
 import AnimeList from "./AnimeList";
+import CurrentAnimeDisplay from "./CurrentAnimeDisplay";
 import { LIST_STATUS } from "../enums";
 import lang from "lang";
 
@@ -21,6 +22,7 @@ const ListTabs = ({ showAnime, api }) => {
 
   return (
     <>
+      <CurrentAnimeDisplay showAnime={showAnime} />
       <Tabs
         value={value}
         onChange={(e, newValue) => setValue(newValue)}

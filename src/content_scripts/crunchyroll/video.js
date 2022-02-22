@@ -2,6 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import browser from "webextension-polyfill";
 import $ from "jquery";
+import {
+  showCurrentWatchingAlertOnPopup,
+  resetCurrentWatchingAlert,
+} from "../../helpers/storageHelpers";
 import ListDisplay from "./ListDisplay";
 import Settings from "../../options/Settings";
 import CrunchyrollService from "../../services/Crunchyroll";
@@ -51,6 +55,7 @@ function init() {
     })
     .then((data) => {
       listEntry = data;
+      showCurrentWatchingAlertOnPopup(listEntry, episodeData);
       renderListDisplay(listEntry, api);
     });
 }
@@ -73,6 +78,8 @@ function onUnload() {
   if (!listEntry || !userData) {
     return;
   }
+
+  resetCurrentWatchingAlert();
 
   // Tell the service worker to update the episode.
   browser.runtime.sendMessage({

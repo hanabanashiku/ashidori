@@ -18,6 +18,7 @@
   "update": "Update",
   "noThanks": "No thanks",
   "seeAnime": "See anime on %s",
+  "seeDetails": "See details.",
 
   "email": "Email address",
   "password": "Password",
@@ -80,6 +81,7 @@
   "waitMinutes": "Wait %s minutes before updating episode count.",
   "askBeforeUpdating": "Ask before updating episode count",
   "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
+  "currentlyWatchingTip": "You are currently watching episode %d of %s.",
 
   "kitsuLogIn": "Sign in to Kitsu",
   "logInAfter": "After, you will be returned to Ashidori. Your password will not be saved.",

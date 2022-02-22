@@ -18,6 +18,7 @@
   "update": "アップデートしよう",
   "noThanks": "結構です",
   "seeAnime": "%sでアニメで見る",
+  "seeDetails": "詳しく見る",
 
   "email": "メールアドレス",
   "password": "パスワード",
@@ -79,6 +80,7 @@
   "enableIntegrations": "ストリーミング・インテグレーションを効果にする",
   "askBeforeUpdating": "進みを自動的にアップデートする前の確認",
   "newEpisodeNotification": "新しいエピソードが放送するたび、お知らせを送る",
+  "currentlyWatchingTip": "今は%d話からの%sを見ています.",
 
   "kitsuLogIn": "KITSUへログイン",
   "logInAfter": "その後、足取りに戻ります。 パスワードはご保存されてございません。",

@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { resetCurrentWatchingAlert } from "../helpers/storageHelpers";
 import MESSAGE_TYPES from "../messageTypes";
 
 // used to inject scripts on pages reached using history.pushState()
@@ -25,3 +26,4 @@ function injectScript(details) {
 }
 
 browser.webNavigation.onHistoryStateUpdated.addListener(injectScript);
+browser.runtime.onStartup.addListener(() => resetCurrentWatchingAlert());
