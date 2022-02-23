@@ -21,6 +21,7 @@ describe("Popup window", () => {
   afterEach(() => {
     jest.clearAllMocks();
     apiInstanceSpy.mockRestore();
+    browser.storage.local.clear();
   });
 
   it("shows loading spinner on launch", () => {
@@ -53,6 +54,40 @@ describe("Popup window", () => {
     expect(loginButton).toBeInTheDocument();
     userEvent.click(loginButton);
     expect(browser.runtime.openOptionsPage).toHaveBeenCalledTimes(1);
+  });
+
+  describe("currently watching alert", () => {
+    it("is rendered when an anime is being watched", async () => {
+      browser.storage.local.set({
+        current_anime: {
+          libraryEntryId: "12345",
+          title: "My Hero Academia",
+          episodeNumber: 5,
+        },
+      });
+
+      const { getByText, queryByRole } = render(<Popup />);
+
+      await waitFor(() =>
+        expect(queryByRole("progressbar")).not.toBeInTheDocument()
+      );
+
+      expect(
+        getByText("You are currently watching episode 5 of My Hero Academia.")
+      ).toBeInTheDocument();
+      const link = getByText("See details.");
+      expect(link).not.toBeNull();
+    });
+
+    it("is not rendered by default", async () => {
+      const { queryByTestId, queryByRole } = render(<Popup />);
+
+      await waitFor(() =>
+        expect(queryByRole("progressbar")).not.toBeInTheDocument()
+      );
+
+      expect(queryByTestId("current-watching-alert")).toBeNull();
+    });
   });
 
   it("renders the list tabs", async () => {

@@ -28,7 +28,7 @@ const CurrentAnimeDisplay = ({ showAnime }) => {
   }
 
   return (
-    <Alert severity="info">
+    <Alert severity="info" data-testid="current-watching-alert">
       {util.format(
         lang.currentlyWatchingTip,
         currentAnime.episodeNumber,
