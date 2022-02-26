@@ -14,7 +14,7 @@ function EntryRating({ libraryEntry, api }) {
     setRating(newValue);
     setLoading(true);
     try {
-      await api.updateLibrarItem(libraryEntry.id, {
+      await api.updateLibraryItem(libraryEntry.id, {
         rating: newValue,
       });
     } catch {

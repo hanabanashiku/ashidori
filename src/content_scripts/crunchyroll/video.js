@@ -69,7 +69,7 @@ function renderListDisplay(listEntry, api) {
   }).appendTo(".erc-current-media-info");
 
   ReactDOM.render(
-    <ListDisplay libraryEntry={listEntry} api={api} />,
+    <ListDisplay libraryEntry={listEntry} api={api} userData={userData} />,
     container[0]
   );
 }

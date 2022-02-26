@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import browser from "webextension-polyfill";
+import util from "util";
 import { css } from "@emotion/react";
 import CrunchyrollThemeProvider from "../theme";
 import { Box, Stack, Typography, Button } from "@mui/material";
@@ -8,10 +9,12 @@ import Progress from "./Progress";
 import Rating from "./Rating";
 import LibraryEntry from "../../../models/LibraryEntry";
 import ApiProvider from "../../../providers/ApiProvider";
+import UserData from "../../../models/UserData";
 import MESSAGE_TYPES from "../../../messageTypes";
+import { PROVIDER_NAMES } from "../../../enums";
 import lang from "../../../lang";
 
-function ListDisplay({ libraryEntry, api }) {
+function ListDisplay({ libraryEntry, api, userData }) {
   async function onOpenDetail() {
     await browser.browserAction.openPopup();
     browser.runtime.sendMessage({
@@ -49,10 +52,13 @@ function ListDisplay({ libraryEntry, api }) {
               href={libraryEntry.anime.externalLink}
               target="_blank"
             >
-              View on Kitsu
+              {util.format(
+                lang.viewOnProvider,
+                PROVIDER_NAMES[userData.apiSource]
+              )}
             </Button>
             {browser.browserAction?.openPopup && (
-              <Button onClick={onOpenDetail}>Open in Ashidori</Button>
+              <Button onClick={onOpenDetail}>lang.openInAshidori</Button>
             )}
           </Stack>
         </Box>
@@ -63,6 +69,7 @@ function ListDisplay({ libraryEntry, api }) {
 ListDisplay.propTypes = {
   libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
   api: PropTypes.instanceOf(ApiProvider).isRequired,
+  userData: PropTypes.instanceOf(UserData).isRequired,
 };
 
 export default ListDisplay;

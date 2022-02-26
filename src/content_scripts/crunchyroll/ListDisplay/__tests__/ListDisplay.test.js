@@ -1,11 +1,12 @@
 import React from "react";
-import { render, waitFor, act } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ListDisplay from "..";
 import MockApiProvider from "../../../../__mocks__/MockApiProvider";
 import LibraryEntry from "../../../../models/LibraryEntry";
-import { LIST_STATUS } from "../../../../enums";
+import { LIST_STATUS, PROVIDERS } from "../../../../enums";
 import AnimeSeries from "../../../../models/AnimeSeries";
+import UserData from "../../../../models/UserData";
 
 describe("List display component", () => {
   const api = new MockApiProvider();
@@ -17,26 +18,30 @@ describe("List display component", () => {
     _anime: new AnimeSeries({
       _title: "One Piece",
       _episodeCount: 0,
+      _link: "https://kitsu.io/one-piece",
     }),
+  });
+  const userData = new UserData({
+    _provider: PROVIDERS.KITSU,
   });
 
   it("renders the anime title", () => {
     const { getByText } = render(
-      <ListDisplay libraryEntry={entry} api={api} />
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
     );
     expect(getByText("One Piece")).toBeInTheDocument();
   });
 
   it("renders the anime status", () => {
     const { getByText } = render(
-      <ListDisplay libraryEntry={entry} api={api} />
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
     );
     expect(getByText("Currently watching")).toBeInTheDocument();
   });
 
   it("renders the current progress", () => {
     const { getByText } = render(
-      <ListDisplay libraryEntry={entry} api={api} />
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
     );
     expect(getByText("1010")).toBeInTheDocument();
   });
@@ -50,14 +55,40 @@ describe("List display component", () => {
       },
     });
     const { getByText } = render(
-      <ListDisplay libraryEntry={newEntry} api={api} />
+      <ListDisplay libraryEntry={newEntry} api={api} userData={userData} />
     );
     expect(getByText("/ 1011")).toBeInTheDocument();
   });
 
+  test.each([
+    LIST_STATUS.COMPLETED,
+    LIST_STATUS.DROPPED,
+    LIST_STATUS.NOT_WATCHING,
+  ])(
+    `does not render the progress widget if the show is not in progress - %d`,
+    (status) => {
+      const newEntry = new LibraryEntry({
+        _id: "12345",
+        _status: status,
+        _rating: 8,
+        _progress: 1010,
+        _anime: new AnimeSeries({
+          _title: "One Piece",
+          _episodeCount: 0,
+        }),
+      });
+
+      const { queryByText } = render(
+        <ListDisplay libraryEntry={newEntry} api={api} userData={userData} />
+      );
+
+      expect(queryByText("1010")).toBeFalsy();
+    }
+  );
+
   it("renders the rating widget", () => {
     const { getByTestId, getByLabelText } = render(
-      <ListDisplay libraryEntry={entry} api={api} />
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
     );
 
     const rating = getByTestId("ashidori-anime-rating");
@@ -65,15 +96,40 @@ describe("List display component", () => {
     expect(getByLabelText("8 Stars")).toBeChecked();
   });
 
-  it.skip("calls api on rating change", async () => {
+  it("calls api on rating change", () => {
     const { getByLabelText } = render(
-      <ListDisplay libraryEntry={entry} api={api} />
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
     );
 
     act(() => userEvent.click(getByLabelText("9 Stars")));
-    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenCalledTimes(1);
     expect(api.updateLibraryItem).toHaveBeenLastCalledWith("12345", {
       rating: 9,
     });
+  });
+
+  it("does not render the rating widget if the show is not in the list", () => {
+    const newEntry = new LibraryEntry({
+      _status: LIST_STATUS.NOT_WATCHING,
+      _anime: new AnimeSeries({
+        _title: "One Piece",
+        _episodeCount: 0,
+      }),
+    });
+    const { queryByTestId } = render(
+      <ListDisplay libraryEntry={newEntry} api={api} userData={userData} />
+    );
+
+    expect(queryByTestId("ashidori-anime-rating")).toBeFalsy();
+  });
+
+  it("Clicking the view on provider button opens the external link", () => {
+    const { getByText } = render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    const button = getByText("View on Kitsu");
+    expect(button).toBeInTheDocument();
+    expect(button.getAttribute("href")).toBe("https://kitsu.io/one-piece");
   });
 });
