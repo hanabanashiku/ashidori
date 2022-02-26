@@ -4,9 +4,10 @@ import userEvent from "@testing-library/user-event";
 import ListDisplay from "..";
 import MockApiProvider from "../../../../__mocks__/MockApiProvider";
 import LibraryEntry from "../../../../models/LibraryEntry";
-import { LIST_STATUS, PROVIDERS } from "../../../../enums";
 import AnimeSeries from "../../../../models/AnimeSeries";
 import UserData from "../../../../models/UserData";
+import { LIST_STATUS, PROVIDERS } from "../../../../enums";
+import MESSAGE_TYPES from "../../../../messageTypes";
 
 describe("List display component", () => {
   const api = new MockApiProvider();
@@ -131,5 +132,23 @@ describe("List display component", () => {
     const button = getByText("View on Kitsu");
     expect(button).toBeInTheDocument();
     expect(button.getAttribute("href")).toBe("https://kitsu.io/one-piece");
+  });
+
+  it("Clicking the open in ashidori button opens the anime detail in a popup window on chrome", () => {
+    const { getByText } = render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    const button = getByText("Open in Ashidori");
+    expect(button).toBeInTheDocument();
+    act(() => userEvent.click(button));
+
+    expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(1);
+    expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
+      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL_POPUP,
+      payload: {
+        libraryEntryId: "12345",
+      },
+    });
   });
 });

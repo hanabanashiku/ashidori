@@ -22,7 +22,11 @@
     }
   ],
   "background": {
-    "scripts": ["background/inject.js", "background/updateList.js"],
+    "scripts": [
+      "background/inject.js",
+      "background/updateList.js",
+      "background/showPopup.js"
+    ],
     "persistent": true
   },
   "permissions": [

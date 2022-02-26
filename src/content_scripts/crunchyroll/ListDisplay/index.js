@@ -16,9 +16,8 @@ import lang from "../../../lang";
 
 function ListDisplay({ libraryEntry, api, userData }) {
   async function onOpenDetail() {
-    await browser.browserAction.openPopup();
     browser.runtime.sendMessage({
-      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL,
+      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL_POPUP,
       payload: {
         libraryEntryId: libraryEntry.id,
       },
@@ -57,9 +56,7 @@ function ListDisplay({ libraryEntry, api, userData }) {
                 PROVIDER_NAMES[userData.apiSource]
               )}
             </Button>
-            {browser.browserAction?.openPopup && (
-              <Button onClick={onOpenDetail}>lang.openInAshidori</Button>
-            )}
+            <Button onClick={onOpenDetail}>{lang.openInAshidori}</Button>
           </Stack>
         </Box>
       </Box>
