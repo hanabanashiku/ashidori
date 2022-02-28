@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { resetCurrentWatchingAlert } from "../helpers/storageHelpers";
 import MESSAGE_TYPES from "../messageTypes";
 
 async function onMessage(message) {
@@ -29,3 +30,4 @@ async function onMessage(message) {
 }
 
 browser.runtime.onMessage.addListener(onMessage);
+browser.runtime.onStartup.addListener(() => resetCurrentWatchingAlert());

@@ -225,6 +225,7 @@ export default class AnimeSeries {
       const domain = regex.exec(link)?.[1];
       regex.lastIndex = 0;
 
+      /* istanbul ignore if */
       if (
         !domain ||
         !Object.prototype.hasOwnProperty.call(SERVICE_DOMAINS, domain)

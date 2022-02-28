@@ -2,6 +2,7 @@ import browser from "webextension-polyfill";
 import UserData from "../models/UserData";
 import { PROVIDERS } from "../enums";
 
+/* istanbul ignore next */
 export default class ApiProvider {
   /**
    * @returns {Promise<number>} The selected provider.

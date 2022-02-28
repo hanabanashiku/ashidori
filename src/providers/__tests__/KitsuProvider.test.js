@@ -191,20 +191,53 @@ describe("Kitsu api provider", () => {
       expect(actual).not.toBeNull();
     });
 
-    it("allows for sorting", async () => {
-      const actual = await kitsu.getAnimeListByStatus(
-        LIST_STATUS.CURRENT,
-        0,
-        20,
-        "progress",
-        "desc"
-      );
-      expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(axios.get).toHaveBeenCalledWith(
-        `library-entries?filter[kind]=anime&filter[userId]=${userId}&filter[status]=current&include=anime,anime.streamingLinks,anime.genres&page[limit]=20&page[offset]=0&sort=-progress`
-      );
+    describe("allows for sorting", () => {
+      test.each([
+        ["progress", "asc", "progress"],
+        ["progress", "desc", "-progress"],
+        ["notes", "asc", "notes"],
+        ["notes", "desc", "-notes"],
+        ["startDate", "asc", "startedAt"],
+        ["startDate", "desc", "-startedAt"],
+        ["completedDate", "asc", "finishedAt"],
+        ["completedDate", "desc", "-finishedAt"],
+        ["rating", "asc", "ratingTwenty"],
+        ["rating", "desc", "-ratingTwenty"],
+        ["lastUpdated", "asc", "updatedAt"],
+        ["lastUpdated", "desc", "-updatedAt"],
+        ["status", "asc", "status"],
+        ["status", "desc", "-status"],
+      ])("%s by %s", async (field, orientation, expectedKitsuField) => {
+        const actual = await kitsu.getAnimeListByStatus(
+          LIST_STATUS.CURRENT,
+          0,
+          20,
+          field,
+          orientation
+        );
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(axios.get).toHaveBeenCalledWith(
+          `library-entries?filter[kind]=anime&filter[userId]=${userId}&filter[status]=current&include=anime,anime.streamingLinks,anime.genres&page[limit]=20&page[offset]=0&sort=${expectedKitsuField}`
+        );
 
-      expect(actual).not.toBeNull();
+        expect(actual).not.toBeNull();
+      });
+
+      it("but does not sort by an invalid field", async () => {
+        const actual = await kitsu.getAnimeListByStatus(
+          LIST_STATUS.CURRENT,
+          0,
+          20,
+          "garbage",
+          "asc"
+        );
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(axios.get).toHaveBeenCalledWith(
+          `library-entries?filter[kind]=anime&filter[userId]=${userId}&filter[status]=current&include=anime,anime.streamingLinks,anime.genres&page[limit]=20&page[offset]=0`
+        );
+
+        expect(actual).not.toBeNull();
+      });
     });
 
     it("allows for pagination", async () => {

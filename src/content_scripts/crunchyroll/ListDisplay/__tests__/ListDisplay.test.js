@@ -109,6 +109,21 @@ describe("List display component", () => {
     });
   });
 
+  it("reverts the rating widget if the update fails", () => {
+    api.updateLibraryItem.mockRejectedValueOnce({
+      response: {
+        status: 400,
+      },
+    });
+    const { getByLabelText } = render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    act(() => userEvent.click(getByLabelText("9 Stars")));
+    expect(api.updateLibraryItem).toHaveBeenCalled();
+    expect(getByLabelText("9 Stars")).not.toBeChecked();
+  });
+
   it("does not render the rating widget if the show is not in the list", () => {
     const newEntry = new LibraryEntry({
       _status: LIST_STATUS.NOT_WATCHING,

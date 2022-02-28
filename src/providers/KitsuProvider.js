@@ -6,7 +6,6 @@ import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
-import Library from "../models/Library";
 import AnimeSeries from "../models/AnimeSeries";
 import PagedData from "../models/PagedData";
 import { LIST_STATUS } from "../enums";
@@ -22,9 +21,6 @@ export const STATUS_MAP = {
 };
 
 function mapStatus(status) {
-  if (status === undefined) {
-    return undefined;
-  }
   return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
@@ -53,28 +49,6 @@ export default class KitsuProvider extends ApiProvider {
       const userId = data?.id ?? null;
       this.#userId = userId;
     });
-  }
-
-  /**
-   * Get the user's anime list.
-   * @returns {Promise<Library>} The user's library.
-   */
-  async getAnimeList() {
-    if (!this.#userId) {
-      throw "Missing user data";
-    }
-
-    const response = await this.#client.get(
-      `library-entries?filter[kind]=anime&filter[userId]=${
-        this.#userId
-      }&include=anime,anime.streamingLinks,anime.genres`
-    );
-
-    const items = response.data.data.map((entry) =>
-      KitsuProvider.#mapData(LibraryEntry, entry, response.data.included)
-    );
-
-    return new Library(items);
   }
 
   /**
