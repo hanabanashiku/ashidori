@@ -53,6 +53,7 @@ async function canUpdateAsync(loadTime, payload) {
     LIST_STATUS.NOT_WATCHING,
     LIST_STATUS.CURRENT,
     LIST_STATUS.ON_HOLD,
+    LIST_STATUS.PLANNED,
   ].includes(listEntry.status);
   const isValidEpisodeNumber = episodeData.number > listEntry.progress;
 
@@ -150,7 +151,9 @@ async function updateAnimeAsync(payload) {
     progress: episode,
   };
 
-  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+  if (
+    [LIST_STATUS.NOT_WATCHING, LIST_STATUS.PLANNED].includes(listEntry.status)
+  ) {
     patch = {
       ...patch,
       status: LIST_STATUS.CURRENT,
