@@ -3,15 +3,6 @@ import MESSAGE_TYPES from "../messageTypes";
 
 // used to inject scripts on pages reached using history.pushState()
 function injectScript(details) {
-  // Crunchyroll video
-  if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
-    browser.tabs.executeScript(details.tabId, {
-      file: "/content_scripts/crunchyroll/video.js",
-      frameId: details.frameId,
-    });
-    return;
-  }
-
   // send a mesage when history.pushState() is used.
   // This allows content scripts to look for history state events.
   browser.tabs.sendMessage(
@@ -22,6 +13,15 @@ function injectScript(details) {
     },
     { frameId: details.frameId }
   );
+
+  // Crunchyroll video
+  if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
+    browser.tabs.executeScript(details.tabId, {
+      file: "/content_scripts/crunchyroll/video.js",
+      frameId: details.frameId,
+    });
+    return;
+  }
 }
 
 browser.webNavigation.onHistoryStateUpdated.addListener(injectScript);

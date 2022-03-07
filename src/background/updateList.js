@@ -4,11 +4,21 @@ import Settings from "../options/Settings";
 import MESSAGE_TYPES from "../messageTypes";
 import { getApiInstance } from "../providers/builder";
 import { sendNotification } from "../helpers/extensionHelpers";
+import { resetCurrentWatchingAlert } from "../helpers/storageHelpers";
 import UserData from "../models/UserData";
 import AnimeEpisode from "../models/AnimeEpisode";
 import LibraryEntry from "../models/LibraryEntry";
 import lang from "../lang";
 import { LIST_STATUS, PROVIDER_NAMES } from "../enums";
+
+function onClearWatching(message) {
+  if (!message.type !== MESSAGE_TYPES.CLEAR_NOW_WATCHING) {
+    return;
+  }
+
+  resetCurrentWatchingAlert();
+}
+browser.runtime.onMessage.addListener(onClearWatching);
 
 Settings.listUpdatingEnabled().then((value) => {
   if (!value) {
@@ -22,6 +32,7 @@ function onUpdateRequest(message) {
     return false;
   }
 
+  resetCurrentWatchingAlert();
   message.payload.userData = new UserData(message.payload.userData);
   message.payload.episodeData = new AnimeEpisode(message.payload.episodeData);
   message.payload.listEntry = new LibraryEntry(message.payload.listEntry);

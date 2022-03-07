@@ -2,10 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import browser from "webextension-polyfill";
 import $ from "jquery";
-import {
-  showCurrentWatchingAlertOnPopup,
-  resetCurrentWatchingAlert,
-} from "../../helpers/storageHelpers";
+import { showCurrentWatchingAlertOnPopup } from "../../helpers/storageHelpers";
 import ListDisplay from "./ListDisplay";
 import Settings from "../../options/Settings";
 import CrunchyrollService from "../../services/Crunchyroll";
@@ -25,13 +22,27 @@ Settings.getEnabledServices().then((enabledServices) => {
 
   init();
 
-  // unload if the user clicks a link in the CrunchyRoll SPA
+  // unload if the user clicks a link in the Crunchyroll SPA
   browser.runtime.onMessage.addListener((message) => {
     if (message.type !== MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
       return false;
     }
 
     onUnload();
+
+    if (message.payload.url.includes("https://beta.crunchyroll.com/watch")) {
+      init();
+    }
+    return true;
+  });
+  // todo fix this scenario - unload if the user closes the tab
+  $(window).on("beforeunload", () => {
+    let resolved = false;
+    onUnload().then(() => {
+      resolved = true;
+    });
+
+    while (!resolved);
     return true;
   });
 });
@@ -74,23 +85,32 @@ function renderListDisplay(listEntry, api) {
   );
 }
 
-function onUnload() {
+async function onUnload() {
+  let promise;
   if (!listEntry || !userData) {
-    return;
+    promise = browser.runtime.sendMessage({
+      type: MESSAGE_TYPES.CLEAR_NOW_WATCHING,
+    });
   }
 
-  resetCurrentWatchingAlert();
-
   // Tell the service worker to update the episode.
-  browser.runtime.sendMessage({
-    type: MESSAGE_TYPES.UPDATE_EPISODE,
-    payload: {
-      episodeData,
-      loadTime,
-      userData,
-      listEntry,
-    },
-  });
+  else {
+    promise = browser.runtime.sendMessage({
+      type: MESSAGE_TYPES.UPDATE_EPISODE,
+      payload: {
+        episodeData,
+        loadTime,
+        userData,
+        listEntry,
+      },
+    });
+  }
+
+  episodeData = null;
+  loadTime = null;
+  listEntry = null;
+  $("#ashidori-list-info").remove();
+  return promise;
 }
 
 async function getEpisodeData() {
