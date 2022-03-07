@@ -37,13 +37,7 @@ Settings.getEnabledServices().then((enabledServices) => {
   });
   // todo fix this scenario - unload if the user closes the tab
   $(window).on("beforeunload", () => {
-    let resolved = false;
-    onUnload().then(() => {
-      resolved = true;
-    });
-
-    while (!resolved);
-    return true;
+    onUnload();
   });
 });
 
