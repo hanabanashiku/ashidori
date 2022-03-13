@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import browser from "webextension-polyfill";
 import $ from "jquery";
-import { showCurrentWatchingAlertOnPopup } from "../../helpers/storageHelpers";
 import ListDisplay from "./ListDisplay";
 import Settings from "../../options/Settings";
 import CrunchyrollService from "../../services/Crunchyroll";
@@ -29,16 +28,15 @@ Settings.getEnabledServices().then((enabledServices) => {
     }
 
     onUnload();
+    resetPage();
 
     if (message.payload.url.includes("https://beta.crunchyroll.com/watch")) {
       init();
     }
     return true;
   });
-  // todo fix this scenario - unload if the user closes the tab
-  $(window).on("beforeunload", () => {
-    onUnload();
-  });
+
+  $(window).on("beforeunload", () => resetPage());
 });
 
 function init() {
@@ -60,8 +58,16 @@ function init() {
     })
     .then((data) => {
       listEntry = data;
-      showCurrentWatchingAlertOnPopup(listEntry, episodeData);
       renderListDisplay(listEntry, api);
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+        payload: {
+          loadTime,
+          userData,
+          listEntry,
+          episodeData,
+        },
+      });
     });
 }
 
@@ -79,17 +85,10 @@ function renderListDisplay(listEntry, api) {
   );
 }
 
-async function onUnload() {
-  let promise;
-  if (!listEntry || !userData) {
-    promise = browser.runtime.sendMessage({
-      type: MESSAGE_TYPES.CLEAR_NOW_WATCHING,
-    });
-  }
-
+function onUnload() {
   // Tell the service worker to update the episode.
-  else {
-    promise = browser.runtime.sendMessage({
+  if (listEntry && userData) {
+    browser.runtime.sendMessage({
       type: MESSAGE_TYPES.UPDATE_EPISODE,
       payload: {
         episodeData,
@@ -99,12 +98,6 @@ async function onUnload() {
       },
     });
   }
-
-  episodeData = null;
-  loadTime = null;
-  listEntry = null;
-  $("#ashidori-list-info").remove();
-  return promise;
 }
 
 async function getEpisodeData() {
@@ -112,4 +105,11 @@ async function getEpisodeData() {
   var client = new CrunchyrollService();
   await client.authenticate();
   return client.getEpisodeData(episodeId);
+}
+
+function resetPage() {
+  episodeData = null;
+  loadTime = null;
+  listEntry = null;
+  $("#ashidori-list-info").remove();
 }

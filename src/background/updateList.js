@@ -4,58 +4,112 @@ import Settings from "../options/Settings";
 import MESSAGE_TYPES from "../messageTypes";
 import { getApiInstance } from "../providers/builder";
 import { sendNotification } from "../helpers/extensionHelpers";
-import { resetCurrentWatchingAlert } from "../helpers/storageHelpers";
+import {
+  showCurrentWatchingAlertOnPopup,
+  resetCurrentWatchingAlert,
+} from "../helpers/storageHelpers";
 import UserData from "../models/UserData";
 import AnimeEpisode from "../models/AnimeEpisode";
 import LibraryEntry from "../models/LibraryEntry";
 import lang from "../lang";
 import { LIST_STATUS, PROVIDER_NAMES } from "../enums";
 
-function onClearWatching(message) {
-  if (!message.type !== MESSAGE_TYPES.CLEAR_NOW_WATCHING) {
+/**
+ * A list of episode tabs containing corresponding registered onRemove listeners.
+ */
+const currentTabs = {};
+
+browser.runtime.onMessage.addListener(onEpisodeStarted);
+browser.runtime.onMessage.addListener(onUpdateRequest);
+
+/**
+ * Event handler when the user first opens an anime episode.
+ * @param {object} message The message payload.
+ * @param {browser.runtime.MessageSender} sender The message sender.
+ */
+function onEpisodeStarted(message, sender) {
+  if (message.type !== MESSAGE_TYPES.ANIME_EPISODE_STARTED) {
     return;
   }
 
-  resetCurrentWatchingAlert();
+  const episodeTab = sender.tab.id;
+  const loadTime = message.payload.loadTime;
+  const userData = new UserData(message.payload.userData);
+  const episodeData = new AnimeEpisode(message.payload.episodeData);
+  const listEntry = new LibraryEntry(message.payload.listEntry);
+
+  showCurrentWatchingAlertOnPopup(listEntry, episodeData);
+
+  // register event to update the list when the close the tab
+  function onTabClose(tabId) {
+    if (tabId !== episodeTab) {
+      return;
+    }
+
+    removeTabOnRemovedHook(tabId);
+    startUpdate(loadTime, userData, episodeData, listEntry);
+  }
+  browser.tabs.onRemoved.addListener(onTabClose);
+
+  currentTabs[sender.tab.id] = {
+    episodeData,
+    listener: onTabClose,
+  };
 }
-browser.runtime.onMessage.addListener(onClearWatching);
 
-Settings.listUpdatingEnabled().then((value) => {
-  if (!value) {
-    return;
-  }
-  browser.runtime.onMessage.addListener(onUpdateRequest);
-});
-
-function onUpdateRequest(message) {
+/**
+ * Event handler when the the content script sends a request to update (e.g. from a SPA page)
+ * @param {object} message The message payload.
+ * @param {browser.runtime.MessageSender} sender The message sender.
+ */
+function onUpdateRequest(message, sender) {
   if (message.type !== MESSAGE_TYPES.UPDATE_EPISODE) {
     return false;
   }
 
-  resetCurrentWatchingAlert();
-  message.payload.userData = new UserData(message.payload.userData);
-  message.payload.episodeData = new AnimeEpisode(message.payload.episodeData);
-  message.payload.listEntry = new LibraryEntry(message.payload.listEntry);
+  const loadTime = message.payload.loadTime;
+  const userData = new UserData(message.payload.userData);
+  const episodeData = new AnimeEpisode(message.payload.episodeData);
+  const listEntry = new LibraryEntry(message.payload.listEntry);
 
-  return (async () => {
-    const shouldUpdate = await canUpdateAsync(
-      message.payload.loadTime,
-      message.payload
-    );
-    if (!shouldUpdate) {
-      return;
-    }
-
-    if (await Settings.shouldShowUpdatePopup()) {
-      await showUpdatePopupAsync(message.payload);
-    } else {
-      await updateAnimeAsync(message.payload);
-    }
-  })();
+  removeTabOnRemovedHook(sender.tab.id);
+  startUpdate(loadTime, userData, episodeData, listEntry);
 }
 
-async function canUpdateAsync(loadTime, payload) {
-  const { listEntry, episodeData } = payload;
+/**
+ * Begin updating the anime episode.
+ * @param {Date} loadTime The time at which the user began watching.
+ * @param {UserData} userData Data about the user.
+ * @param {EpisodeData} episodeData Episode data extracted from the video page.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @returns {Promise<void>}
+ */
+async function startUpdate(loadTime, userData, episodeData, listEntry) {
+  resetCurrentWatchingAlert();
+  const shouldUpdate = await canUpdateAsync(loadTime, listEntry, episodeData);
+  if (!shouldUpdate) {
+    return;
+  }
+
+  if (await Settings.shouldShowUpdatePopup()) {
+    await showUpdatePopupAsync(episodeData, listEntry, userData);
+  } else {
+    await updateAnimeAsync(episodeData, listEntry, userData);
+  }
+}
+
+/**
+ * Check if the current episode can be updated
+ * @param {Date} loadTime The time at which the user began watching.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {EpisodeData} episodeData Episode data extracted from the video page.
+ * @returns {Promise<boolean>} True if the list can be updated.
+ */
+async function canUpdateAsync(loadTime, listEntry, episodeData) {
+  if (!(await Settings.listUpdatingEnabled())) {
+    return false;
+  }
+
   const delayInMinutes = await Settings.shouldUpdateAfterMinutes();
   const meetsDelay =
     new Date() - new Date(loadTime) > delayInMinutes * 60 * 1000;
@@ -71,16 +125,21 @@ async function canUpdateAsync(loadTime, payload) {
   return meetsDelay && isValidStatus && isValidEpisodeNumber;
 }
 
-async function showUpdatePopupAsync(payload) {
-  const { episodeData, listEntry, userData } = payload;
-
+/**
+ * Shows a push notification requesting the user to confirm the update.
+ * @param {EpisodeData} episodeData Episode data extracted from the video page.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {UserData} userData Data about the user.
+ * @returns {Promise<void>}
+ */
+async function showUpdatePopupAsync(episodeData, listEntry, userData) {
   function listener(buttonIndex) {
     if (buttonIndex !== 0) {
       // Clicked no
       return;
     }
 
-    updateAnimeAsync(payload);
+    updateAnimeAsync(episodeData, listEntry, userData);
   }
 
   await sendNotification(
@@ -103,8 +162,20 @@ async function showUpdatePopupAsync(payload) {
   );
 }
 
-async function showUpdatedPopupAsync(payload, isComplete) {
-  const { listEntry, episodeData, userData } = payload;
+/**
+ * Shows a push notification to tell the user that the anime was updated successfully.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {EpisodeData} episodeData Episode data extracted from the video page.
+ * @param {UserData} userData Data about the user.
+ * @param {boolean} isCompleted Whether the user finished watching the series.
+ * @returns {Promise<void>}
+ */
+async function showUpdatedPopupAsync(
+  listEntry,
+  episodeData,
+  userData,
+  isComplete
+) {
   let message;
 
   if (isComplete) {
@@ -147,8 +218,14 @@ async function showUpdatedPopupAsync(payload, isComplete) {
   );
 }
 
-async function updateAnimeAsync(payload) {
-  const { episodeData, listEntry } = payload;
+/**
+ * Updates the list entry to the current episode.
+ * @param {EpisodeData} episodeData Episode data extracted from the video page.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {UserData} userData Data about the user.
+ * @returns {Promise<void>}
+ */
+async function updateAnimeAsync(episodeData, listEntry, userData) {
   const api = await getApiInstance();
   if (!api) {
     return;
@@ -186,5 +263,20 @@ async function updateAnimeAsync(payload) {
   }
 
   await api.updateLibraryItem(listEntry.id, patch);
-  showUpdatedPopupAsync(payload, isComplete);
+  showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
+}
+
+/**
+ * Removes the onRemoved tab listener for a closed anime episode.
+ * @param {number} tabId The id of the current tab
+ */
+function removeTabOnRemovedHook(tabId) {
+  const data = currentTabs[tabId];
+
+  if (!data) {
+    return;
+  }
+
+  browser.tabs.onRemoved.removeListener(data.listener);
+  delete currentTabs[tabId];
 }
