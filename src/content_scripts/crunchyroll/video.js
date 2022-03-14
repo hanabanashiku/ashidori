@@ -30,13 +30,11 @@ Settings.getEnabledServices().then((enabledServices) => {
     onUnload();
     resetPage();
 
-    if (message.payload.url.includes("https://beta.crunchyroll.com/watch")) {
+    if (message.payload.url.includes("https://beta.crunchyroll.com/watch/")) {
       init();
     }
     return true;
   });
-
-  $(window).on("beforeunload", () => resetPage());
 });
 
 function init() {

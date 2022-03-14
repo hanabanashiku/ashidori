@@ -2,13 +2,22 @@ import { waitFor } from "@testing-library/react";
 import _ from "lodash";
 import Settings from "../../options/Settings";
 import * as builder from "../../providers/builder";
+import * as storageHelpers from "../../helpers/storageHelpers";
 import MockApiProvider from "../../__mocks__/MockApiProvider";
+import AnimeEpisode from "../../models/AnimeEpisode";
 import MESSAGE_TYPES from "../../messageTypes";
 import { LIST_STATUS } from "../../enums";
+import LibraryEntry from "../../models/LibraryEntry";
+import AnimeSeries from "../../models/AnimeSeries";
 
 describe("Update list background script", () => {
   const now = new Date("2022-03-05");
   const oneMinute = 60000;
+
+  let showCurrentWatchingAlertOnPopupSpy = jest.spyOn(
+    storageHelpers,
+    "showCurrentWatchingAlertOnPopup"
+  );
   let apiInstanceSpy;
   let listUpdatingEnabledSpy;
   /* eslint-disable no-unused-vars */
@@ -16,6 +25,7 @@ describe("Update list background script", () => {
   let shouldShowUpdatePopupSpy;
   /* eslint-enable no-unused-vars */
   let api = new MockApiProvider();
+  let onEpisodeStarted;
   let onUpdateRequest;
 
   const baseMessage = {
@@ -45,6 +55,12 @@ describe("Update list background script", () => {
     },
   };
 
+  const sender = {
+    tab: {
+      id: 123,
+    },
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.useFakeTimers().setSystemTime(now.getTime());
@@ -61,9 +77,19 @@ describe("Update list background script", () => {
       .mockResolvedValue(api);
     api.isAuthenticated.mockResolvedValue(true);
     api.updateLibraryItem.mockResolvedValue(true);
-    browser.runtime.onMessage.addListener.mockImplementation((fn) => {
+    browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
+      onEpisodeStarted = fn;
+    });
+    browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
       onUpdateRequest = fn;
     });
+    browser.tabs = {
+      ...browser.tabs,
+      onRemoved: {
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+      },
+    };
   });
 
   afterEach(async () => {
@@ -84,21 +110,40 @@ describe("Update list background script", () => {
     await waitFor(() => expect(onUpdateRequest).toBeDefined());
   }
 
-  it("does not add listener if list updating is disabled", async () => {
-    listUpdatingEnabledSpy.mockResolvedValueOnce(false);
-    require("../updateList");
-    await waitFor(() => expect(listUpdatingEnabledSpy).toHaveBeenCalled());
-    expect(browser.runtime.onMessage.addListener).not.toHaveBeenCalled();
+  it("adds message listeners", async () => {
+    await requireScript();
+    expect(browser.runtime.onMessage.addListener).toHaveBeenCalledTimes(2);
   });
 
-  it("does add listener if list updating is enabled", async () => {
+  it("shows current watching alert on start", async () => {
     await requireScript();
-    expect(browser.runtime.onMessage.addListener).toHaveBeenCalledTimes(1);
+    onEpisodeStarted(
+      {
+        type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+        payload: {
+          episodeData: new AnimeEpisode({
+            _number: 5,
+            _series: {
+              _title: "Test series",
+            },
+          }),
+          listEntry: new LibraryEntry({
+            _progress: 4,
+            _anime: new AnimeSeries({
+              _title: "Test series",
+            }),
+          }),
+        },
+      },
+      sender
+    );
+
+    expect(showCurrentWatchingAlertOnPopupSpy).toHaveBeenCalledTimes(1);
   });
 
   it("does not update if the load time has not been met", async () => {
     await requireScript();
-    await onUpdateRequest(baseMessage);
+    await onUpdateRequest(baseMessage, sender);
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
   });
 
@@ -117,7 +162,8 @@ describe("Update list background script", () => {
               _status: listStatus,
             },
           },
-        })
+        }),
+        sender
       );
       expect(api.updateLibraryItem).not.toHaveBeenCalled();
     }
@@ -135,7 +181,8 @@ describe("Update list background script", () => {
             _progress: 114,
           },
         },
-      })
+      }),
+      sender
     );
 
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
