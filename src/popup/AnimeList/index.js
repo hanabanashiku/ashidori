@@ -18,7 +18,7 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
   const [itemCount, setItemCount] = useState(0);
 
   useEffect(() => {
-    if(hide) {
+    if (hide) {
       return;
     }
     setApiState("loading");
@@ -109,7 +109,8 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
     <DataGrid
       css={css`
         border: none;
-        margin: 0 -4px;
+        margin: 0;
+        height: 490px;
       `}
       loading={apiState === "loading"}
       columns={columns}

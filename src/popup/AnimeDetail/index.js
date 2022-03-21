@@ -6,13 +6,15 @@ import ApiProvider from "../../providers/ApiProvider";
 import AnimeData from "./AnimeData";
 import ListForm from "./ListForm";
 
-const AnimeDetail = ({ selectedAnime, close, api }) => {
+const AnimeDetail = ({ selectedAnime, isListEntryId, close, api }) => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const result = await api.getSingleLibraryEntry(selectedAnime);
+        const result = isListEntryId
+          ? await api.getSingleLibraryEntry(selectedAnime)
+          : await api.getSingleLibraryEntryByAnime(selectedAnime);
         setAnime(result);
       } catch (e) {
         setAnime("error");
@@ -47,6 +49,7 @@ AnimeDetail.propTypes = {
     .isRequired,
   close: PropTypes.func.isRequired,
   api: PropTypes.instanceOf(ApiProvider).isRequired,
+  isListEntryId: PropTypes.bool.isRequired,
 };
 
 export default AnimeDetail;

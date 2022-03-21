@@ -6,11 +6,20 @@ const EditableCell = ({
   saveValue,
   renderCell,
   renderEditView,
+  readonly,
 }) => {
   const [currentValue, setValue] = useState(initialValue);
   const [isEditing, setEditing] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [error, setError] = useState(false);
+
+  function toggleEditing() {
+    if (readonly) {
+      return;
+    }
+
+    setEditing((value) => !value);
+  }
 
   function onEdit(e) {
     setSaving(true);
@@ -55,7 +64,7 @@ const EditableCell = ({
 
   return renderCell({
     value: currentValue,
-    onClick: () => setEditing(true),
+    onClick: toggleEditing,
   });
 };
 EditableCell.propTypes = {
@@ -63,6 +72,10 @@ EditableCell.propTypes = {
   saveValue: PropTypes.func.isRequired,
   renderCell: PropTypes.func.isRequired,
   renderEditView: PropTypes.func.isRequired,
+  readonly: PropTypes.bool,
+};
+EditableCell.defaultProps = {
+  readonly: false,
 };
 
 export default EditableCell;

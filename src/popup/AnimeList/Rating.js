@@ -7,7 +7,7 @@ import ApiProvider from "../../providers/ApiProvider";
 import EditableCell from "./EditableCell";
 import lang from "lang";
 
-const Rating = ({ value: { id, rating, api } }) => {
+const Rating = ({ value: { id, rating, api }, readonly }) => {
   async function updateValue(value) {
     return api.updateLibraryItem(id, { rating: value });
   }
@@ -73,6 +73,7 @@ const Rating = ({ value: { id, rating, api } }) => {
           </Box>
         );
       }}
+      readonly={readonly}
     />
   );
 };
@@ -82,6 +83,10 @@ Rating.propTypes = {
     rating: PropTypes.number.isRequired,
     api: PropTypes.instanceOf(ApiProvider),
   }).isRequired,
+  readonly: PropTypes.bool,
+};
+Rating.defaultProps = {
+  readonly: false,
 };
 
 export default Rating;

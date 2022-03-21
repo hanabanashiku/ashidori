@@ -30,6 +30,8 @@ const ListForm = ({ entry, api, close }) => {
     register,
     handleSubmit,
     control,
+    getValues,
+    setValue,
     formState: { errors, isDirty, dirtyFields, isSubmitting },
   } = useForm({
     mode: "onBlur",
@@ -53,7 +55,12 @@ const ListForm = ({ entry, api, close }) => {
 
     const toPatch = Object.keys(dirtyFields).filter((key) => dirtyFields[key]);
     const patch = _.pick(values, toPatch);
-    await api.updateLibraryItem(entry.id, patch);
+    if (entry.status == LIST_STATUS.NOT_WATCHING) {
+      await api.createLibraryItem(entry.anime.id, patch);
+    } else {
+      await api.updateLibraryItem(entry.id, patch);
+    }
+
     close();
   }
 
@@ -77,7 +84,20 @@ const ListForm = ({ entry, api, close }) => {
                 labelId={`${name}-label`}
                 id={name}
                 value={value}
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  if (
+                    e.target.value === LIST_STATUS.CURRENT &&
+                    entry.status === LIST_STATUS.NOT_WATCHING
+                  ) {
+                    setValue("startDate", new Date());
+                  } else if (
+                    e.target.value === LIST_STATUS.COMPLETED &&
+                    entry.status === LIST_STATUS.CURRENT
+                  ) {
+                    setValue("completedDate", new Date());
+                  }
+                }}
                 onBlur={onBlur}
                 inputRef={ref}
               >
@@ -215,6 +235,10 @@ const ListForm = ({ entry, api, close }) => {
           loadingPosition="start"
           startIcon={<SaveIcon />}
           loading={isSubmitting}
+          disabled={
+            entry.status === LIST_STATUS.NOT_WATCHING &&
+            getValues("status") === LIST_STATUS.NOT_WATCHING
+          }
         >
           {lang.saveButton}
         </LoadingButton>
@@ -226,14 +250,16 @@ const ListForm = ({ entry, api, close }) => {
         >
           Cancel
         </Button>
-        <IconButton
-          color="error"
-          variant="contained"
-          onClick={() => modalRef.current()}
-          aria-label={lang.removeFromList}
-        >
-          <Delete />
-        </IconButton>
+        {entry.status !== LIST_STATUS.NOT_WATCHING && (
+          <IconButton
+            color="error"
+            variant="contained"
+            onClick={() => modalRef.current()}
+            aria-label={lang.removeFromList}
+          >
+            <Delete />
+          </IconButton>
+        )}
       </Box>
       <DeleteModal
         entryId={entry.id}

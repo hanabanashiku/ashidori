@@ -57,7 +57,7 @@ const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
           autoFocus
           data-testid="delete-modal-cancel"
         >
-          {lang.cancel}
+          {lang.cancelButton}
         </Button>
         <LoadingButton
           onClick={() => onDelete()}

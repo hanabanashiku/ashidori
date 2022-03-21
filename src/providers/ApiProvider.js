@@ -45,6 +45,17 @@ export default class ApiProvider {
   }
 
   /**
+   * Create a new library entry for a given anime.
+   * @param {string|number} animeId
+   * @param {object} patch
+   * @returns {Promise<*>}
+   * @see LibraryEntry for valid parameters.
+   */
+  async createLibraryItem() {
+    return ApiProvider.#defaultImplAsync();
+  }
+
+  /**
    * Updates an anime library entry with a given patch document.
    * @param {string|number} itemId The library entry id.
    * @param {object} patch The patch data.
@@ -69,7 +80,7 @@ export default class ApiProvider {
    * @param {string} text The search text.
    * @param {number} page The page to load.
    * @param {number} limit The number per page.
-   * @returns {[AnimeSeries]} The list of found series.
+   * @returns {PagedData<AnimeSeries>} The list of found series.
    */
   async findAnime() {
     return ApiProvider.#defaultImplAsync();

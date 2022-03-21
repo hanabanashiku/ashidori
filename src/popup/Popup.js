@@ -6,11 +6,14 @@ import Header from "./Header";
 import LogInNotice from "./LogInNotice";
 import AnimeDetail from "./AnimeDetail";
 import ListTabs from "./ListTabs";
+import AnimeSearch from "./AnimeSearch";
 import MESSAGE_TYPES from "../messageTypes";
 
 const Popup = () => {
   const [authState, setAuthState] = useState(null);
   const [selectedAnime, setSelectedAnime] = useState();
+  const [search, setSearch] = useState(false);
+
   const [api, setApi] = useState(null);
 
   // Used to show an anime detail by clicking a button on a streaming video page.
@@ -19,6 +22,14 @@ const Popup = () => {
       return;
     }
     setSelectedAnime(message.payload.libraryEntryId);
+  }
+
+  function showAnime(id, isListEntry = true) {
+    setSelectedAnime({ id, isListEntry });
+  }
+
+  function toggleSearch() {
+    setSearch(!search);
   }
 
   useEffect(() => {
@@ -49,14 +60,27 @@ const Popup = () => {
     if (selectedAnime) {
       return (
         <AnimeDetail
-          selectedAnime={selectedAnime}
+          selectedAnime={selectedAnime?.id}
           api={api}
+          isListEntryId={selectedAnime?.isListEntry}
           close={() => setSelectedAnime(null)}
         />
       );
     }
 
-    return <ListTabs showAnime={(id) => setSelectedAnime(id)} api={api} />;
+    if (search) {
+      return (
+        <AnimeSearch
+          api={api}
+          toggleSearch={toggleSearch}
+          showAnime={showAnime}
+        />
+      );
+    }
+
+    return (
+      <ListTabs showAnime={showAnime} api={api} toggleSearch={toggleSearch} />
+    );
   };
 
   return (

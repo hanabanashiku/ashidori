@@ -199,8 +199,45 @@ export default class KitsuProvider extends ApiProvider {
     );
   }
 
+  async createLibraryItem(animeId, patch) {
+    const attributes = KitsuProvider.#createPatch(patch);
+
+    return this.#client.post(`/library-entries`, {
+      data: {
+        type: "libraryEntries",
+        attributes,
+        relationships: {
+          anime: {
+            data: {
+              type: "anime",
+              id: animeId,
+            },
+          },
+          user: {
+            data: {
+              type: "users",
+              id: this.#userId,
+            },
+          },
+        },
+      },
+    });
+  }
+
   async updateLibraryItem(itemId, patch) {
-    const attributes = _.flow(
+    const attributes = KitsuProvider.#createPatch(patch);
+
+    return this.#client.patch(`/library-entries/${itemId}`, {
+      data: {
+        type: "libraryEntries",
+        id: `${itemId}`,
+        attributes,
+      },
+    });
+  }
+
+  static #createPatch(patch) {
+    return _.flow(
       omitBy(_.isUndefined),
       omitBy(_.isNaN)
     )({
@@ -216,14 +253,6 @@ export default class KitsuProvider extends ApiProvider {
           ? null
           : patch.completedDate?.toISOString() ?? undefined,
       ratingTwenty: patch.rating * 2,
-    });
-
-    return this.#client.patch(`/library-entries/${itemId}`, {
-      data: {
-        type: "libraryEntries",
-        id: `${itemId}`,
-        attributes,
-      },
     });
   }
 
