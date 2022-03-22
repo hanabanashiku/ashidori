@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import browser from "webextension-polyfill";
-import { CircularProgress } from "@mui/material";
+import { css } from "@emotion/react";
+import { Box, CircularProgress } from "@mui/material";
 import { getApiInstance } from "../providers/builder";
 import Header from "./Header";
 import LogInNotice from "./LogInNotice";
@@ -50,7 +51,18 @@ const Popup = () => {
 
   const Body = () => {
     if (authState === null) {
-      return <CircularProgress />;
+      return (
+        <Box
+          css={css`
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+          `}
+        >
+          <CircularProgress />
+        </Box>
+      );
     }
 
     if (!authState) {

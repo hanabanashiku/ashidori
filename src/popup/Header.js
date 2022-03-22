@@ -3,24 +3,37 @@ import browser from "webextension-polyfill";
 import { css } from "@emotion/react";
 import { Box, IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
+import useDarkMode from "../helpers/useDarkMode";
 import lang from "lang";
 
 const Header = () => {
+  const isDarkMode = useDarkMode();
+
   return (
-    <Box borderBottom="1px solid black" height="50px" position="relative">
+    <Box
+      css={css`
+      display: flex;
+      position: relative;
+      border-bottom: 1px solid rgba(194, 224, 255, 0.08);
+      height="50px";
+      align-items: center;
+      justify-content: center;
+    `}
+    >
       <img
-        src="../static/images/logo.png"
+        src={`../static/images/${isDarkMode ? "logo_dark" : "logo"}.png`}
         css={css`
           width: 180px;
           height: 45px;
-          margin: 0 25%;
+          margin: 4px 0;
         `}
       />
       <IconButton
         css={css`
           position: absolute;
           right: 0;
-          margin-right: 8px;
+          padding-right: 8px;
+          color: ${isDarkMode ? "#007fff" : "#000"};
         `}
         onClick={() => browser.runtime.openOptionsPage()}
         aria-label={lang.settingsButton}

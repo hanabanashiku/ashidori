@@ -14,7 +14,7 @@ export function buildColumns(status) {
         {
           field: "title",
           headerName: lang.title,
-          width: 220,
+          width: 200,
           renderCell: ({ value }) => <Title value={value} />,
           sortable: false,
         },

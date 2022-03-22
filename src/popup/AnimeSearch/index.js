@@ -73,7 +73,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
             display: flex;
             align-items: flex-end;
             flex-grow: 1;
-            padding-right: 16px;
+            padding-right: 36px;
           `}
         >
           <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />

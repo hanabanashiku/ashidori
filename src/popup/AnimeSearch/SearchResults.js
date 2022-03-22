@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
-import { Alert } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Title from "../AnimeList/Title";
 import LoadingOverlay from "../AnimeList/LoadingOverlay";
@@ -12,7 +12,11 @@ const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
   const isError = results === "error";
 
   if (!results) {
-    return null;
+    return (
+      <Typography height="450px" my="32px" mx="8px" textAlign="center">
+        Enter a search term to continue
+      </Typography>
+    );
   }
 
   if (isError) {

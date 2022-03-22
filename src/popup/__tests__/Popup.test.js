@@ -219,10 +219,11 @@ describe("Popup window", () => {
     await waitFor(() => expect(queryAllByRole("tab")).not.toHaveLength(0));
 
     browser.runtime.sendMessage({
-      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL, payload: {
-        libraryEntryId: "12345"
-      }
-    })
+      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL,
+      payload: {
+        libraryEntryId: "12345",
+      },
+    });
     expect(api.getSingleLibraryEntry).toHaveBeenCalledTimes(1);
     expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
     await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
