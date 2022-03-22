@@ -22,7 +22,7 @@ const Popup = () => {
     if (message.type !== MESSAGE_TYPES.SHOW_ANIME_DETAIL) {
       return;
     }
-    setSelectedAnime(message.payload.libraryEntryId);
+    showAnime(message.payload.libraryEntryId);
   }
 
   function showAnime(id, isListEntry = true) {

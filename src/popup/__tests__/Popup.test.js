@@ -202,7 +202,7 @@ describe("Popup window", () => {
         page: 0,
       })
     );
-    api.getSingleLibraryEntry.mockResolvedValueOnce(
+    api.getSingleLibraryEntry.mockResolvedValue(
       new LibraryEntry({
         _id: "12345",
         _progress: 5,
@@ -224,7 +224,7 @@ describe("Popup window", () => {
         libraryEntryId: "12345",
       },
     });
-    expect(api.getSingleLibraryEntry).toHaveBeenCalledTimes(1);
+    expect(api.getSingleLibraryEntry).toHaveBeenCalled();
     expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
     await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
     expect(getByText("One Piece")).toBeInTheDocument();

@@ -15,6 +15,7 @@ describe("Anime detail display", () => {
     selectedAnime: entryId,
     api,
     close,
+    isListEntryId: true,
   };
 
   beforeEach(() => {
@@ -36,6 +37,14 @@ describe("Anime detail display", () => {
 
     expect(api.getSingleLibraryEntry).toHaveBeenCalledTimes(1);
     expect(api.getSingleLibraryEntry).toHaveBeenCalledWith(entryId);
+  });
+
+  it("fetches data for anime id on launch", () => {
+    render(<AnimeDetail {...props} isListEntryId={false} />);
+
+    expect(api.getSingleLibraryEntry).not.toHaveBeenCalled();
+    expect(api.getSingleLibraryEntryByAnime).toHaveBeenCalledTimes(1);
+    expect(api.getSingleLibraryEntryByAnime).toHaveBeenCalledWith(entryId);
   });
 
   it("shows loading spinner while loading", () => {

@@ -4,6 +4,7 @@ export default class MockApiProvider extends ApiProvider {
   getAnineList = jest.fn();
   getAnimeListByStatus = jest.fn();
   getSingleLibraryEntry = jest.fn();
+  getSingleLibraryEntryByAnime = jest.fn();
   updateLibraryItem = jest.fn();
   removeLibraryItem = jest.fn();
   fetchUserData = jest.fn((info) => super.fetchUserData(info));

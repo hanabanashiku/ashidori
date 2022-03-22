@@ -92,7 +92,7 @@ const Services = () => {
             image="../static/images/crunchyroll.png"
             value={SERVICES.CRUNCHYROLL}
           />
-          <ServiceCheckbox
+          {/*<ServiceCheckbox
             name="Funimation"
             image="../static/images/funimation.png"
             value={SERVICES.FUNIMATION}
@@ -116,7 +116,7 @@ const Services = () => {
             name="Hidive"
             image="../static/images/hidive.png"
             value={SERVICES.HIDIVE}
-          />
+  />*/}
         </Box>
       </Box>
 

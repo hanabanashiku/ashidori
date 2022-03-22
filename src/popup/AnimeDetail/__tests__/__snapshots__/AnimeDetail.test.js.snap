@@ -3,29 +3,672 @@
 exports[`Anime detail display matches snapshot 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-xilmwd-MuiPaper-root-MuiAlert-root"
-    role="alert"
+    class="MuiBox-root css-0"
   >
-    <div
-      class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+    <button
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
     >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-        data-testid="ErrorOutlineIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
+      <span
+        class="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
       >
-        <path
-          d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-        />
-      </svg>
-    </div>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardBackspaceIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"
+          />
+        </svg>
+      </span>
+      Back
+      <span
+        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
     <div
-      class="MuiAlert-message css-acap47-MuiAlert-message"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation3 css-113ef77-MuiPaper-root-AnimeData"
+      data-testid="detail-staticdata"
     >
-      An error occurred getting the details for the selected anime.
+      <h1
+        class="MuiTypography-root MuiTypography-h1 css-1wszan8-MuiTypography-root-AnimeData"
+      >
+        ONE PIECE
+         
+        <a
+          aria-label="External page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-l5tjyk-MuiTypography-root-MuiLink-root-AnimeData"
+          href="https://kitsu.io/anime/12"
+          target="_blank"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="LinkIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
+            />
+          </svg>
+        </a>
+      </h1>
+      <div
+        class="MuiBox-root css-uxi4gc-AnimeData"
+      >
+        <img
+          alt="ONE PIECE"
+          class="css-v7ktw6-AnimeData"
+          data-testid="detail-cover"
+          src="data:,"
+        />
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-paragraph css-6f2xxf-MuiTypography-root-style"
+          data-testid="detail-synopsis"
+        >
+          Gol D. Roger was known as the "Pirate King," the strongest and most infamous being to have sailed the Grand Line.
+        </p>
+        <ul
+          class="MuiBox-root css-4k22zd-AnimeData"
+        >
+          <li>
+            <strong>
+              Status
+            </strong>
+             
+            Airing
+          </li>
+          <li>
+            <strong>
+              Episodes
+            </strong>
+             
+            1008
+          </li>
+          <li>
+            <strong>
+              Aired
+            </strong>
+             
+            Wed Oct 20 1999
+          </li>
+          <li>
+            <strong>
+              Length
+            </strong>
+             
+            24
+             minutes
+          </li>
+          <li
+            class="css-nm2fo-MuiStack-root-AnimeData"
+          >
+            <div
+              class="MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-outlinedPrimary css-to58wm-MuiChip-root"
+            >
+              <span
+                class="MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label"
+              >
+                Adventure
+              </span>
+            </div>
+            <div
+              class="MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-outlinedPrimary css-to58wm-MuiChip-root"
+            >
+              <span
+                class="MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label"
+              >
+                Drama
+              </span>
+            </div>
+            <div
+              class="MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-outlinedPrimary css-to58wm-MuiChip-root"
+            >
+              <span
+                class="MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label"
+              >
+                Piracy
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="css-1clyo4s-MuiStack-root"
+      >
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-0"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://www.crunchyroll.com/one-piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Crunchyroll"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/crunchyroll_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-0"
+            >
+              Crunchyroll
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-1"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://www.funimation.com/shows/one-piece/#videos"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Funimation"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/funimation_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-1"
+            >
+              Funimation
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-2"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://www.hulu.com/series/one-piece-c7a08df6-d0d5-4dd3-afff-d1f90133cd4e"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Hulu"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/hulu_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-2"
+            >
+              Hulu
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-3"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://netflix.com/one-piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Netflix"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/netflix_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-3"
+            >
+              Netflix
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-4"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://amazon.com/one-piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Prime Video"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/amazon_prime_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-4"
+            >
+              Prime Video
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-5"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://hidive.com/one-piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on Hidive"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/hidive_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-5"
+            >
+              Hidive
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-6"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://tubitv.com/one-piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on TubiTV"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/tubitv_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-6"
+            >
+              TubiTV
+            </p>
+          </a>
+        </div>
+        <div
+          class="MuiBox-root css-0"
+        >
+          <a
+            aria-labelledby="streamingLink-7"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-ven9y9-MuiTypography-root-MuiLink-root-StreamingLink"
+            href="https://vrv.co/series/GRMG8ZQZR/One-Piece"
+            target="_blank"
+          >
+            <img
+              alt="Watch on VRV"
+              class="css-48xgr-ServiceImage"
+              src="../static/images/vrv_icon.png"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-15l1c25-MuiTypography-root"
+              id="streamingLink-7"
+            >
+              VRV
+            </p>
+          </a>
+        </div>
+      </div>
     </div>
+    <form
+      class="MuiBox-root css-hpgf8j"
+      data-testid="detail-form"
+    >
+      <div
+        class="css-678bp8-MuiStack-root"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink="true"
+            id="status-label"
+          >
+            Library status
+          </label>
+          <div
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-labelledby="status-label status"
+              class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              id="status"
+              role="button"
+              tabindex="0"
+            >
+              Watching
+            </div>
+            <input
+              aria-hidden="true"
+              class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              tabindex="-1"
+              value="2"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-nnbavb"
+              >
+                <span
+                  class="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink="true"
+            for="progress"
+            id="progress-label"
+          >
+            Progress
+          </label>
+          <div
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root"
+            max="1008"
+            min="0"
+            step="1"
+          >
+            <input
+              aria-invalid="false"
+              class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+              id="progress"
+              name="progress"
+              type="number"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
+            >
+              / 
+              1008
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-1z7n62"
+              >
+                <span>
+                  Progress
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-1mwmlqy-MuiFormLabel-root-MuiInputLabel-root-ListForm"
+            data-shrink="false"
+            id="rating-label"
+          >
+            ⭐   
+            Rating
+          </label>
+          <span
+            class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-187mznn-MuiSlider-root"
+            id="rating"
+          >
+            <span
+              class="MuiSlider-rail css-14pt78w-MuiSlider-rail"
+            />
+            <span
+              class="MuiSlider-track css-1gv0vcd-MuiSlider-track"
+              style="left: 0%; width: 80%;"
+            />
+            <span
+              class="MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium MuiSlider-thumb css-eg0mwd-MuiSlider-thumb"
+              data-index="0"
+              style="left: 80%;"
+            >
+              <input
+                aria-labelledby="rating-label"
+                aria-orientation="horizontal"
+                aria-valuemax="10"
+                aria-valuemin="0"
+                aria-valuenow="8"
+                data-index="0"
+                max="10"
+                min="0"
+                name="rating"
+                step="0.5"
+                style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
+                type="range"
+                value="8"
+              />
+              <span
+                aria-hidden="true"
+                class="MuiSlider-valueLabel css-1kz0hui-MuiSlider-valueLabel"
+              >
+                <span
+                  class="MuiSlider-valueLabelCircle"
+                >
+                  <span
+                    class="MuiSlider-valueLabelLabel"
+                  >
+                    8
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink="true"
+            for="mui-21"
+            id="mui-21-label"
+          >
+            Started
+          </label>
+          <div
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <input
+              aria-invalid="false"
+              aria-label="Choose date, selected date is Jan 30, 2022"
+              aria-readonly="true"
+              class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+              id="mui-21"
+              readonly=""
+              type="text"
+              value="01/30/2022"
+            />
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-1z7n62"
+              >
+                <span>
+                  Started
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink="false"
+            for="mui-23"
+            id="mui-23-label"
+          >
+            Finished
+          </label>
+          <div
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <input
+              aria-invalid="false"
+              aria-label="Choose date"
+              aria-readonly="true"
+              class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+              id="mui-23"
+              readonly=""
+              type="text"
+              value=""
+            />
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-173wfxe"
+              >
+                <span>
+                  Finished
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+        >
+          <label
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink="true"
+            for="notes"
+            id="notes-label"
+          >
+            Notes
+          </label>
+          <div
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <textarea
+              aria-invalid="false"
+              class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+              id="notes"
+              name="notes"
+              style="height: 0px; overflow: hidden;"
+            />
+            <textarea
+              aria-hidden="true"
+              class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+              readonly=""
+              style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+              tabindex="-1"
+            />
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-1z7n62"
+              >
+                <span>
+                  Notes
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-q07hyp-ListForm"
+      >
+        <button
+          class="MuiLoadingButton-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-h4t5eh-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root"
+          id="mui-25"
+          tabindex="0"
+          type="submit"
+        >
+          <span
+            class="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="SaveIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+              />
+            </svg>
+          </span>
+          Save
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-zcbmsk-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="cancel"
+        >
+          Cancel
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          aria-label="Remove from list"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1jo1f9u-MuiButtonBase-root-MuiIconButton-root"
+          tabindex="0"
+          type="button"
+          variant="contained"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="DeleteIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+            />
+          </svg>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 `;

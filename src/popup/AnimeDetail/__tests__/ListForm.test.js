@@ -12,6 +12,7 @@ import ListForm from "../ListForm";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import libraryEntry from "../../../__mocks__/libraryItem";
 import { LIST_STATUS } from "enums";
+import LibraryEntry from "../../../models/LibraryEntry";
 
 describe("Anime list form", () => {
   const props = {
@@ -145,6 +146,17 @@ describe("Anime list form", () => {
       }
     );
     expect(props.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("hides the delete button if the list status is not watching", () => {
+    const entry = new LibraryEntry({
+      ...libraryEntry,
+      _status: LIST_STATUS.NOT_WATCHING,
+    });
+
+    const { queryByLabelText } = render(<ListForm {...props} entry={entry} />);
+
+    expect(queryByLabelText("Remove from list")).toBeNull();
   });
 
   it("clicking the delete button shows the delete modal", () => {

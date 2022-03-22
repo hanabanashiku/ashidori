@@ -49,11 +49,11 @@ const SignInButtons = () => {
           }
         `}
       >
-        <ProviderButton
+        {/*<ProviderButton
           name="My Anime List"
           logo="../../static/images/mal.png"
           onClick={() => {}}
-        />
+        />*/}
 
         <ProviderButton
           name="Kitsu"
@@ -61,11 +61,11 @@ const SignInButtons = () => {
           onClick={() => (window.location.href = "/options/kitsu.html")}
         />
 
-        <ProviderButton
+        {/* <ProviderButton
           name="AniList"
           logo="../../static/images/anilist.png"
           onClick={() => {}}
-        />
+        /> */}
       </Box>
     </Box>
   );
