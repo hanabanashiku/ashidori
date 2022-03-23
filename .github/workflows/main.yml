@@ -51,7 +51,7 @@ jobs:
           fail_on_unmatched_files: true
         
       - name: Publish to Chrome Store
-        uses: Klemensas/chrome-extension-upload-action@$VERSION
+        uses: Klemensas/chrome-extension-upload-action@v1.3
         with:
           refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
           client-id: ${{secrets.CHROME_CLIENT_ID}}
