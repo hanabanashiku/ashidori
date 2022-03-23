@@ -1,6 +1,7 @@
 {
-  "name": "Ashidori",
-  "description": "An anime scrobbler built into your web browser.",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
   "version": "0.0.1",
   "manifest_version": 2,
   "icons": {
