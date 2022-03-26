@@ -32,10 +32,14 @@ describe("Library entry model", () => {
     expect(actual.status).toBe(LIST_STATUS.CURRENT);
     expect(actual.progress).toBe(38);
     expect(actual.notes).toBe("note");
-    expect(actual.startDate.toDateString()).toBe("Sun Oct 08 2017");
+    expect(actual.startDate).toStrictEqual(
+      new Date("2017-10-09T00:00:00.000Z")
+    );
     expect(actual.completedDate).toBeNull();
     expect(actual.rewatchCount).toBe(0);
-    expect(actual.lastUpdated.toDateString()).toBe("Sat Jan 22 2022");
+    expect(actual.lastUpdated).toStrictEqual(
+      new Date("2022-01-22T21:50:33.625Z")
+    );
     expect(actual.rating).toBe(0);
     expect(actual.anime).not.toBeNull();
     expect(actual.anime.title).toBe("Black Clover");
