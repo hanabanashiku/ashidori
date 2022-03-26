@@ -30,7 +30,6 @@ jobs:
         uses: codecov/codecov-action@v2.1.0
         with:
           name: Integration
-          directory: ./coverage
-          files: ./clover.xml,./coverage-final.json,./lcov.info
+          files: ./coverage/clover.xml,./coverage/coverage-final.json,./coverage/lcov.info
           flags: unittests
           verbose: true
