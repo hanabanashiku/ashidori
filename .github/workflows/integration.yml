@@ -1,0 +1,36 @@
+name: Integration
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup node environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "17.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build --if-present
+      
+      - name: Run unit tests
+        run: npm run cover
+      
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          name: Integration
+          directory: ./coverage
+          files: ./clover.xml ./coverage-final.json ./lcov.info
+          flags: unittests
+          verbose: true
