@@ -26,6 +26,15 @@ jobs:
       - name: Run unit tests
         run: npm test
 
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          name: Production
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/clover.xml,./coverage/coverage-final.json,./coverage/lcov.info
+          flags: unittests
+          verbose: true
+
       - name: Create tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
