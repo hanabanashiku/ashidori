@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup node environment
         uses: actions/setup-node@v3
         with:
@@ -19,27 +19,27 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build
         run: npm run build
-      
+
       - name: Run unit tests
         run: npm test
-        
+
       - name: Create tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Bump manifest version
         env:
           tag: ${{steps.tag_version.outputs.new_version}}
-        run: "sed 's/\"version\": \".*\"/\"version\": \"'$tag'\"/' dist/webext-prod/manifest.json"
-      
+        run: 'sed ''s/"version": ".*"/"version": "''$tag''"/'' dist/webext-prod/manifest.json'
+
       - name: Package distribution
-        run: (cd dist/webext-prod; /c/Program\ Files/Git/mingw64/bin/zip ../../dist.zip -r *)
-        
+        run: (cd dist/webext-prod; zip ../../dist.zip -r *)
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -49,22 +49,22 @@ jobs:
           draft: false
           generate_release_notes: true
           fail_on_unmatched_files: true
-        
+
       - name: Publish to Chrome Store
         uses: Klemensas/chrome-extension-upload-action@v1.3
         with:
           refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
           client-id: ${{secrets.CHROME_CLIENT_ID}}
           client-secret: ${{secrets.CHROME_CLIENT_SECRET}}
-          file-name: './dist.zip'
+          file-name: "./dist.zip"
           app-id: ${{secrets.CHROME_APP_ID}}
           publish: true
-      
+
       - name: Publish to Firefox Store
         uses: trmcnvn/firefox-addon@v1
         with:
           uuid: ${{secrets.FIREFOX_UUID}}
-          xpi: './dist.zip'
+          xpi: "./dist.zip"
           manifest: src/manifest.json
           api-key: ${{secrets.FIREFOX_API_KEY}}
           api-secret: ${{secrets.FIREFOX_API_SECRET}}
