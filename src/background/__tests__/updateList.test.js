@@ -19,7 +19,6 @@ describe("Update list background script", () => {
     "showCurrentWatchingAlertOnPopup"
   );
   let apiInstanceSpy;
-  let listUpdatingEnabledSpy;
   /* eslint-disable no-unused-vars */
   let shouldUpdateAfterMinutesSpy;
   let shouldShowUpdatePopupSpy;
@@ -64,7 +63,7 @@ describe("Update list background script", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.useFakeTimers().setSystemTime(now.getTime());
-    listUpdatingEnabledSpy = jest.spyOn(Settings, "listUpdatingEnabled");
+    // listUpdatingEnabledSpy = jest.spyOn(Settings, "listUpdatingEnabled");
     shouldUpdateAfterMinutesSpy = jest
       .spyOn(Settings, "shouldUpdateAfterMinutes")
       .mockResolvedValue(0);
