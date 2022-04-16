@@ -16,9 +16,12 @@ function injectScript(details) {
 
   // Crunchyroll video
   if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
-    browser.tabs.executeScript(details.tabId, {
-      file: "/content_scripts/crunchyroll/video.js",
-      frameId: details.frameId,
+    browser.scripting.executeScript({
+      target: {
+        frameId: details.frameId,
+        tabId: details.tabId,
+      },
+      files: ["/content_scripts/crunchyroll/video.js"],
     });
     return;
   }

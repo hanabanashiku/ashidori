@@ -18,7 +18,7 @@ async function onMessage(message) {
     return;
   }
 
-  const url = `${browser.extension.getURL("popup/detail.html")}?id=${id}`;
+  const url = `${browser.runtime.getURL("popup/detail.html")}?id=${id}`;
 
   await browser.windows.create({
     type: "popup",

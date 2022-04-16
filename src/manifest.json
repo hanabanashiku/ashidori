@@ -3,7 +3,7 @@
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "version": "0.0.1",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "16": "static/icons/icon16.png",
     "48": "static/icons/icon48.png",
@@ -12,7 +12,7 @@
   "options_ui": {
     "page": "options/index.html"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "popup/index.html",
     "default_title": "Ashidori"
   },
@@ -23,19 +23,15 @@
     }
   ],
   "background": {
-    "scripts": [
-      "background/inject.js",
-      "background/updateList.js",
-      "background/showPopup.js"
-    ],
-    "persistent": true
+    "service_worker": "background.js",
+    "type": "module"
   },
   "permissions": [
     "storage",
     "tabs",
     "activeTab",
     "webNavigation",
-    "notifications",
-    "*://*.crunchyroll.com/*"
-  ]
+    "notifications"
+  ],
+  "host_permissions": ["*://*.crunchyroll.com/*"]
 }
