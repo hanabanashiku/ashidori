@@ -21,7 +21,7 @@ describe("Background script injector", () => {
       frameId: 2,
       url: "https://google.com/test",
     });
-    expect(browser.tabs.executeScript).not.toHaveBeenCalled();
+    expect(browser.scripting.executeScript).not.toHaveBeenCalled();
   });
 
   it("sends message on pushState", () => {
@@ -51,10 +51,10 @@ describe("Background script injector", () => {
       frameId: 2,
       url: "https://beta.crunchyroll.com/watch/GPWUK5WJ8/backlighting-is-the-best",
     });
-    expect(browser.tabs.executeScript).toHaveBeenCalledTimes(1);
-    expect(browser.tabs.executeScript).toHaveBeenLastCalledWith(1, {
-      file: "/content_scripts/crunchyroll/video.js",
-      frameId: 2,
+    expect(browser.scripting.executeScript).toHaveBeenCalledTimes(1);
+    expect(browser.scripting.executeScript).toHaveBeenLastCalledWith({
+      files: ["/content_scripts/crunchyroll/video.js"],
+      target: { frameId: 2, tabId: 1 },
     });
   });
 });
