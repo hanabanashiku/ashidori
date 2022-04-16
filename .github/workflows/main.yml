@@ -44,7 +44,7 @@ jobs:
       - name: Bump manifest version
         env:
           tag: ${{steps.tag_version.outputs.new_version}}
-        run: 'sed ''s/"version":"[^"]*"/"version": "${{tag}}"/'' dist/webext-prod/manifest.json | tee dist/webext-prod-mainfest.json'
+        run: 'sed ''s/"version":"[^"]*"/"version": "''$tag''"/'' dist/webext-prod/manifest.json | tee dist/webext-prod-mainfest.json'
 
       - name: Package distribution
         run: (cd dist/webext-prod; zip ../../dist.zip -r *)
