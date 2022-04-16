@@ -1,0 +1,38 @@
+{
+  "__class__": "season",
+  "__href__": "/cms/v2/US/M3/crunchyroll/seasons/GR2PCVZEW",
+  "__resource_key__": "cms:/seasons/GR2PCVZEW",
+  "__links__": {
+    "season/channel": {
+      "href": "/cms/v2/US/M3/crunchyroll/channels/crunchyroll"
+    },
+    "season/episodes": {
+      "href": "/cms/v2/US/M3/crunchyroll/episodes?season_id=GR2PCVZEW"
+    },
+    "season/series": {
+      "href": "/cms/v2/US/M3/crunchyroll/series/G6NQ5DWZ6"
+    }
+  },
+  "__actions__": {},
+  "id": "GR2PCVZEW",
+  "channel_id": "crunchyroll",
+  "title": "My Hero Academia Season 5",
+  "slug_title": "my-hero-academia-season-5",
+  "series_id": "G6NQ5DWZ6",
+  "season_number": 5,
+  "is_complete": false,
+  "description": "",
+  "keywords": [],
+  "season_tags": ["winter-2021", "spring-2021", "summer-2021"],
+  "images": {},
+  "is_mature": false,
+  "mature_blocked": false,
+  "is_subbed": true,
+  "is_dubbed": false,
+  "is_simulcast": false,
+  "seo_title": "",
+  "seo_description": "",
+  "availability_notes": "",
+  "audio_locales": [],
+  "subtitle_locales": []
+}

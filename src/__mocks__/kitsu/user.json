@@ -1,0 +1,212 @@
+{
+  "data": [
+    {
+      "id": "30000",
+      "type": "users",
+      "links": {
+        "self": "https://kitsu.io/api/edge/users/30000"
+      },
+      "attributes": {
+        "createdAt": "2014-01-07T18:18:50.888Z",
+        "updatedAt": "2021-12-19T03:59:23.251Z",
+        "name": "TestAccount",
+        "pastNames": [],
+        "slug": "testaccount",
+        "about": "",
+        "location": "Jest",
+        "waifuOrHusbando": "Waifu",
+        "followersCount": 1,
+        "followingCount": 1,
+        "lifeSpentOnAnime": 0,
+        "birthday": "2000-01-01",
+        "gender": "male",
+        "commentsCount": 1,
+        "favoritesCount": 0,
+        "likesGivenCount": 10,
+        "reviewsCount": 0,
+        "likesReceivedCount": 0,
+        "postsCount": 0,
+        "ratingsCount": 454,
+        "mediaReactionsCount": 0,
+        "proExpiresAt": null,
+        "title": null,
+        "profileCompleted": false,
+        "feedCompleted": false,
+        "website": null,
+        "proTier": null,
+        "avatar": {
+          "tiny": "https://media.kitsu.io/users/avatars/30000/tiny.jpeg",
+          "large": "https://media.kitsu.io/users/avatars/30000/large.jpeg",
+          "small": "https://media.kitsu.io/users/avatars/30000/small.jpeg",
+          "medium": "https://media.kitsu.io/users/avatars/30000/medium.jpeg",
+          "original": "https://media.kitsu.io/users/avatars/30000/original.jpeg",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 40,
+                "height": 40
+              },
+              "large": {
+                "width": 200,
+                "height": 200
+              },
+              "small": {
+                "width": 64,
+                "height": 64
+              },
+              "medium": {
+                "width": 100,
+                "height": 100
+              }
+            }
+          }
+        },
+        "coverImage": {
+          "tiny": "https://media.kitsu.io/users/cover_images/30000/tiny.jpg",
+          "large": "https://media.kitsu.io/users/cover_images/30000/large.jpg",
+          "small": "https://media.kitsu.io/users/cover_images/30000/small.jpg",
+          "original": "https://media.kitsu.io/users/cover_images/30000/original.png",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 840,
+                "height": 200
+              },
+              "large": {
+                "width": 3360,
+                "height": 800
+              },
+              "small": {
+                "width": 1680,
+                "height": 400
+              }
+            }
+          }
+        },
+        "email": "john.doe@example.com",
+        "password": null,
+        "confirmed": false,
+        "previousEmail": null,
+        "language": null,
+        "timeZone": null,
+        "country": null,
+        "shareToGlobal": true,
+        "titleLanguagePreference": "canonical",
+        "sfwFilter": true,
+        "ratingSystem": "advanced",
+        "theme": "dark",
+        "facebookId": null,
+        "hasPassword": true,
+        "status": "registered",
+        "subscribedToNewsletter": false,
+        "aoPro": null,
+        "permissions": "[]"
+      },
+      "relationships": {
+        "waifu": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/waifu",
+            "related": "https://kitsu.io/api/edge/30000/32602/waifu"
+          }
+        },
+        "pinnedPost": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/pinned-post",
+            "related": "https://kitsu.io/api/edge/users/30000/pinned-post"
+          }
+        },
+        "followers": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/followers",
+            "related": "https://kitsu.io/api/edge/users/30000/followers"
+          }
+        },
+        "following": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/following",
+            "related": "https://kitsu.io/api/edge/users/30000/following"
+          }
+        },
+        "blocks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/blocks",
+            "related": "https://kitsu.io/api/edge/users/30000/blocks"
+          }
+        },
+        "linkedAccounts": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/linked-accounts",
+            "related": "https://kitsu.io/api/edge/users/30000/linked-accounts"
+          }
+        },
+        "profileLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/profile-links",
+            "related": "https://kitsu.io/api/edge/users/30000/profile-links"
+          }
+        },
+        "userRoles": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/user-roles",
+            "related": "https://kitsu.io/api/edge/users/30000/user-roles"
+          }
+        },
+        "libraryEntries": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/library-entries",
+            "related": "https://kitsu.io/api/edge/users/30000/library-entries"
+          }
+        },
+        "favorites": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/favorites",
+            "related": "https://kitsu.io/api/edge/users/30000/favorites"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/users/30000/reviews"
+          }
+        },
+        "stats": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/stats",
+            "related": "https://kitsu.io/api/edge/users/30000/stats"
+          }
+        },
+        "notificationSettings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/notification-settings",
+            "related": "https://kitsu.io/api/edge/users/30000/notification-settings"
+          }
+        },
+        "oneSignalPlayers": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/one-signal-players",
+            "related": "https://kitsu.io/api/edge/users/30000/one-signal-players"
+          }
+        },
+        "categoryFavorites": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/category-favorites",
+            "related": "https://kitsu.io/api/edge/users/30000/category-favorites"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/users/30000/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/users/30000/quotes"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/users?filter%5Bself%5D=true&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/users?filter%5Bself%5D=true&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}

@@ -47,7 +47,7 @@ jobs:
         run: 'sed ''s/"version": ".*"/"version": "''$tag''"/'' dist/webext-prod/manifest.json'
 
       - name: Package distribution
-        run: (cd dist/webext-prod; /c/Program\ Files/Git/mingw64/bin/zip ../../dist.zip -r *)
+        run: (cd dist/webext-prod; zip ../../dist.zip -r *)
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
