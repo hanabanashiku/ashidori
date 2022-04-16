@@ -44,7 +44,7 @@ jobs:
       - name: Bump manifest version
         env:
           tag: ${{steps.tag_version.outputs.new_version}}
-        run: 'sed ''s/"version": ".*"/"version": "''$tag''"/'' dist/webext-prod/manifest.json'
+        run: 'sed ''s/"version":"[^"]*"/"version": "${{tag}}"/'' dist/webext-prod/manifest.json | tee dist/webext-prod-mainfest.json'
 
       - name: Package distribution
         run: (cd dist/webext-prod; zip ../../dist.zip -r *)
@@ -60,13 +60,12 @@ jobs:
           fail_on_unmatched_files: true
 
       - name: Publish to Chrome Store
-        uses: Klemensas/chrome-extension-upload-action@v1.3
+        uses: mnao305/chrome-extension-upload@2.2.0
         with:
-          refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
+          file-path: "./dist.zip"
+          extension-id: ${{secrets.CHROME_APP_ID}}
           client-id: ${{secrets.CHROME_CLIENT_ID}}
-          client-secret: ${{secrets.CHROME_CLIENT_SECRET}}
-          file-name: "./dist.zip"
-          app-id: ${{secrets.CHROME_APP_ID}}
+          refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
           publish: true
 
       - name: Publish to Firefox Store
