@@ -37,18 +37,19 @@ export default class KitsuProvider extends ApiProvider {
 
     let adapter = undefined;
 
-    if (process.env.NODE_ENV !== "test") {
+    if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
       // this adapter allows us to use axios in a service worker context
       // Unfortunately it doesn't work in node
-      adapter = require("@vespaiach/axios-fetch-adapter");
+      adapter = require("@vespaiach/axios-fetch-adapter").default;
     }
+
     this.#client = axios.create({
       baseURL: KITSU_BASE_URL,
       headers: {
         Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
       },
-      adapter,
+      adapter: adapter,
     });
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);
