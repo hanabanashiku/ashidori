@@ -2,7 +2,6 @@ import _ from "lodash";
 import { omitBy } from "lodash/fp";
 import levenshtein from "js-levenshtein";
 import axios from "axios";
-import fetchAdapter from "@vespaiach/axios-fetch-adapter";
 import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
@@ -10,6 +9,7 @@ import LibraryEntry from "../models/LibraryEntry";
 import AnimeSeries from "../models/AnimeSeries";
 import PagedData from "../models/PagedData";
 import { LIST_STATUS } from "../enums";
+
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
 
@@ -34,14 +34,21 @@ export default class KitsuProvider extends ApiProvider {
 
   constructor() {
     super();
+
+    let adapter = undefined;
+
+    if (process.env.NODE_ENV !== "test") {
+      // this adapter allows us to use axios in a service worker context
+      // Unfortunately it doesn't work in node
+      adapter = require("@vespaiach/axios-fetch-adapter");
+    }
     this.#client = axios.create({
       baseURL: KITSU_BASE_URL,
       headers: {
         Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
       },
-      // this adapter allows us to use axios in a service worker context
-      adapter: fetchAdapter,
+      adapter,
     });
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);
