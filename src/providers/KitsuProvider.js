@@ -190,13 +190,28 @@ export default class KitsuProvider extends ApiProvider {
    */
   static verifyResolvedAnime(series, episode) {
     const STRING_THRESHOLD = 7;
+    const extractedTitle = this.normalizeString(episode.series.title);
+    const guessTitle = this.normalizeString(series.englishTitle);
     return (
-      levenshtein(episode.series.title, series.englishTitle) <
-        STRING_THRESHOLD ||
-      levenshtein(episode.series.title, series.title) < STRING_THRESHOLD ||
-      levenshtein(episode.season.name, series.title) < STRING_THRESHOLD ||
-      levenshtein(episode.season.name, series.englishTitle) < STRING_THRESHOLD
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.title)
+      ) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.englishTitle)
+      ) < STRING_THRESHOLD
     );
+  }
+
+  /**
+   * @param {string} str
+   * @returns {string}
+   */
+  static normalizeString(str) {
+    return str.toLowerCase().replace(/^[a-z0-9]/g, "");
   }
 
   async createLibraryItem(animeId, patch) {
