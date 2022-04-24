@@ -99,7 +99,8 @@ const AnimeData = ({ anime }) => {
           )}
           {anime.startDate && (
             <li>
-              <strong>{lang.aired}</strong> {anime.startDate.toDateString()}
+              <strong>{anime.isAiring ? lang.airing : lang.aired}</strong>{" "}
+              {anime.startDate.toDateString()}
               {anime.endDate && ` ${lang.to} ${anime.endDate.toDateString()}`}
             </li>
           )}

@@ -92,7 +92,7 @@ exports[`Anime detail display matches snapshot 1`] = `
           </li>
           <li>
             <strong>
-              Aired
+              Airing
             </strong>
              
             Wed Oct 20 1999
@@ -429,10 +429,10 @@ exports[`Anime detail display matches snapshot 1`] = `
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth css-1cdnw8p-MuiFormControl-root-ListForm"
         >
           <label
-            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-1mwmlqy-MuiFormLabel-root-MuiInputLabel-root-ListForm"
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-rsprkj-MuiFormLabel-root-MuiInputLabel-root-ListForm"
             data-shrink="false"
             id="rating-label"
           >
@@ -607,7 +607,7 @@ exports[`Anime detail display matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiBox-root css-q07hyp-ListForm"
+        class="MuiBox-root css-13uv13i-ListForm"
       >
         <button
           class="MuiLoadingButton-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-h4t5eh-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root"

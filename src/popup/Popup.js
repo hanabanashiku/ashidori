@@ -55,7 +55,9 @@ const Popup = () => {
         <Box
           css={css`
             display: flex;
-            height: 100%;
+            height: 420px;
+            padding: 0;
+            margin: 0;
             justify-content: center;
             align-items: center;
           `}

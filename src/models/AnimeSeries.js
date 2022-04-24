@@ -106,6 +106,13 @@ export default class AnimeSeries {
   }
 
   /**
+   * @returns {true} if the series is airing.
+   */
+  get isAiring() {
+    return this._status === ANIME_STATUS.AIRING;
+  }
+
+  /**
    * @returns {number} The number of episodes.
    */
   get episodeCount() {

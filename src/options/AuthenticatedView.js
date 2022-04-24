@@ -8,11 +8,11 @@ import { getApiInstance } from "../providers/builder";
 import { PROVIDER_NAMES } from "../enums";
 import lang from "lang";
 
-const AuthenticatedView = ({ userData }) => {
+const AuthenticatedView = ({ userData, reset }) => {
   const signOut = async () => {
     const api = await getApiInstance();
     await api.signOut();
-    window.location.href = "/options/index.html";
+    reset();
   };
 
   return (
@@ -72,6 +72,7 @@ const AuthenticatedView = ({ userData }) => {
 };
 AuthenticatedView.propTypes = {
   userData: PropTypes.instanceOf(UserData).isRequired,
+  reset: PropTypes.func.isRequired,
 };
 
 export default AuthenticatedView;

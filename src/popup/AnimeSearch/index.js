@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import { css } from "@emotion/react";
 import { Box, Stack, Button, TextField } from "@mui/material";
 import { Search as SearchIcon, ChevronLeft } from "@mui/icons-material";
@@ -22,6 +23,21 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
     toggleSearch();
   }
 
+  const submitSearchRef = useRef(
+    _.throttle(async (text) => {
+      try {
+        setLoading(true);
+        const data = await api.findAnime(text, page, 20);
+        setResults(data);
+      } catch {
+        setResults("error");
+      } finally {
+        setLoading(false);
+      }
+    }, 500)
+  );
+
+  // restore state between popup clicks
   useEffect(() => {
     const q = window.sessionStorage.getItem("search_query");
     const p = window.sessionStorage.getItem("search_page");
@@ -39,20 +55,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
       return;
     }
 
-    const timeoutId = setTimeout(() => {
-      (async () => {
-        try {
-          setLoading(true);
-          const data = await api.findAnime(query, page, 20);
-          setResults(data);
-        } catch {
-          setResults("error");
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }, 1000);
-    return () => clearTimeout(timeoutId);
+    submitSearchRef.current(query);
   }, [query, page]);
 
   return (
@@ -89,6 +92,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
             css={css`
               flex-grow: 1;
             `}
+            autoFocus
           />
         </Box>
       </Stack>

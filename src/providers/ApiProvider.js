@@ -101,6 +101,9 @@ export default class ApiProvider {
    */
   async getUserData() {
     const data = await browser.storage.local.get({ userData: null });
+    if (!data.userData) {
+      return null;
+    }
     return new UserData(data.userData);
   }
 

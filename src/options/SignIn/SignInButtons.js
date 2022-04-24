@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { Box, Button, Typography } from "@mui/material";
 import lang from "lang";
@@ -35,6 +36,8 @@ ProviderButton.propTypes = {
 };
 
 const SignInButtons = () => {
+  const navigate = useNavigate();
+
   return (
     <Box>
       <Typography variant="h2" fontSize="18px">
@@ -58,7 +61,7 @@ const SignInButtons = () => {
         <ProviderButton
           name="Kitsu"
           logo="../../static/images/kitsu.png"
-          onClick={() => (window.location.href = "/options/kitsu.html")}
+          onClick={() => navigate("signin/kitsu")}
         />
 
         {/* <ProviderButton
