@@ -2,6 +2,7 @@ import _ from "lodash";
 import { omitBy } from "lodash/fp";
 import levenshtein from "js-levenshtein";
 import axios from "axios";
+import fetchAdapter from "@vespaiach/axios-fetch-adapter";
 import ApiProvider from "./ApiProvider";
 import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
@@ -39,6 +40,8 @@ export default class KitsuProvider extends ApiProvider {
         Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
       },
+      // this adapter allows us to use axios in a service worker context
+      adapter: fetchAdapter,
     });
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);

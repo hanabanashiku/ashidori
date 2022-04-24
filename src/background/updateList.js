@@ -14,11 +14,6 @@ import LibraryEntry from "../models/LibraryEntry";
 import lang from "../lang";
 import { LIST_STATUS, PROVIDER_NAMES } from "../enums";
 
-/**
- * A list of episode tabs containing corresponding registered onRemove listeners.
- */
-const currentTabs = {};
-
 browser.runtime.onMessage.addListener(onEpisodeStarted);
 browser.runtime.onMessage.addListener(onUpdateRequest);
 
@@ -27,7 +22,7 @@ browser.runtime.onMessage.addListener(onUpdateRequest);
  * @param {object} message The message payload.
  * @param {browser.runtime.MessageSender} sender The message sender.
  */
-function onEpisodeStarted(message, sender) {
+async function onEpisodeStarted(message, sender) {
   if (message.type !== MESSAGE_TYPES.ANIME_EPISODE_STARTED) {
     return;
   }
@@ -46,15 +41,18 @@ function onEpisodeStarted(message, sender) {
       return;
     }
 
-    removeTabOnRemovedHook(tabId);
+    browser.tabs.onRemoved.removeListener(onTabClose);
     startUpdate(loadTime, userData, episodeData, listEntry);
   }
   browser.tabs.onRemoved.addListener(onTabClose);
 
+  const currentTabs = await browser.storage.local.get("CURRENT_TABS")
+    .CURRENT_TABS;
   currentTabs[sender.tab.id] = {
     episodeData,
     listener: onTabClose,
   };
+  await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }
 
 /**
@@ -270,13 +268,15 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
  * Removes the onRemoved tab listener for a closed anime episode.
  * @param {number} tabId The id of the current tab
  */
-function removeTabOnRemovedHook(tabId) {
+async function removeTabOnRemovedHook(tabId) {
+  const currentTabs = (await browser.storage.local.get("CURRENT_TABS"))
+    .CURRENT_TABS;
   const data = currentTabs[tabId];
-
   if (!data) {
     return;
   }
 
   browser.tabs.onRemoved.removeListener(data.listener);
   delete currentTabs[tabId];
+  await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }
