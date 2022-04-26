@@ -5,8 +5,15 @@ import { KeyboardBackspace } from "@mui/icons-material";
 import ApiProvider from "../../providers/ApiProvider";
 import AnimeData from "./AnimeData";
 import ListForm from "./ListForm";
+import { resetSearchPage } from "../../helpers/storageHelpers";
 
-const AnimeDetail = ({ selectedAnime, isListEntryId, close, api }) => {
+const AnimeDetail = ({
+  selectedAnime,
+  isListEntryId,
+  close,
+  api,
+  toggleSearch,
+}) => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
@@ -21,6 +28,14 @@ const AnimeDetail = ({ selectedAnime, isListEntryId, close, api }) => {
       }
     })();
   }, [selectedAnime, setAnime]);
+
+  function closeDetail(saving) {
+    if (saving && toggleSearch) {
+      resetSearchPage();
+      toggleSearch();
+    }
+    close();
+  }
 
   if (!anime) {
     return <CircularProgress />;
@@ -40,7 +55,7 @@ const AnimeDetail = ({ selectedAnime, isListEntryId, close, api }) => {
         Back
       </Button>
       <AnimeData anime={anime.anime} />
-      <ListForm entry={anime} api={api} close={close} />
+      <ListForm entry={anime} api={api} close={closeDetail} />
     </Box>
   );
 };
@@ -50,6 +65,7 @@ AnimeDetail.propTypes = {
   close: PropTypes.func.isRequired,
   api: PropTypes.instanceOf(ApiProvider).isRequired,
   isListEntryId: PropTypes.bool.isRequired,
+  toggleSearch: PropTypes.func,
 };
 
 export default AnimeDetail;

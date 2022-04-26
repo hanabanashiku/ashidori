@@ -50,7 +50,7 @@ const ListForm = ({ entry, api, close }) => {
 
   async function onSubmit(values) {
     if (!isDirty) {
-      close();
+      close(false);
       return;
     }
 
@@ -62,7 +62,7 @@ const ListForm = ({ entry, api, close }) => {
       await api.updateLibraryItem(entry.id, patch);
     }
 
-    close();
+    close(true);
   }
 
   return (

@@ -6,6 +6,11 @@ import { Box, Stack, Button, TextField } from "@mui/material";
 import { Search as SearchIcon, ChevronLeft } from "@mui/icons-material";
 import SearchResults from "./SearchResults";
 import ApiProvider from "../../providers/ApiProvider";
+import {
+  resetSearchPage,
+  cacheSearchPage,
+  getCachedSearchPage,
+} from "../../helpers/storageHelpers";
 
 const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
   const [query, setQuery] = useState("");
@@ -13,13 +18,8 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
   const [results, setResults] = useState(null);
   const [page, setPage] = useState(0);
 
-  function cacheState(q, p) {
-    window.sessionStorage.setItem("search_query", q);
-    window.sessionStorage.setItem("search_page", p);
-  }
-
   function onBack() {
-    cacheState("", 0);
+    resetSearchPage();
     toggleSearch();
   }
 
@@ -39,8 +39,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
 
   // restore state between popup clicks
   useEffect(() => {
-    const q = window.sessionStorage.getItem("search_query");
-    const p = window.sessionStorage.getItem("search_page");
+    const [q, p] = getCachedSearchPage();
 
     if (q) {
       setQuery(q);
@@ -87,7 +86,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
             onChange={(e) => {
               setPage(0);
               setQuery(e.target.value);
-              cacheState(e.target.value, 0);
+              cacheSearchPage(e.target.value, 0);
             }}
             css={css`
               flex-grow: 1;
@@ -102,7 +101,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
         page={page}
         setPage={(value) => {
           setPage(value);
-          cacheState(query, value);
+          cacheSearchPage(query, value);
         }}
         loading={loading}
       />

@@ -28,3 +28,20 @@ export async function resetCurrentWatchingAlert() {
     current_anime: null,
   });
 }
+
+export function cacheSearchPage(query, page) {
+  window.sessionStorage.setItem("search_query", query);
+  window.sessionStorage.setItem("search_page", page);
+}
+
+export function getCachedSearchPage() {
+  return [
+    window.sessionStorage.getItem("search_query"),
+    window.sessionStorage.getItem("search_page"),
+  ];
+}
+
+export function resetSearchPage() {
+  window.sessionStorage.removeItem("search_query");
+  window.sessionStorage.removeItem("search_page");
+}
