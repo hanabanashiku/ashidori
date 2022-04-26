@@ -94,5 +94,8 @@
   "episodeUpdatedPopupTitle": "List updated",
   "episodeUpdatedPopupBody": "%s has been updated to episode %s.",
   "episodeUpdatedCompleteBody": "%s has been marked finished.",
-  "episodeUpdatedCurrentBody": "%s has been marked as currently watching."
+  "episodeUpdatedCurrentBody": "%s has been marked as currently watching.",
+
+  "errorOccurredTitle": "An error has occurred.",
+  "errorOccurredBody": "Please check your internet connection and try again."
 }

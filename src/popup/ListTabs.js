@@ -8,6 +8,7 @@ import AnimeList from "./AnimeList";
 import CurrentAnimeDisplay from "./CurrentAnimeDisplay";
 import { LIST_STATUS } from "../enums";
 import lang from "lang";
+import ErrorDisplay from "./ErrorDisplay";
 
 export const TABS = {
   ...LIST_STATUS,
@@ -15,12 +16,18 @@ export const TABS = {
 
 const ListTabs = ({ showAnime, api, toggleSearch }) => {
   const [value, setValue] = useState(TABS.CURRENT);
+  const [showError, setError] = useState(false);
 
   const tabProps = (tab) => ({
     hide: tab !== value,
     showAnime,
     api,
+    showError: () => setError(true),
   });
+
+  if (showError) {
+    return <ErrorDisplay />;
+  }
 
   return (
     <>

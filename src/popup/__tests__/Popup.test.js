@@ -59,6 +59,18 @@ describe("Popup window", () => {
     expect(browser.runtime.openOptionsPage).toHaveBeenCalledTimes(1);
   });
 
+  it("shows error page when an error occurs", async () => {
+    api.getAnimeListByStatus.mockRejectedValueOnce();
+
+    const { getByText, queryByRole } = render(<Popup />);
+
+    await waitFor(() =>
+      expect(queryByRole("progressbar")).not.toBeInTheDocument()
+    );
+
+    expect(getByText("An error has occurred.")).toBeInTheDocument();
+  });
+
   describe("currently watching alert", () => {
     it("is rendered when an anime is being watched", async () => {
       browser.storage.local.set({

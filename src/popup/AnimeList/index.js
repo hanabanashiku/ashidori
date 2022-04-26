@@ -9,7 +9,7 @@ import { LIST_STATUS } from "../../enums";
 
 const DEFAULT_PAGE_SIZE = 25;
 
-const AnimeList = ({ status, hide, showAnime, api }) => {
+const AnimeList = ({ status, hide, showAnime, showError, api }) => {
   const [page, setPage] = useState(0);
   const [listRefresher, refreshList] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -43,6 +43,7 @@ const AnimeList = ({ status, hide, showAnime, api }) => {
         setItemCount(data.total);
       } catch {
         setApiState("error");
+        showError();
       }
     })();
   }, [
@@ -136,6 +137,7 @@ AnimeList.propTypes = {
   status: PropTypes.oneOf(Object.values(LIST_STATUS)).isRequired,
   hide: PropTypes.bool.isRequired,
   showAnime: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
   api: PropTypes.instanceOf(ApiProvider).isRequired,
 };
 

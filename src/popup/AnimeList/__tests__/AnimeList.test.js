@@ -12,6 +12,7 @@ describe("Anime list viewer", () => {
     hide: false,
     showAnime: jest.fn(),
     api: new MockApiProvider(),
+    showError: jest.fn(),
   };
 
   afterEach(() => {
@@ -76,5 +77,17 @@ describe("Anime list viewer", () => {
 
     userEvent.click(getByText("ONE PIECE"));
     expect(props.showAnime).toHaveBeenCalledWith("1");
+  });
+
+  it("sets error on error", async () => {
+    props.api.getAnimeListByStatus.mockRejectedValueOnce();
+
+    const { queryByTestId } = render(
+      <AnimeList {...props} status={LIST_STATUS.CURRENT} />
+    );
+
+    await waitFor(() => expect(queryByTestId("loading-overlay")).toBeFalsy());
+
+    expect(props.showError).toHaveBeenCalledTimes(1);
   });
 });
