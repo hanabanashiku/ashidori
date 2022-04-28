@@ -140,10 +140,15 @@ async function showUpdatePopupAsync(episodeData, listEntry, userData) {
     updateAnimeAsync(episodeData, listEntry, userData);
   }
 
+  const body =
+    listEntry === LIST_STATUS.NOT_WATCHING
+      ? lang.newAnimeEpisodeCompletedPopupBody
+      : lang.episodeCompletedPopupBody;
+
   await sendNotification(
     lang.episodeCompletedPopupTitle,
     util.format(
-      lang.episodeCompletedPopupBody,
+      body,
       episodeData.number,
       listEntry.anime.title,
       userData.username
@@ -181,9 +186,15 @@ async function showUpdatedPopupAsync(
       lang.episodeUpdatedCompleteBody,
       listEntry.anime.title
     );
+  } else if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+    message = util.format(
+      lang.episodeUpdatedNewBody,
+      listEntry.anime.title
+    );
   } else if (
-    listEntry.status === LIST_STATUS.NOT_WATCHING ||
-    listEntry.status === LIST_STATUS.ON_HOLD
+    listEntry.status === LIST_STATUS.ON_HOLD ||
+    listEntry.status === LIST_STATUS.PLANNED ||
+    listEntry.status == LIST_STATUS.DROPPED
   ) {
     message = util.format(
       lang.episodeUpdatedCurrentBody,
@@ -260,7 +271,12 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
     };
   }
 
-  await api.updateLibraryItem(listEntry.id, patch);
+  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+    await api.createLibraryItem(listEntry.anime.id, patch);
+  } else {
+    await api.updateLibraryItem(listEntry.id, patch);
+  }
+
   showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
 }
 

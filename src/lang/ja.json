@@ -89,11 +89,13 @@
   "invalidCredentials": "ユーザーネームやパスワードは無効です。",
 
   "episodeCompletedPopupTitle": "一話終了後",
-  "episodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストでアップデートしましょう。",
+  "episodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストでアップデートしましょうか。",
+  "newAnimeEpisodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストに追加しましょうか。",
   "episodeUpdatedPopupTitle": "リストがアップデートされました。",
   "episodeUpdatedPopupBody": "%sは%s話にアップデートされました。",
   "episodeUpdatedCompleteBody": "%sは完成として記録されました。",
   "episodeUpdatedCurrentBody": "%sは現行中として記録されました。",
+  "episodeUpdatedNewBody": "%sはリストに追加されました。.",
 
   "errorOccurredTitle": "エラーが発生しまいました",
   "errorOccurredBody": "インターネット接続を確認して、もう一度お試しください。"
