@@ -31,7 +31,8 @@
     "tabs",
     "activeTab",
     "webNavigation",
-    "notifications"
+    "notifications",
+    "scripting"
   ],
   "host_permissions": ["*://*.crunchyroll.com/*"]
 }
