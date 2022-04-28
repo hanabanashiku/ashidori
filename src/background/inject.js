@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
+import { executeScript } from "../helpers/extensionHelpers";
 import { SERVICES } from "../enums";
 import MESSAGE_TYPES from "../messageTypes";
-
 
 // used to inject scripts on pages reached using history.pushState()
 async function injectScript(details) {
@@ -18,12 +18,7 @@ async function injectScript(details) {
 
   // Crunchyroll video
   if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
-    browser.scripting.executeScript({
-      target: {
-        tabId: details.tabId,
-      },
-      files: await getVideoScript(SERVICES.CRUNCHYROLL),
-    });
+    executeScript(details.tabId, await getVideoScript(SERVICES.CRUNCHYROLL));
     return;
   }
 }
