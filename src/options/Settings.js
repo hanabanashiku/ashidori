@@ -80,12 +80,29 @@ export default class Settings {
   }
 
   /**
+   * Check if it is safe to automatically add a new series to the list after watching.
+   * @returns {Promise<boolean>} A promise that returns true if the popup should be shown.
+   */
+  static async shouldShowAddPopup() {
+    return this.#getStoredKey("enable_add_popup", true);
+  }
+
+  /**
    * Enable or disable the popup to prompt the user to update the current episode count after watching an episode.
    * @param {boolean} value Whether to show the confirmation popup.
    * @returns {Promise<void>}
    */
   static async setShouldShowUpdatePopup(value) {
     return this.#setStoredKey("enable_update_popup", value);
+  }
+
+  /**
+   * Enable or disable the popup to prompt the user to add the current anime after watching an episode.
+   * @param {boolean} value Whether to show the confirmation popup.
+   * @returns {Promise<void>}
+   */
+  static async setShouldShowAddPopup(value) {
+    return this.#setStoredKey("enable_add_popup", value);
   }
 
   /**

@@ -81,6 +81,7 @@
   "chooseProvider": "この下、アニメリストのプロバイダーを選んでください。",
   "enableIntegrations": "ストリーミング・インテグレーションを効果にする",
   "askBeforeUpdating": "進みを自動的にアップデートする前の確認",
+  "askBeforeAdding": "新しいシリスを追加する前の確認",
   "newEpisodeNotification": "新しいエピソードが放送するたび、お知らせを送る",
   "currentlyWatchingTip": "今は%d話からの%sを見ています.",
 

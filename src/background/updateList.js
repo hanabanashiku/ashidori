@@ -89,7 +89,12 @@ async function startUpdate(loadTime, userData, episodeData, listEntry) {
     return;
   }
 
-  if (await Settings.shouldShowUpdatePopup()) {
+  const shouldShowUpdatePopup =
+    listEntry.status === LIST_STATUS.NOT_WATCHING
+      ? await Settings.shouldShowAddPopup()
+      : await Settings.shouldShowUpdatePopup();
+
+  if (shouldShowUpdatePopup) {
     await showUpdatePopupAsync(episodeData, listEntry, userData);
   } else {
     await updateAnimeAsync(episodeData, listEntry, userData);
@@ -187,10 +192,7 @@ async function showUpdatedPopupAsync(
       listEntry.anime.title
     );
   } else if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-    message = util.format(
-      lang.episodeUpdatedNewBody,
-      listEntry.anime.title
-    );
+    message = util.format(lang.episodeUpdatedNewBody, listEntry.anime.title);
   } else if (
     listEntry.status === LIST_STATUS.ON_HOLD ||
     listEntry.status === LIST_STATUS.PLANNED ||

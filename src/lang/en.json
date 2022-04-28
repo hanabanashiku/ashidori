@@ -82,6 +82,7 @@
   "enableIntegrations": "Enable integrations on",
   "waitMinutes": "Wait %s minutes before updating episode count.",
   "askBeforeUpdating": "Ask before updating episode count",
+  "askBeforeAdding": "Ask before adding a new series",
   "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
   "currentlyWatchingTip": "You are currently watching episode %d of %s.",
 

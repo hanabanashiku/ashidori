@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel watch --no-content-hash src/manifest.json --target webext-dev",
-    "build": "parcel build --no-content-hash src/manifest.json --target webext-prod",
+    "start": "parcel watch src/manifest.json --target webext-dev",
+    "build": "parcel build src/manifest.json --target webext-prod",
     "test": "jest",
     "cover": "jest --collectCoverage",
     "clear-build-cache": "rm -rf .cache/ dist/",
