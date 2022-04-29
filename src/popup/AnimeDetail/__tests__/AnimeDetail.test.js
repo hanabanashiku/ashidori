@@ -97,7 +97,7 @@ describe("Anime detail display", () => {
 
     await waitForData(container);
     expect(await axe(container)).toHaveNoViolations();
-  });
+  }, 20000);
 
   it("matches snapshot", async () => {
     const { container } = render(<AnimeDetail {...props} />);
