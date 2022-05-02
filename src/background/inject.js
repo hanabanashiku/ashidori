@@ -6,7 +6,7 @@ import MESSAGE_TYPES from "../messageTypes";
 // used to inject scripts on pages reached using history.pushState()
 async function injectScript(details) {
   // send a mesage when history.pushState() is used.
-  // This allows content scripts to look for history state events.
+  // This allows content scripts to look for history state events.∂
   browser.tabs.sendMessage(
     details.tabId,
     {

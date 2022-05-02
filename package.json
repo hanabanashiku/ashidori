@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel watch src/v2/manifest.json --target webext-dev",
+    "start": "parcel watch src/manifest.json --target webext-dev",
+    "start-firefox": "parcel watch src/v2/manifest.json --target webext-dev",
     "build": "parcel build src/manifest.json --target webext-prod",
     "build-firefox": "parcel build src/v2/manifest.json --target webext-prod-ff",
     "build-all": "npm run build & npm run build-firefox",

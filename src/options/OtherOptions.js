@@ -70,6 +70,7 @@ const OtherOptions = () => {
       // Get settings
       const listUpdatingEnabled = Settings.listUpdatingEnabled();
       const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
+      const shouldShowAddPopup = Settings.shouldShowAddPopup();
       const shouldNotifiyForNewEpisodes =
         Settings.shouldNotifiyForNewEpisodes();
       const updateDelay = Settings.shouldUpdateAfterMinutes();
@@ -79,6 +80,7 @@ const OtherOptions = () => {
         payload: {
           listUpdatingEnabled: await listUpdatingEnabled,
           shouldShowUpdatePopup: await shouldShowUpdatePopup,
+          shouldShowAddPopup: await shouldShowAddPopup,
           shouldNotifiyForNewEpisodes: await shouldNotifiyForNewEpisodes,
           updateDelay: await updateDelay,
         },
