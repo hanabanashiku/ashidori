@@ -105,3 +105,8 @@ dist
 
 # parcel files
 .parcel-cache/
+
+# test build files
+dist.zip
+dist.crx
+dist.xpi

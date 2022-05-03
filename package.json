@@ -3,11 +3,14 @@
   "version": "0.0.1",
   "description": "An anime scrobbler built into your web browser.",
   "scripts": {
-    "start": "parcel watch src/manifest.json --target webext-dev",
-    "build": "parcel build src/manifest.json --target webext-prod",
+    "start": "parcel watch src/manifest.json --target webext-dev --no-hmr --no-content-hash",
+    "start-firefox": "parcel watch src/v2/manifest.json --target webext-dev --no-hmr --no-content-hash",
+    "build": "parcel build src/manifest.json --target webext-prod --no-content-hash",
+    "build-firefox": "parcel build src/v2/manifest.json --target webext-prod-ff --no-content-hash",
+    "build-all": "npm run build & npm run build-firefox",
     "test": "jest",
     "cover": "jest --collectCoverage",
-    "clear-build-cache": "rm -rf .cache/ dist/",
+    "clear-build-cache": "rm -rf .cache/ .parcel-cache/ dist/",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
     "format": "prettier --write \"src/**/*.{js,jsx}\""
   },
@@ -22,12 +25,11 @@
   "keywords": [
     "anime",
     "scrobbler",
+    "scrobbling",
     "kitsu",
     "kitsu.io",
     "mal",
-    "my",
-    "anime",
-    "list",
+    "myanimelist",
     "anilist",
     "netflix",
     "crunchyroll",
@@ -118,14 +120,17 @@
   },
   "targets": {
     "webext-dev": {
-      "distDir": "./dist",
+      "distDir": "./dist/dev",
       "sourceMap": {
         "inline": true,
         "inlineSources": true
       }
     },
     "webext-prod": {
-      "distDir": "./dist"
+      "distDir": "./dist/crx"
+    },
+    "webext-prod-ff": {
+      "distDir": "./dist/xpi"
     }
   },
   "staticFiles": {
