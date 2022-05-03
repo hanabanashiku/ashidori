@@ -45,8 +45,8 @@ jobs:
         env:
           tag: ${{steps.tag_version.outputs.new_version}}
         run: |
-          sed 's/"version":"[^"]*"/"version": "'$tag'"/' dist/crx/manifest.json | tee dist/crx/manifest.json
-          sed 's/"version":"[^"]*"/"version": "'$tag'"/' dist/xpi/manifest.json | tee dist/xpi/manifest.json
+          sed -i -e 's/"version":"[^"]*"/"version": "'$tag'"/' dist/crx/manifest.json
+          sed -i -e 's/"version":"[^"]*"/"version": "'$tag'"/' dist/xpi/manifest.json
 
       - name: Package distribution
         run: |
