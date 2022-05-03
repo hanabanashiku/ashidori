@@ -24,7 +24,7 @@ jobs:
         run: npm run build-all
 
       - name: Run unit tests
-        run: npm test
+        run: npm run cover
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v2.1.0
