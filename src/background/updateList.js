@@ -14,11 +14,6 @@ import LibraryEntry from "../models/LibraryEntry";
 import lang from "../lang";
 import { LIST_STATUS, PROVIDER_NAMES } from "../enums";
 
-/**
- * A list of episode tabs containing corresponding registered onRemove listeners.
- */
-const currentTabs = {};
-
 browser.runtime.onMessage.addListener(onEpisodeStarted);
 browser.runtime.onMessage.addListener(onUpdateRequest);
 
@@ -27,7 +22,7 @@ browser.runtime.onMessage.addListener(onUpdateRequest);
  * @param {object} message The message payload.
  * @param {browser.runtime.MessageSender} sender The message sender.
  */
-function onEpisodeStarted(message, sender) {
+async function onEpisodeStarted(message, sender) {
   if (message.type !== MESSAGE_TYPES.ANIME_EPISODE_STARTED) {
     return;
   }
@@ -46,15 +41,18 @@ function onEpisodeStarted(message, sender) {
       return;
     }
 
-    removeTabOnRemovedHook(tabId);
+    browser.tabs.onRemoved.removeListener(onTabClose);
     startUpdate(loadTime, userData, episodeData, listEntry);
   }
   browser.tabs.onRemoved.addListener(onTabClose);
 
+  const currentTabs = await browser.storage.local.get("CURRENT_TABS")
+    .CURRENT_TABS;
   currentTabs[sender.tab.id] = {
     episodeData,
     listener: onTabClose,
   };
+  await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }
 
 /**
@@ -91,7 +89,12 @@ async function startUpdate(loadTime, userData, episodeData, listEntry) {
     return;
   }
 
-  if (await Settings.shouldShowUpdatePopup()) {
+  const shouldShowUpdatePopup =
+    listEntry.status === LIST_STATUS.NOT_WATCHING
+      ? await Settings.shouldShowAddPopup()
+      : await Settings.shouldShowUpdatePopup();
+
+  if (shouldShowUpdatePopup) {
     await showUpdatePopupAsync(episodeData, listEntry, userData);
   } else {
     await updateAnimeAsync(episodeData, listEntry, userData);
@@ -142,10 +145,15 @@ async function showUpdatePopupAsync(episodeData, listEntry, userData) {
     updateAnimeAsync(episodeData, listEntry, userData);
   }
 
+  const body =
+    listEntry === LIST_STATUS.NOT_WATCHING
+      ? lang.newAnimeEpisodeCompletedPopupBody
+      : lang.episodeCompletedPopupBody;
+
   await sendNotification(
     lang.episodeCompletedPopupTitle,
     util.format(
-      lang.episodeCompletedPopupBody,
+      body,
       episodeData.number,
       listEntry.anime.title,
       userData.username
@@ -183,9 +191,12 @@ async function showUpdatedPopupAsync(
       lang.episodeUpdatedCompleteBody,
       listEntry.anime.title
     );
+  } else if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+    message = util.format(lang.episodeUpdatedNewBody, listEntry.anime.title);
   } else if (
-    listEntry.status === LIST_STATUS.NOT_WATCHING ||
-    listEntry.status === LIST_STATUS.ON_HOLD
+    listEntry.status === LIST_STATUS.ON_HOLD ||
+    listEntry.status === LIST_STATUS.PLANNED ||
+    listEntry.status == LIST_STATUS.DROPPED
   ) {
     message = util.format(
       lang.episodeUpdatedCurrentBody,
@@ -262,7 +273,12 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
     };
   }
 
-  await api.updateLibraryItem(listEntry.id, patch);
+  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+    await api.createLibraryItem(listEntry.anime.id, patch);
+  } else {
+    await api.updateLibraryItem(listEntry.id, patch);
+  }
+
   showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
 }
 
@@ -270,13 +286,15 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
  * Removes the onRemoved tab listener for a closed anime episode.
  * @param {number} tabId The id of the current tab
  */
-function removeTabOnRemovedHook(tabId) {
-  const data = currentTabs[tabId];
-
+async function removeTabOnRemovedHook(tabId) {
+  const currentTabs = (await browser.storage.local.get("CURRENT_TABS"))
+    .CURRENT_TABS;
+  const data = currentTabs?.[tabId];
   if (!data) {
     return;
   }
 
   browser.tabs.onRemoved.removeListener(data.listener);
   delete currentTabs[tabId];
+  await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }

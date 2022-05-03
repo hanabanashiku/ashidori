@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build-all
 
       - name: Run unit tests
         run: npm test
@@ -44,15 +44,21 @@ jobs:
       - name: Bump manifest version
         env:
           tag: ${{steps.tag_version.outputs.new_version}}
-        run: 'sed ''s/"version":"[^"]*"/"version": "''$tag''"/'' dist/webext-prod/manifest.json | tee dist/webext-prod-mainfest.json'
+        run: |
+          sed 's/"version":"[^"]*"/"version": "'$tag'"/' dist/crx/manifest.json | tee dist/crx/manifest.json
+          sed 's/"version":"[^"]*"/"version": "'$tag'"/' dist/xpi/manifest.json | tee dist/xpi/manifest.json
 
       - name: Package distribution
-        run: (cd dist/webext-prod; zip ../../dist.zip -r *)
+        run: |
+          (cd dist/crx; zip ../../dist.crx -r *) & \
+          (cd dist/xpi; zip ../../dist.xpi -r *)
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist.zip
+          files: |
+            dist.crx
+            dist.xpi
           tag_name: ${{steps.tag_version.outputs.new_tag}}
           prerelease: false
           draft: false
@@ -62,7 +68,7 @@ jobs:
       - name: Publish to Chrome Store
         uses: mnao305/chrome-extension-upload@2.2.0
         with:
-          file-path: "./dist.zip"
+          file-path: "./dist.crx"
           extension-id: ${{secrets.CHROME_APP_ID}}
           client-id: ${{secrets.CHROME_CLIENT_ID}}
           refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
@@ -72,7 +78,7 @@ jobs:
         uses: trmcnvn/firefox-addon@v1
         with:
           uuid: ${{secrets.FIREFOX_UUID}}
-          xpi: "./dist.zip"
-          manifest: src/manifest.json
+          xpi: "./dist.xpi"
+          manifest: dist/xpi/manifest.json
           api-key: ${{secrets.FIREFOX_API_KEY}}
           api-secret: ${{secrets.FIREFOX_API_SECRET}}

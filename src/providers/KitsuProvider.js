@@ -9,6 +9,7 @@ import LibraryEntry from "../models/LibraryEntry";
 import AnimeSeries from "../models/AnimeSeries";
 import PagedData from "../models/PagedData";
 import { LIST_STATUS } from "../enums";
+
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
 
@@ -33,12 +34,22 @@ export default class KitsuProvider extends ApiProvider {
 
   constructor() {
     super();
+
+    let adapter = undefined;
+
+    // if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
+    //   // this adapter allows us to use axios in a service worker context
+    //   // Unfortunately it doesn't work in node
+    //   adapter = require("@vespaiach/axios-fetch-adapter").default;
+    // }
+
     this.#client = axios.create({
       baseURL: KITSU_BASE_URL,
       headers: {
         Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
       },
+      adapter: adapter,
     });
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);
@@ -190,13 +201,28 @@ export default class KitsuProvider extends ApiProvider {
    */
   static verifyResolvedAnime(series, episode) {
     const STRING_THRESHOLD = 7;
+    const extractedTitle = this.normalizeString(episode.series.title);
+    const guessTitle = this.normalizeString(series.englishTitle);
     return (
-      levenshtein(episode.series.title, series.englishTitle) <
-        STRING_THRESHOLD ||
-      levenshtein(episode.series.title, series.title) < STRING_THRESHOLD ||
-      levenshtein(episode.season.name, series.title) < STRING_THRESHOLD ||
-      levenshtein(episode.season.name, series.englishTitle) < STRING_THRESHOLD
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.title)
+      ) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.englishTitle)
+      ) < STRING_THRESHOLD
     );
+  }
+
+  /**
+   * @param {string} str
+   * @returns {string}
+   */
+  static normalizeString(str) {
+    return str.toLowerCase().replace(/^[a-z0-9]/g, "");
   }
 
   async createLibraryItem(animeId, patch) {

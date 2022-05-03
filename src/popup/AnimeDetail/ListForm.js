@@ -20,6 +20,7 @@ import { LoadingButton, DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { Save as SaveIcon, Delete } from "@mui/icons-material";
 import DeleteModal from "./DeleteModal";
+import NumberInput from "../../components/NumberInput";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
 import { LIST_STATUS } from "../../enums";
@@ -49,7 +50,7 @@ const ListForm = ({ entry, api, close }) => {
 
   async function onSubmit(values) {
     if (!isDirty) {
-      close();
+      close(false);
       return;
     }
 
@@ -61,7 +62,7 @@ const ListForm = ({ entry, api, close }) => {
       await api.updateLibraryItem(entry.id, patch);
     }
 
-    close();
+    close(true);
   }
 
   return (
@@ -115,10 +116,10 @@ const ListForm = ({ entry, api, close }) => {
           )}
         />
 
-        <TextField
+        <NumberInput
           id="progress"
-          type="number"
           label={lang.progress}
+          type="number"
           variant="outlined"
           InputProps={{
             min: 0,
@@ -152,11 +153,18 @@ const ListForm = ({ entry, api, close }) => {
           control={control}
           rules={{ valueAsNumber: true }}
           render={({ field: { onChange, onBlur, value, name } }) => (
-            <FormControl fullWidth>
+            <FormControl
+              fullWidth
+              css={css`
+                padding-left: 16px;
+                padding-right: 16px;
+              `}
+            >
               <InputLabel
                 id={`${name}-label`}
                 css={css`
                   padding-top: 8px;
+                  padding-left: 16px;
                 `}
               >
                 ⭐ &nbsp; {lang.rating}
@@ -220,7 +228,7 @@ const ListForm = ({ entry, api, close }) => {
       </Stack>
       <Box
         css={css`
-          width: 50%;
+          width: fit-content;
           margin: 0 auto;
           margin-top: 16px;
           & > Button:not(:first-of-type) {

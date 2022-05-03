@@ -1,10 +1,12 @@
 import browser from "webextension-polyfill";
+import { executeScript } from "../helpers/extensionHelpers";
+import { SERVICES } from "../enums";
 import MESSAGE_TYPES from "../messageTypes";
 
 // used to inject scripts on pages reached using history.pushState()
-function injectScript(details) {
+async function injectScript(details) {
   // send a mesage when history.pushState() is used.
-  // This allows content scripts to look for history state events.
+  // This allows content scripts to look for history state events.∂
   browser.tabs.sendMessage(
     details.tabId,
     {
@@ -16,14 +18,21 @@ function injectScript(details) {
 
   // Crunchyroll video
   if (/^https?:\/\/beta.crunchyroll.com\/watch\/.*/.test(details.url)) {
-    browser.scripting.executeScript({
-      target: {
-        frameId: details.frameId,
-        tabId: details.tabId,
-      },
-      files: ["/content_scripts/crunchyroll/video.js"],
-    });
+    executeScript(details.tabId, await getVideoScript(SERVICES.CRUNCHYROLL));
     return;
+  }
+}
+
+async function getVideoScript(service) {
+  const manifest = await (await fetch("manifest.json")).json();
+
+  switch (service) {
+    case SERVICES.CRUNCHYROLL:
+      return manifest.content_scripts.find((cs) =>
+        cs.matches.includes("*://beta.crunchyroll.com/watch/**")
+      ).js;
+    default:
+      return "";
   }
 }
 

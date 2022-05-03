@@ -7,11 +7,19 @@ import SignInButtons from "./SignInButtons";
 const SignIn = () => {
   const [userData, setUserData] = useState(undefined);
 
+  function resetUserData() {
+    setUserData(null);
+  }
+
   useEffect(() => {
     (async () => {
-      const provider = await getApiInstance();
-      const data = await provider?.getUserData();
-      setUserData(data ?? null);
+      try {
+        const provider = await getApiInstance();
+        const data = await provider?.getUserData();
+        setUserData(data ?? null);
+      } catch {
+        setUserData(null);
+      }
     })();
   }, [setUserData]);
 
@@ -27,7 +35,7 @@ const SignIn = () => {
     return <SignInButtons />;
   }
 
-  return <AuthenticatedView userData={userData} />;
+  return <AuthenticatedView userData={userData} reset={resetUserData} />;
 };
 
 export default SignIn;

@@ -34,7 +34,7 @@ describe("Anime data", () => {
     expect(cover).toHaveAttribute("src", props.anime.coverImageUrl);
     expect(getByTextContent("Status Airing")).toBeInTheDocument();
     expect(getByTextContent("Episodes 1008")).toBeInTheDocument();
-    expect(getByTextContent("Aired Wed Oct 20 1999")).toBeInTheDocument();
+    expect(getByTextContent("Airing Wed Oct 20 1999")).toBeInTheDocument();
     expect(getByTextContent("Length 24 minutes")).toBeInTheDocument();
     expect(getByTextContent("AdventureDramaPiracy")).toBeInTheDocument();
   });

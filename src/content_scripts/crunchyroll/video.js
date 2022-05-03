@@ -99,7 +99,7 @@ function onUnload() {
 }
 
 async function getEpisodeData() {
-  const episodeId = /watch\/(.+?)\/.+/g.exec(window.location.href)[1];
+  const episodeId = /watch\/(\w+)\/?.*?/g.exec(window.location.href)[1];
   var client = new CrunchyrollService();
   await client.authenticate();
   return client.getEpisodeData(episodeId);

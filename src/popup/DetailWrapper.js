@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import { useParams } from "react-router-dom";
 import { getApiInstance } from "../providers/builder";
 import AnimeDetail from "./AnimeDetail";
 
 function Popup() {
   const [api, setApi] = useState(null);
-  const id = new URLSearchParams(window.location.search).get("id");
+  const { id } = useParams();
 
   useEffect(() => {
     (async () => {
@@ -26,6 +26,4 @@ function Popup() {
   return <AnimeDetail selectedAnime={id} close={close} api={api} />;
 }
 
-const root = document.getElementById("root");
-
-ReactDOM.render(<Popup />, root);
+export default Popup;

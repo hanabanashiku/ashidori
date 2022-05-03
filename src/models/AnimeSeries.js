@@ -106,6 +106,13 @@ export default class AnimeSeries {
   }
 
   /**
+   * @returns {true} if the series is airing.
+   */
+  get isAiring() {
+    return this._status === ANIME_STATUS.AIRING;
+  }
+
+  /**
    * @returns {number} The number of episodes.
    */
   get episodeCount() {
@@ -175,7 +182,9 @@ export default class AnimeSeries {
         _title: data.attributes.canonicalTitle,
         _englishTitle: data.attributes.titles.en,
         _description: data.attributes.synopsis,
-        _coverImage: data.attributes.posterImage?.tiny,
+        _coverImage:
+          data.attributes.posterImage?.tiny ??
+          data.attributes.posterImage.original,
         _startDate: new Date(data.attributes.startDate),
         _endDate: data.attributes.endDate
           ? new Date(data.attributes.endDate)

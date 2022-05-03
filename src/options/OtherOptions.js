@@ -35,6 +35,13 @@ const reducer = (state, action) => {
         shouldShowUpdatePopup: action.payload,
       };
 
+    case "setAddPopup":
+      Settings.setShouldShowAddPopup(action.payload);
+      return {
+        ...state,
+        shouldShowAddPopup: action.payload,
+      };
+
     case "setEpisodeNotifications":
       Settings.setNotifiyForNewEpisodes(action.payload);
       return {
@@ -63,6 +70,7 @@ const OtherOptions = () => {
       // Get settings
       const listUpdatingEnabled = Settings.listUpdatingEnabled();
       const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
+      const shouldShowAddPopup = Settings.shouldShowAddPopup();
       const shouldNotifiyForNewEpisodes =
         Settings.shouldNotifiyForNewEpisodes();
       const updateDelay = Settings.shouldUpdateAfterMinutes();
@@ -72,6 +80,7 @@ const OtherOptions = () => {
         payload: {
           listUpdatingEnabled: await listUpdatingEnabled,
           shouldShowUpdatePopup: await shouldShowUpdatePopup,
+          shouldShowAddPopup: await shouldShowAddPopup,
           shouldNotifiyForNewEpisodes: await shouldNotifiyForNewEpisodes,
           updateDelay: await updateDelay,
         },
@@ -89,6 +98,13 @@ const OtherOptions = () => {
   const toggleUpdatePopup = (value) => {
     dispatch({
       type: "setUpdatePopup",
+      payload: value,
+    });
+  };
+
+  const toggleAddPopup = (value) => {
+    dispatch({
+      type: "setAddPopup",
       payload: value,
     });
   };
@@ -171,6 +187,21 @@ const OtherOptions = () => {
           disabled={!state.listUpdatingEnabled}
         />
         {lang.askBeforeUpdating}
+      </InputLabel>
+      <InputLabel
+        css={css`
+          margin-top: -16px;
+          margin-left: 16px;
+        `}
+      >
+        <Checkbox
+          name="should-show-add-poppup"
+          checked={state.shouldShowAddPopup}
+          onChange={(e) => toggleAddPopup(e.target.checked)}
+          size="small"
+          disabled={!state.listUpdatingEnabled}
+        />
+        {lang.askBeforeAdding}
       </InputLabel>
       <FormGroup>
         <Typography>{lang.newEpisodeNotification}</Typography>

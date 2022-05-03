@@ -1,0 +1,41 @@
+{
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "icons": {
+    "16": "../static/icons/icon16.png",
+    "48": "../static/icons/icon48.png",
+    "128": "../static/icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "../options/index.html"
+  },
+  "browser_action": {
+    "default_popup": "../popup/index.html",
+    "default_title": "__MSG_appName__"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://beta.crunchyroll.com/watch/**"],
+      "js": ["../content_scripts/crunchyroll/video.js"]
+    }
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{de146335-43f9-46bc-8c2d-51aa82bab4f5}"
+    }
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "webNavigation",
+    "notifications",
+    "*://*.crunchyroll.com/*"
+  ]
+}
