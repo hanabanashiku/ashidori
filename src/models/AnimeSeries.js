@@ -1,5 +1,11 @@
+import browser from "webextension-polyfill";
 import _ from "lodash";
-import { PROVIDERS, ANIME_STATUS, SERVICES } from "../enums";
+import {
+  PROVIDERS,
+  ANIME_STATUS,
+  SERVICES,
+  TITLE_LANGUAGE_PREFERENCES,
+} from "../enums";
 import lang from "lang";
 
 /**
@@ -16,10 +22,11 @@ export default class AnimeSeries {
     switch (data.provider) {
       case PROVIDERS.KITSU:
         this.#mapFromKitsu(data);
-        break;
+        return;
 
       default:
         _.defaultsDeep(this, data, DEFAULT_VALUES);
+        return this;
     }
   }
 
@@ -155,6 +162,14 @@ export default class AnimeSeries {
   }
 
   #mapFromKitsu(data) {
+    const title = this.#mapTitle(
+      {
+        ...data.attributes.titles,
+        canonicalTitle: data.attributes.canonicalTitle,
+      },
+      data.__langPref
+    );
+
     const streamingLinks =
       data.relationships.streamingLinks.data
         ?.map((link) =>
@@ -179,7 +194,7 @@ export default class AnimeSeries {
       this,
       {
         _id: data.id,
-        _title: data.attributes.canonicalTitle,
+        _title: title,
         _englishTitle: data.attributes.titles.en,
         _description: data.attributes.synopsis,
         _coverImage:
@@ -219,6 +234,31 @@ export default class AnimeSeries {
       },
       DEFAULT_VALUES
     );
+  }
+
+  #mapTitle(titles, preference) {
+    const language = browser.i18n.getUILanguage().replace("-", "_");
+
+    if (preference === TITLE_LANGUAGE_PREFERENCES.ROMAJI) {
+      return titles.canonicalTitle;
+    }
+
+    const exactMatch = Object.keys(titles).find(
+      (key) => key.toLowerCase == language.toLowerCase()
+    );
+    if (exactMatch) {
+      return titles[exactMatch];
+    }
+
+    function normalize(lang) {
+      return lang.split(/[-_]/)[0].toLowerCase();
+    }
+
+    const normalizedLanguage = normalize(language);
+    const resultKey = Object.keys(titles)
+      .filter((key) => key !== "en_jp")
+      .find((key) => normalize(key) === normalizedLanguage);
+    return (resultKey && titles[resultKey]) || titles.canonicalTitle;
   }
 
   /**

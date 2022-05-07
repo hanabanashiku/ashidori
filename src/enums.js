@@ -55,3 +55,8 @@ export const ANIME_STATUS = {
   UNRELEASED: 3,
   UPCOMING: 4,
 };
+
+export const TITLE_LANGUAGE_PREFERENCES = {
+  ROMAJI: 0,
+  UI_LANGUAGE: 1,
+};

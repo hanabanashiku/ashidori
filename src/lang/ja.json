@@ -12,7 +12,7 @@
   "enableAll": "全て可能",
   "disableAll": "全て無効",
   "never": "しない",
-  "always": "いつも",
+  "always": "必ず",
   "latestEpisodeRadio": "最新エピソードの後",
   "viewProfile": "プロファイルを見る",
   "update": "アップデートしよう",
@@ -79,11 +79,14 @@
   "deleteModalBody": "続いて削除した場合は「%s」の進みデータを服せられません。",
 
   "chooseProvider": "この下、アニメリストのプロバイダーを選んでください。",
-  "enableIntegrations": "ストリーミング・インテグレーションを効果にする",
+  "enableIntegrations": "ストリーミング・インテグレーション",
+  "autoUpdateList": "エピソードを見終わった後、自度的にリストをアップデートする",
   "askBeforeUpdating": "進みを自動的にアップデートする前の確認",
   "askBeforeAdding": "新しいシリスを追加する前の確認",
   "newEpisodeNotification": "新しいエピソードが放送するたび、お知らせを送る",
-  "currentlyWatchingTip": "今は%d話からの%sを見ています.",
+  "showTitleLanguage": "タイトルの優先言語",
+  "romajiTitleLanguage": "ローマ字",
+  "defaultTitleLanguage": "ブラウザーUIに一致",
 
   "kitsuLogIn": "KITSUへログイン",
   "logInAfter": "その後、足取りに戻ります。 パスワードはご保存されてございません。",
@@ -97,6 +100,7 @@
   "episodeUpdatedCompleteBody": "%sは完成として記録されました。",
   "episodeUpdatedCurrentBody": "%sは現行中として記録されました。",
   "episodeUpdatedNewBody": "%sはリストに追加されました。.",
+  "currentlyWatchingTip": "今は%d話からの%sを見ています.",
 
   "errorOccurredTitle": "エラーが発生しまいました",
   "errorOccurredBody": "インターネット接続を確認して、もう一度お試しください。"

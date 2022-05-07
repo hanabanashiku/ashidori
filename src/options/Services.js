@@ -78,7 +78,7 @@ const Services = () => {
         width: 30rem;
       `}
     >
-      <Typography vaariant="h2" fontSize="18px">
+      <Typography vaariant="h2" fontSize="15px" overflow="wrap" maxWidth="60%">
         {lang.enableIntegrations}
       </Typography>
       <Box

@@ -1,5 +1,9 @@
 import browser from "webextension-polyfill";
-import { SERVICES, NOTIFY_EPSIODE_ANSWERS } from "../enums";
+import {
+  SERVICES,
+  NOTIFY_EPSIODE_ANSWERS,
+  TITLE_LANGUAGE_PREFERENCES,
+} from "../enums";
 
 const DEFAULT_SERVICES = Object.values(SERVICES);
 
@@ -125,6 +129,19 @@ export default class Settings {
    */
   static async setNotifiyForNewEpisodes(value) {
     return this.#setStoredKey("should_notify_for_new_episodes", value);
+  }
+
+  static async getTitleLanguagePreference() {
+    return this.#getStoredKey(
+      "title_language_preference",
+      browser.i18n.getUILanguage().includes("en")
+        ? TITLE_LANGUAGE_PREFERENCES.ROMAJI
+        : TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE
+    );
+  }
+
+  static async setTitleLanguagePreference(value) {
+    return this.#setStoredKey("title_language_preference", value);
   }
 
   static async #getStoredKey(key, defaultValue) {

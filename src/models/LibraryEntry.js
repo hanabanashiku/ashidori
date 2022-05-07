@@ -130,6 +130,7 @@ export default class LibraryEntry {
               ...anime,
               included: data.included,
               provider: PROVIDERS.KITSU,
+              __langPref: data.__langPref,
             })
           : null,
       },
