@@ -80,11 +80,14 @@
 
   "chooseProvider": "Choose your anime list provider below.",
   "enableIntegrations": "Enable integrations on",
+  "autoUpdateList": "Automatically update my anime list after watching an episode.",
   "waitMinutes": "Wait %s minutes before updating episode count.",
   "askBeforeUpdating": "Ask before updating episode count",
   "askBeforeAdding": "Ask before adding a new series",
   "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
-  "currentlyWatchingTip": "You are currently watching episode %d of %s.",
+  "showTitleLanguage": "Prefer to show titles with",
+  "romajiTitleLanguage": "Canonical title",
+  "defaultTitleLanguage": "UI language",
 
   "kitsuLogIn": "Sign in to Kitsu",
   "logInAfter": "After, you will be returned to Ashidori. Your password will not be saved.",
@@ -98,6 +101,7 @@
   "episodeUpdatedCompleteBody": "%s has been marked finished.",
   "episodeUpdatedCurrentBody": "%s has been marked as currently watching.",
   "episodeUpdatedNewBody": "%s has been added to your anime list.",
+  "currentlyWatchingTip": "You are currently watching episode %d of %s.",
 
   "errorOccurredTitle": "An error has occurred.",
   "errorOccurredBody": "Please check your internet connection and try again."
