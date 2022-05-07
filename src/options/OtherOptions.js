@@ -219,7 +219,11 @@ const OtherOptions = () => {
         />
         {lang.askBeforeAdding}
       </InputLabel>
-      <FormGroup>
+      <FormGroup
+        css={css`
+          display: none;
+        `}
+      >
         <Typography>{lang.newEpisodeNotification}</Typography>
         <RadioGroup
           css={css`
