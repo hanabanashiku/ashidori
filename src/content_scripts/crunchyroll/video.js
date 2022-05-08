@@ -12,6 +12,7 @@ import MESSAGE_TYPES from "../../messageTypes";
 let episodeData;
 let loadTime;
 let userData;
+let api;
 let listEntry;
 
 Settings.getEnabledServices().then((enabledServices) => {
@@ -23,23 +24,28 @@ Settings.getEnabledServices().then((enabledServices) => {
 
   // unload if the user clicks a link in the Crunchyroll SPA
   browser.runtime.onMessage.addListener((message) => {
-    if (message.type !== MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
-      return false;
+    if (message.type === MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
+      onUnload();
+      resetPage();
+
+      if (message.payload.url.includes("https://beta.crunchyroll.com/watch/")) {
+        init();
+      }
+      return true;
     }
 
-    onUnload();
-    resetPage();
-
-    if (message.payload.url.includes("https://beta.crunchyroll.com/watch/")) {
-      init();
+    if (api && message.type === MESSAGE_TYPES.LIST_UPDATED) {
+      api.resolveLibraryEntryFromAnimeEpisode(episodeData).then((entry) => {
+        listEntry = entry;
+      });
     }
-    return true;
+
+    return false;
   });
 });
 
 function init() {
   loadTime = new Date();
-  let api;
 
   getApiInstance()
     .then((value) => {

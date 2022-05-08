@@ -313,6 +313,9 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
   }
 
   showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
+  browser.runtime.sendMessage({
+    type: MESSAGE_TYPES.LIST_UPDATED,
+  });
 }
 
 /**
