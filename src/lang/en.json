@@ -104,5 +104,6 @@
   "currentlyWatchingTip": "You are currently watching episode %d of %s.",
 
   "errorOccurredTitle": "An error has occurred.",
-  "errorOccurredBody": "Please check your internet connection and try again."
+  "errorOccurredBody": "Please check your internet connection and try again.",
+  "errorOccurredOnUpdateBody": "The series progress was unable to be updated automatically."
 }

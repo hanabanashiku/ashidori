@@ -230,6 +230,32 @@ async function showUpdatedPopupAsync(
 }
 
 /**
+ * Shows a push notification to tell the user that the anime was not able to be updated.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {UserData} userData Data about the user.
+ * @returns {Promise<void>}
+ */
+async function showErrorPopupAsync(listEntry, userData) {
+  function listener() {
+    browser.tabs.create({
+      url: listEntry.anime.externalLink,
+      selected: true,
+    });
+  }
+
+  await sendNotification(
+    lang.errorOccurredTitle,
+    lang.errorOccurredOnUpdateBody,
+    [
+      {
+        title: util.format(lang.seeAnime, PROVIDER_NAMES[userData.apiSource]),
+      },
+    ],
+    listener
+  );
+}
+
+/**
  * Updates the list entry to the current episode.
  * @param {EpisodeData} episodeData Episode data extracted from the video page.
  * @param {LibraryEntry} listEntry The current library entry record to update.
@@ -273,10 +299,17 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
     };
   }
 
-  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-    await api.createLibraryItem(listEntry.anime.id, patch);
-  } else {
-    await api.updateLibraryItem(listEntry.id, patch);
+  try {
+    if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+      await api.createLibraryItem(listEntry.anime.id, patch);
+    } else {
+      await api.updateLibraryItem(listEntry.id, patch);
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+    await showErrorPopupAsync(listEntry, userData);
+    return;
   }
 
   showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);

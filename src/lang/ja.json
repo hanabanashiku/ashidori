@@ -103,5 +103,6 @@
   "currentlyWatchingTip": "今は%d話からの%sを見ています.",
 
   "errorOccurredTitle": "エラーが発生しまいました",
-  "errorOccurredBody": "インターネット接続を確認して、もう一度お試しください。"
+  "errorOccurredBody": "インターネット接続を確認して、もう一度お試しください。",
+  "errorOccurredOnUpdateBody": "シリスを自動的にアップデートできませんでした。"
 }
