@@ -1,7 +1,9 @@
 import React from "react";
 import { render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Popup from "../Popup";
+import DetailWrapper from "../DetailWrapper";
 import * as builder from "../../providers/builder";
 import MockApiProvider from "../../__mocks__/MockApiProvider";
 import PagedData from "../../models/PagedData";
@@ -27,14 +29,25 @@ describe("Popup window", () => {
     browser.storage.local.clear();
   });
 
+  // eslint-disable-next-line react/prop-types
+  function Component({ search = "" }) {
+    return (
+      <MemoryRouter initialEntries={[{ pathname: "/", search }]}>
+        <Routes>
+          <Route path="/" element={<Popup />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  }
+
   it("shows loading spinner on launch", () => {
-    const { getByRole } = render(<Popup />);
+    const { getByRole } = render(<Component />);
 
     expect(getByRole("progressbar")).toBeInTheDocument();
   });
 
   it("clicking the settings cog opens the options page", async () => {
-    const { queryByRole, getByLabelText } = render(<Popup />);
+    const { queryByRole, getByLabelText } = render(<Component />);
 
     await waitFor(() =>
       expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -47,7 +60,7 @@ describe("Popup window", () => {
   it("shows login page when the user is not logged in", async () => {
     apiInstanceSpy.mockResolvedValueOnce(null);
 
-    const { getByText, queryByRole } = render(<Popup />);
+    const { getByText, queryByRole } = render(<Component />);
 
     await waitFor(() =>
       expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -62,7 +75,7 @@ describe("Popup window", () => {
   it("shows error page when an error occurs", async () => {
     api.getAnimeListByStatus.mockRejectedValueOnce();
 
-    const { getByText, queryByRole } = render(<Popup />);
+    const { getByText, queryByRole } = render(<Component />);
 
     await waitFor(() =>
       expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -81,7 +94,7 @@ describe("Popup window", () => {
         },
       });
 
-      const { getByText, queryByRole } = render(<Popup />);
+      const { getByText, queryByRole } = render(<Component />);
 
       await waitFor(() =>
         expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -95,7 +108,7 @@ describe("Popup window", () => {
     });
 
     it("is not rendered by default", async () => {
-      const { queryByTestId, queryByRole } = render(<Popup />);
+      const { queryByTestId, queryByRole } = render(<Component />);
 
       await waitFor(() =>
         expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -106,7 +119,7 @@ describe("Popup window", () => {
   });
 
   it("renders the list tabs", async () => {
-    const { getByText, queryByRole } = render(<Popup />);
+    const { getByText, queryByRole } = render(<Component />);
 
     await waitFor(() =>
       expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -123,7 +136,7 @@ describe("Popup window", () => {
     const shouldBeSelected = (element) =>
       expect(element).toHaveAttribute("aria-selected", "true");
 
-    const { getByText, queryByRole } = render(<Popup />);
+    const { getByText, queryByRole } = render(<Component />);
 
     await waitFor(() =>
       expect(queryByRole("progressbar")).not.toBeInTheDocument()
@@ -184,12 +197,55 @@ describe("Popup window", () => {
       })
     );
 
-    const { getByText, queryAllByRole } = render(<Popup />);
+    const { getByText, queryAllByRole } = render(<Component />);
 
     await waitFor(() => expect(queryAllByRole("tab")).not.toHaveLength(0));
 
     act(() => userEvent.click(getByText("One Piece")));
     expect(api.getSingleLibraryEntry).toHaveBeenCalledTimes(1);
+    expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
+    await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
+    expect(getByText("One Piece")).toBeInTheDocument();
+  });
+
+  it.skip("recieving a show anime redirect opens the anime detail page", async () => {
+    api.getAnimeListByStatus.mockResolvedValueOnce(
+      new PagedData({
+        data: [
+          new LibraryEntry({
+            _id: "12345",
+            _progress: 5,
+            _status: LIST_STATUS.CURRENT,
+            _anime: {
+              _id: "12",
+              _title: "One Piece",
+            },
+          }),
+        ],
+        total: 1,
+        limit: 25,
+        page: 0,
+      })
+    );
+    api.getSingleLibraryEntry.mockResolvedValue(
+      new LibraryEntry({
+        _id: "12345",
+        _progress: 5,
+        _status: LIST_STATUS.CURRENT,
+        _anime: {
+          _id: "12",
+          _title: "One Piece",
+        },
+      })
+    );
+
+    const { getByText, queryAllByRole } = render(
+      <Component search="?detail=12345" />
+    );
+
+    await waitFor(() => expect(queryAllByRole("tab")).not.toHaveLength(0));
+
+    expect(api.getSingleLibraryEntry).toHaveBeenCalled();
     expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
     await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
     expect(getByText("One Piece")).toBeInTheDocument();
@@ -226,7 +282,7 @@ describe("Popup window", () => {
       })
     );
 
-    const { getByText, queryAllByRole } = render(<Popup />);
+    const { getByText, queryAllByRole } = render(<Component />);
 
     await waitFor(() => expect(queryAllByRole("tab")).not.toHaveLength(0));
 

@@ -14,7 +14,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path={`/${name}`} element={<Popup />} />
-        <Route path={`/${name}/detail:id`} element={<DetailWrapper />} />
+        <Route path={`${name}/detail/:id`} element={<DetailWrapper />} />
       </Routes>
     </BrowserRouter>
   </Theme>,

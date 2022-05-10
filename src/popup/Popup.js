@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import browser from "webextension-polyfill";
+import { useNavigate, useLocation } from "react-router-dom";
 import { css } from "@emotion/react";
 import { Box, CircularProgress } from "@mui/material";
 import { getApiInstance } from "../providers/builder";
@@ -14,6 +15,9 @@ const Popup = () => {
   const [authState, setAuthState] = useState(null);
   const [selectedAnime, setSelectedAnime] = useState();
   const [search, setSearch] = useState(false);
+  const { search: query } = useLocation();
+  const navigate = useNavigate();
+  const params = useMemo(() => new URLSearchParams(query), [query]);
 
   const [api, setApi] = useState(null);
 
@@ -36,6 +40,12 @@ const Popup = () => {
   useEffect(() => {
     browser.runtime.onMessage.addListener(onMessage);
   }, [onMessage]);
+
+  useEffect(() => {
+    if (params.has("detail")) {
+      navigate(`detail/${params.get("detail")}`);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {

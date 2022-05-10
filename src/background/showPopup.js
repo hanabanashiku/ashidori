@@ -9,7 +9,7 @@ async function onMessage(message) {
 
   const id = message.payload.libraryEntryId;
 
-  if (browser.browserAction.openPopup) {
+  if (browser.browserAction?.openPopup) {
     await browser.browserAction.openPopup();
     browser.runtime.sendMessage({
       type: MESSAGE_TYPES.SHOW_ANIME_DETAIL,
@@ -18,7 +18,7 @@ async function onMessage(message) {
     return;
   }
 
-  const url = `${browser.runtime.getURL("popup/index.html")}/detail?id=${id}`;
+  const url = `${browser.runtime.getURL(await getPopup())}?detail=${id}`;
 
   await browser.windows.create({
     type: "popup",
@@ -27,6 +27,14 @@ async function onMessage(message) {
     height: 500,
     width: 500,
   });
+}
+
+async function getPopup() {
+  const manifest = await (await fetch("manifest.json")).json();
+  if (manifest.action) {
+    return manifest.action.default_popup;
+  }
+  return manifest.browser_action.default_popup;
 }
 
 browser.runtime.onMessage.addListener(onMessage);

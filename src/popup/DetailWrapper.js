@@ -21,9 +21,11 @@ function Popup() {
   }
 
   if (!api) {
-    return null;
+    return <div>hello</div>;
   }
-  return <AnimeDetail selectedAnime={id} close={close} api={api} />;
+  return (
+    <AnimeDetail selectedAnime={id} isListEntryId close={close} api={api} />
+  );
 }
 
 export default Popup;
