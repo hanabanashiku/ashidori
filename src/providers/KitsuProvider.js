@@ -315,7 +315,7 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `anime?filter[text]=${encodeURIComponent(
         text
-      )}?include=streamingLinks,genres&page[limit]=${limit}&page[offset]=${
+      )}&include=streamingLinks,genres&page[limit]=${limit}&page[offset]=${
         limit * page
       }`
     );
