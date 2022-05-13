@@ -5,6 +5,11 @@ export const PROVIDERS = {
   ANILIST: 2,
 };
 
+export const BROWSER = {
+  CHROMIUM: 0,
+  FIREFOX: 1,
+};
+
 export const PROVIDER_NAMES = {
   0: "My Anime List",
   1: "Kitsu",

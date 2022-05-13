@@ -1,8 +1,27 @@
 import browser from "webextension-polyfill";
 import { v4 as uuid } from "uuid";
+import { BROWSER } from "../enums";
+
+export function getBrowserType() {
+  const baseUrl = browser.runtime.getURL("");
+
+  if (process.env.NODE_ENV === "test") {
+    return BROWSER.CHROMIUM;
+  }
+
+  if (baseUrl.startsWith("moz-extension")) {
+    return BROWSER.FIREFOX;
+  }
+
+  if (baseUrl.startsWith("chrome-extension")) {
+    return BROWSER.CHROMIUM;
+  }
+
+  return null;
+}
 
 /**
- * Send a browser notification.
+ * Send a browser notification. This method uses buttons, which is incompatible with Firefox.
  * @param {string} title The title of the notification.
  * @param {string} message The message to send for the notification.
  * @param {[{title: string}]|null} buttons The list of options to choose from.
@@ -32,6 +51,36 @@ export async function sendNotification(title, message, buttons = [], callback) {
  * A callback that is ran when the user selects an button from the notification.
  * @callback notificationCallback
  * @param {number} buttonIndex The 0-based index of the button that was pressed.
+ */
+
+/**
+ * Send a browser notification that activates an action on click. Compatible with Firefox.
+ * @param {string} title The title of the notification.
+ * @param {string} message The message to send for the notification.
+ * @param {notificationClickedCallback} callback
+ */
+export async function sendNotificationWithClick(title, message, callback) {
+  const id = uuid();
+  await browser.notifications.create(id, {
+    type: "basic",
+    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
+    title,
+    message,
+  });
+
+  function listener(notificationId) {
+    if (notificationId !== id) {
+      return;
+    }
+    browser.notifications.onClicked.removeListener(listener);
+    callback();
+  }
+  browser.notifications.onClicked.addListener(listener);
+}
+
+/**
+ * A callback that is ran when the user clicks on a notification.
+ * @callback notificationClickedCallback
  */
 
 /**

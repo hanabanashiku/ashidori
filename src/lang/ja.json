@@ -94,7 +94,9 @@
 
   "episodeCompletedPopupTitle": "一話終了後",
   "episodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストでアップデートしましょうか。",
+  "episodeCompletedPopupClickBody": "%d話での%sを見たようですね。 ここにクリックして、%sのリストでアップデートできます。",
   "newAnimeEpisodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストに追加しましょうか。",
+  "newAnimeEpisodeCompletedPopupClickBody": "%d話での%sを見たようですね。 ここにクリックして、%sのリストに追加できます。",
   "episodeUpdatedPopupTitle": "リストがアップデートされました。",
   "episodeUpdatedPopupBody": "%sは%s話にアップデートされました。",
   "episodeUpdatedCompleteBody": "%sは完成として記録されました。",
