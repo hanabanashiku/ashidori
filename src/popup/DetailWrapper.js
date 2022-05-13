@@ -24,7 +24,13 @@ function Popup() {
     return <div>hello</div>;
   }
   return (
-    <AnimeDetail selectedAnime={id} isListEntryId close={close} api={api} />
+    <AnimeDetail
+      selectedAnime={id}
+      isListEntryId
+      close={close}
+      api={api}
+      isPopup={false}
+    />
   );
 }
 

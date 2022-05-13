@@ -8,6 +8,8 @@
   "saveButton": "Save",
   "deleteButton": "Delete",
   "cancelButton": "Cancel",
+  "backButton": "Back",
+  "closeButton": "Close",
   "removeFromList": "Remove from list",
   "enableAll": "Enable all",
   "disableAll": "Disable all",

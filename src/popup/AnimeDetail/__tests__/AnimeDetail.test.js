@@ -16,6 +16,7 @@ describe("Anime detail display", () => {
     api,
     close,
     isListEntryId: true,
+    isPopup: true,
   };
 
   beforeEach(() => {
@@ -64,7 +65,7 @@ describe("Anime detail display", () => {
     await waitFor(() =>
       expect(
         getByText(
-          "An error occurred getting the details for the selected anime."
+          "An error has occurred. Please check your internet connection and try again."
         )
       ).toBeInTheDocument()
     );

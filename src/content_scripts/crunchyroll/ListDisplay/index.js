@@ -16,7 +16,7 @@ import lang from "../../../lang";
 
 function ListDisplay({ libraryEntry, api, userData }) {
   async function onOpenDetail() {
-    browser.runtime.sendMessage({
+    return browser.runtime.sendMessage({
       type: MESSAGE_TYPES.SHOW_ANIME_DETAIL_POPUP,
       payload: {
         libraryEntryId: libraryEntry.id,

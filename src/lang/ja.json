@@ -8,6 +8,8 @@
   "saveButton": "保存する",
   "deleteButton": "削除する",
   "cancelButton": "キャンセル",
+  "backButton": "戻る",
+  "closeButton": "閉じる",
   "removeFromList": "リストから外す",
   "enableAll": "全て可能",
   "disableAll": "全て無効",

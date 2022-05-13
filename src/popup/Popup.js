@@ -89,6 +89,7 @@ const Popup = () => {
           isListEntryId={selectedAnime?.isListEntry}
           close={() => setSelectedAnime(null)}
           toggleSearch={search ? toggleSearch : undefined}
+          isPopup
         />
       );
     }
