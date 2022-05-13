@@ -1,4 +1,3 @@
-import { waitFor } from "@testing-library/react";
 import MESSAGE_TYPES from "../../messageTypes";
 
 describe("Popup background script", () => {
