@@ -8,6 +8,8 @@
   "saveButton": "Save",
   "deleteButton": "Delete",
   "cancelButton": "Cancel",
+  "backButton": "Back",
+  "closeButton": "Close",
   "removeFromList": "Remove from list",
   "enableAll": "Enable all",
   "disableAll": "Disable all",
@@ -95,7 +97,9 @@
 
   "episodeCompletedPopupTitle": "Finished watching an episode",
   "episodeCompletedPopupBody": "Looks like you've finished watching episode %d of %s. Should we update your progress on %s's anime list?",
+  "episodeCompletedPopupClickBody": "Looks like you've finished watching episode %d of %s. Click on this notification to update %s's anime list.",
   "newAnimeEpisodeCompletedPopupBody": "Looks like you've finished watching episode %d of %s. Should we add the show to %s's anime list?",
+  "newAnimeEpisodeCompletedPopupClickBody": "Looks like you've finished watching episode %d of %s. Click on this notification to add the show to %s's anime list.",
   "episodeUpdatedPopupTitle": "List updated",
   "episodeUpdatedPopupBody": "%s has been updated to episode %s.",
   "episodeUpdatedCompleteBody": "%s has been marked finished.",

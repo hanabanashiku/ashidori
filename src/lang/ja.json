@@ -8,6 +8,8 @@
   "saveButton": "保存する",
   "deleteButton": "削除する",
   "cancelButton": "キャンセル",
+  "backButton": "戻る",
+  "closeButton": "閉じる",
   "removeFromList": "リストから外す",
   "enableAll": "全て可能",
   "disableAll": "全て無効",
@@ -94,7 +96,9 @@
 
   "episodeCompletedPopupTitle": "一話終了後",
   "episodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストでアップデートしましょうか。",
+  "episodeCompletedPopupClickBody": "%d話での%sを見たようですね。 ここにクリックして、%sのリストでアップデートできます。",
   "newAnimeEpisodeCompletedPopupBody": "%d話での%sを見たようですね。 %sのリストに追加しましょうか。",
+  "newAnimeEpisodeCompletedPopupClickBody": "%d話での%sを見たようですね。 ここにクリックして、%sのリストに追加できます。",
   "episodeUpdatedPopupTitle": "リストがアップデートされました。",
   "episodeUpdatedPopupBody": "%sは%s話にアップデートされました。",
   "episodeUpdatedCompleteBody": "%sは完成として記録されました。",

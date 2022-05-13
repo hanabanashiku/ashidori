@@ -3,7 +3,6 @@ import { render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Popup from "../Popup";
-import DetailWrapper from "../DetailWrapper";
 import * as builder from "../../providers/builder";
 import MockApiProvider from "../../__mocks__/MockApiProvider";
 import PagedData from "../../models/PagedData";

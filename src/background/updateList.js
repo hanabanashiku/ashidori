@@ -3,7 +3,11 @@ import util from "util";
 import Settings from "../options/Settings";
 import MESSAGE_TYPES from "../messageTypes";
 import { getApiInstance } from "../providers/builder";
-import { sendNotification } from "../helpers/extensionHelpers";
+import {
+  sendNotification,
+  getBrowserType,
+  sendNotificationWithClick,
+} from "../helpers/extensionHelpers";
 import {
   showCurrentWatchingAlertOnPopup,
   resetCurrentWatchingAlert,
@@ -12,7 +16,7 @@ import UserData from "../models/UserData";
 import AnimeEpisode from "../models/AnimeEpisode";
 import LibraryEntry from "../models/LibraryEntry";
 import lang from "../lang";
-import { LIST_STATUS, PROVIDER_NAMES } from "../enums";
+import { LIST_STATUS, PROVIDER_NAMES, BROWSER } from "../enums";
 
 browser.runtime.onMessage.addListener(onEpisodeStarted);
 browser.runtime.onMessage.addListener(onUpdateRequest);
@@ -136,6 +140,15 @@ async function canUpdateAsync(loadTime, listEntry, episodeData) {
  * @returns {Promise<void>}
  */
 async function showUpdatePopupAsync(episodeData, listEntry, userData) {
+  switch (getBrowserType()) {
+    case BROWSER.FIREFOX:
+      return showUpdatePopupAsyncFirefox(episodeData, listEntry, userData);
+    case BROWSER.CHROMIUM:
+      return showUpdatePopupAsyncChrome(episodeData, listEntry, userData);
+  }
+}
+
+async function showUpdatePopupAsyncChrome(episodeData, listEntry, userData) {
   function listener(buttonIndex) {
     if (buttonIndex !== 0) {
       // Clicked no
@@ -166,6 +179,28 @@ async function showUpdatePopupAsync(episodeData, listEntry, userData) {
         title: lang.noThanks,
       },
     ],
+    listener
+  );
+}
+
+async function showUpdatePopupAsyncFirefox(episodeData, listEntry, userData) {
+  function listener() {
+    updateAnimeAsync(episodeData, listEntry, userData);
+  }
+
+  const body =
+    listEntry === LIST_STATUS.NOT_WATCHING
+      ? lang.newAnimeEpisodeCompletedPopupClickBody
+      : lang.episodeCompletedPopupClickBody;
+
+  await sendNotificationWithClick(
+    lang.episodeCompletedPopupTitle,
+    util.format(
+      body,
+      episodeData.number,
+      listEntry.anime.title,
+      userData.username
+    ),
     listener
   );
 }
@@ -217,16 +252,29 @@ async function showUpdatedPopupAsync(
     });
   }
 
-  await sendNotification(
-    lang.episodeUpdatedPopupTitle,
-    message,
-    [
-      {
-        title: util.format(lang.seeAnime, PROVIDER_NAMES[userData.apiSource]),
-      },
-    ],
-    listener
-  );
+  switch (getBrowserType()) {
+    case BROWSER.CHROMIUM:
+      return sendNotification(
+        lang.episodeUpdatedPopupTitle,
+        message,
+        [
+          {
+            title: util.format(
+              lang.seeAnime,
+              PROVIDER_NAMES[userData.apiSource]
+            ),
+          },
+        ],
+        listener
+      );
+
+    case BROWSER.FIREFOX:
+      return sendNotificationWithClick(
+        lang.episodeUpdatedPopupTitle,
+        message,
+        listener
+      );
+  }
 }
 
 /**
@@ -243,16 +291,29 @@ async function showErrorPopupAsync(listEntry, userData) {
     });
   }
 
-  await sendNotification(
-    lang.errorOccurredTitle,
-    lang.errorOccurredOnUpdateBody,
-    [
-      {
-        title: util.format(lang.seeAnime, PROVIDER_NAMES[userData.apiSource]),
-      },
-    ],
-    listener
-  );
+  switch (getBrowserType()) {
+    case BROWSER.CHROMIUM:
+      return sendNotification(
+        lang.errorOccurredTitle,
+        lang.errorOccurredOnUpdateBody,
+        [
+          {
+            title: util.format(
+              lang.seeAnime,
+              PROVIDER_NAMES[userData.apiSource]
+            ),
+          },
+        ],
+        listener
+      );
+
+    case BROWSER.FIREFOX:
+      return sendNotificationWithClick(
+        lang.errorOccurredTitle,
+        lang.errorOccurredOnUpdateBody,
+        listener
+      );
+  }
 }
 
 /**
