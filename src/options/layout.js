@@ -1,7 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "@emotion/react";
-import { Container, Box, Paper } from "@mui/material";
+import {
+  Container,
+  Box,
+  Paper,
+  Grid,
+  Stack,
+  Typography,
+  Link,
+} from "@mui/material";
+import {
+  BugReport as BugReportIcon,
+  Lightbulb as LightbulbIcon,
+} from "@mui/icons-material";
 import useDarkMode from "../helpers/useDarkMode";
 
 const Layout = ({ children }) => {
@@ -17,6 +29,7 @@ const Layout = ({ children }) => {
         elevation={6}
         css={css`
           display: block;
+          position: relative;
           min-height: 650px;
           height: calc(100vh - 64px);
           overflow: auto;
@@ -47,6 +60,67 @@ const Layout = ({ children }) => {
           <hr />
         </Box>
         <Box padding="16px 36px">{children}</Box>
+        <Grid
+          direction="row"
+          css={css`
+          position: absolute;
+          bottom: 0;
+          width: 100%
+          flex-grow: 1;
+          padding: 8px 16px;
+        `}
+          container
+        >
+          <Grid item xs={5} />
+          <Grid item xs={4}>
+            <Typography
+              css={css`
+                height: 100%;
+                line-height: 2.5em;
+              `}
+            >
+              Made with ❤️ by{" "}
+              <Link
+                href="https://twitter.com/hanabanashiku"
+                color="text.primary"
+                target="_blank"
+                underline="hover"
+              >
+                hanabanashiku
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Stack lineHeight={0.5}>
+              <Link
+                href="https://github.com/hanabanashiku/ashidori/issues"
+                target="_blank"
+                underline="hover"
+              >
+                <BugReportIcon
+                  css={css`
+                    font-size: 19px;
+                    color: green;
+                  `}
+                />
+                ? Report here
+              </Link>
+              <Link
+                href="https://github.com/hanabanashiku/ashidori"
+                target="_blank"
+                underline="hover"
+              >
+                <LightbulbIcon
+                  css={css`
+                    font-size: 19px;
+                    color: yellow;
+                  `}
+                />
+                ? Contribute here
+              </Link>
+            </Stack>
+          </Grid>
+        </Grid>
       </Paper>
     </Container>
   );
