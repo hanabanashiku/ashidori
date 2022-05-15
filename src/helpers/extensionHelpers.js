@@ -84,6 +84,22 @@ export async function sendNotificationWithClick(title, message, callback) {
  */
 
 /**
+ * Opens the options pane in a new tab
+ * @param {Window|null} The window to close, if any.
+ * @returns {Promise<browser.tabs.Tab>} The opened tab.
+ */
+export async function openOptions(popupWindow = null) {
+  const manifest = browser.runtime.getManifest();
+  const file = manifest.options_ui.page;
+  const result = await browser.tabs.create({
+    url: browser.runtime.getURL(file),
+    active: true,
+  });
+  popupWindow?.close();
+  return result;
+}
+
+/**
  * Execute a script in a given tab.
  * @param {number} tabId The id of the tab to inject.
  * @param {[string]} files The list of scripts to inject.

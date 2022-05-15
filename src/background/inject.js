@@ -29,7 +29,7 @@ async function injectScript(details) {
 }
 
 async function getVideoScript(service) {
-  const manifest = await (await fetch("manifest.json")).json();
+  const manifest = browser.runtime.getManifest();
 
   switch (service) {
     case SERVICES.CRUNCHYROLL:

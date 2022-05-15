@@ -1,6 +1,6 @@
 import React from "react";
-import browser from "webextension-polyfill";
 import { css } from "@emotion/react";
+import { openOptions } from "../helpers/extensionHelpers";
 import { Box, IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import useDarkMode from "../helpers/useDarkMode";
@@ -35,7 +35,7 @@ const Header = () => {
           padding-right: 8px;
           color: ${isDarkMode ? "#007fff" : "#000"};
         `}
-        onClick={() => browser.runtime.openOptionsPage()}
+        onClick={() => openOptions(window)}
         aria-label={lang.settingsButton}
       >
         <Settings />

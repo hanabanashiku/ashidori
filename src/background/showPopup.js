@@ -8,7 +8,7 @@ async function onMessage(message) {
   }
 
   const id = message.payload.libraryEntryId;
-  const url = `${browser.runtime.getURL(await getPopup())}?detail=${id}`;
+  const url = `${await browser.browserAction.getPopup({})}?detail=${id}`;
 
   await browser.windows.create({
     type: "popup",
@@ -17,14 +17,6 @@ async function onMessage(message) {
     height: 500,
     width: 500,
   });
-}
-
-async function getPopup() {
-  const manifest = await (await fetch("manifest.json")).json();
-  if (manifest.action) {
-    return manifest.action.default_popup;
-  }
-  return manifest.browser_action.default_popup;
 }
 
 browser.runtime.onMessage.addListener(onMessage);
