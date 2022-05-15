@@ -5,6 +5,11 @@ import MESSAGE_TYPES from "../messageTypes";
 
 // used to inject scripts on pages reached using history.pushState()
 async function injectScript(details) {
+  // probably a browser popup
+  if (details.tabId < 0) {
+    return;
+  }
+
   // send a mesage when history.pushState() is used.
   // This allows content scripts to look for history state events.∂
   browser.tabs.sendMessage(
@@ -24,7 +29,7 @@ async function injectScript(details) {
 }
 
 async function getVideoScript(service) {
-  const manifest = await (await fetch("manifest.json")).json();
+  const manifest = browser.runtime.getManifest();
 
   switch (service) {
     case SERVICES.CRUNCHYROLL:

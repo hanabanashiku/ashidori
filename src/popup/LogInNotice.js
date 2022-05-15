@@ -1,6 +1,6 @@
 import React from "react";
-import browser from "webextension-polyfill";
 import { css } from "@emotion/react";
+import { openOptions } from "../helpers/extensionHelpers";
 import { Box, Typography, Button } from "@mui/material";
 import lang from "lang";
 
@@ -22,7 +22,7 @@ const LogInNotice = () => {
         {lang.logInBody}
       </Typography>
       <Button
-        onClick={() => browser.runtime.openOptionsPage()}
+        onClick={() => openOptions(window)}
         css={css`
           position: absolute;
           bottom: 16px;

@@ -8,17 +8,7 @@ async function onMessage(message) {
   }
 
   const id = message.payload.libraryEntryId;
-
-  if (browser.browserAction.openPopup) {
-    await browser.browserAction.openPopup();
-    browser.runtime.sendMessage({
-      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL,
-      payload: message.payload,
-    });
-    return;
-  }
-
-  const url = `${browser.runtime.getURL("popup/index.html")}/detail?id=${id}`;
+  const url = `${await browser.browserAction.getPopup({})}?detail=${id}`;
 
   await browser.windows.create({
     type: "popup",

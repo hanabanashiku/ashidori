@@ -1,4 +1,9 @@
-import { ANIME_STATUS, PROVIDERS, SERVICES } from "../../enums";
+import {
+  ANIME_STATUS,
+  PROVIDERS,
+  SERVICES,
+  TITLE_LANGUAGE_PREFERENCES,
+} from "../../enums";
 import AnimeSeries from "../AnimeSeries";
 
 // mock data
@@ -98,6 +103,66 @@ describe("Anime series model", () => {
     );
     expect(actual.streamingLinks).toStrictEqual({
       0: "https://beta.crunchyroll.com/series/G6NQ5DWZ6",
+    });
+  });
+
+  describe("maps title", () => {
+    it("when preference is set to canonical title", () => {
+      const data = {
+        ...kitsu_anime.data,
+        included: kitsu_anime.included,
+        provider: PROVIDERS.KITSU,
+        __langPref: TITLE_LANGUAGE_PREFERENCES.ROMAJI,
+      };
+      const actual = new AnimeSeries(data);
+
+      expect(actual.title).toBe("One Piece");
+    });
+
+    it("when the language matches exactly", () => {
+      browser.i18n.getUILanguage.mockReturnValueOnce("ja-JP");
+      const data = {
+        ...kitsu_anime.data,
+        included: kitsu_anime.included,
+        provider: PROVIDERS.KITSU,
+        __langPref: TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE,
+      };
+      const actual = new AnimeSeries(data);
+
+      expect(actual.title).toBe("ONE PIECE");
+    });
+
+    it("when only the language portion matches", () => {
+      browser.i18n.getUILanguage.mockReturnValueOnce("en-US");
+      const data = {
+        ...kitsu_anime.data,
+        included: kitsu_anime.included,
+        provider: PROVIDERS.KITSU,
+        __langPref: TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE,
+        attributes: {
+          ...kitsu_anime.data.attributes,
+          titles: {
+            en: "One piece",
+            ja_jp: "ONE PIECE",
+          },
+        },
+      };
+      const actual = new AnimeSeries(data);
+
+      expect(actual.title).toBe("One piece");
+    });
+
+    it("defaults to canonical", () => {
+      browser.i18n.getUILanguage.mockReturnValueOnce("es-MX");
+      const data = {
+        ...kitsu_anime.data,
+        included: kitsu_anime.included,
+        provider: PROVIDERS.KITSU,
+        __langPref: TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE,
+      };
+      const actual = new AnimeSeries(data);
+
+      expect(actual.title).toBe("One Piece");
     });
   });
 

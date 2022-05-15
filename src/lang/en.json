@@ -8,6 +8,8 @@
   "saveButton": "Save",
   "deleteButton": "Delete",
   "cancelButton": "Cancel",
+  "backButton": "Back",
+  "closeButton": "Close",
   "removeFromList": "Remove from list",
   "enableAll": "Enable all",
   "disableAll": "Disable all",
@@ -80,11 +82,14 @@
 
   "chooseProvider": "Choose your anime list provider below.",
   "enableIntegrations": "Enable integrations on",
+  "autoUpdateList": "Automatically update my anime list after watching an episode.",
   "waitMinutes": "Wait %s minutes before updating episode count.",
   "askBeforeUpdating": "Ask before updating episode count",
   "askBeforeAdding": "Ask before adding a new series",
   "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
-  "currentlyWatchingTip": "You are currently watching episode %d of %s.",
+  "showTitleLanguage": "Prefer to show titles with",
+  "romajiTitleLanguage": "Canonical title",
+  "defaultTitleLanguage": "UI language",
 
   "kitsuLogIn": "Sign in to Kitsu",
   "logInAfter": "After, you will be returned to Ashidori. Your password will not be saved.",
@@ -92,13 +97,17 @@
 
   "episodeCompletedPopupTitle": "Finished watching an episode",
   "episodeCompletedPopupBody": "Looks like you've finished watching episode %d of %s. Should we update your progress on %s's anime list?",
+  "episodeCompletedPopupClickBody": "Looks like you've finished watching episode %d of %s. Click on this notification to update %s's anime list.",
   "newAnimeEpisodeCompletedPopupBody": "Looks like you've finished watching episode %d of %s. Should we add the show to %s's anime list?",
+  "newAnimeEpisodeCompletedPopupClickBody": "Looks like you've finished watching episode %d of %s. Click on this notification to add the show to %s's anime list.",
   "episodeUpdatedPopupTitle": "List updated",
   "episodeUpdatedPopupBody": "%s has been updated to episode %s.",
   "episodeUpdatedCompleteBody": "%s has been marked finished.",
   "episodeUpdatedCurrentBody": "%s has been marked as currently watching.",
   "episodeUpdatedNewBody": "%s has been added to your anime list.",
+  "currentlyWatchingTip": "You are currently watching episode %d of %s.",
 
   "errorOccurredTitle": "An error has occurred.",
-  "errorOccurredBody": "Please check your internet connection and try again."
+  "errorOccurredBody": "Please check your internet connection and try again.",
+  "errorOccurredOnUpdateBody": "The series progress was unable to be updated automatically."
 }

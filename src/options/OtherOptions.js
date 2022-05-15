@@ -11,7 +11,7 @@ import {
   Radio,
 } from "@mui/material";
 import Settings from "./Settings";
-import { NOTIFY_EPSIODE_ANSWERS } from "../enums";
+import { NOTIFY_EPSIODE_ANSWERS, TITLE_LANGUAGE_PREFERENCES } from "../enums";
 import lang from "lang";
 
 const reducer = (state, action) => {
@@ -56,6 +56,13 @@ const reducer = (state, action) => {
         updateDelay: action.payload,
       };
 
+    case "setTitleLanguagePreference":
+      Settings.setTitleLanguagePreference(action.payload);
+      return {
+        ...state,
+        titleLanguagePreference: action.payload,
+      };
+
     default:
       return state;
   }
@@ -74,6 +81,7 @@ const OtherOptions = () => {
       const shouldNotifiyForNewEpisodes =
         Settings.shouldNotifiyForNewEpisodes();
       const updateDelay = Settings.shouldUpdateAfterMinutes();
+      const titleLanguagePreference = Settings.getTitleLanguagePreference();
 
       dispatch({
         type: "init",
@@ -83,6 +91,7 @@ const OtherOptions = () => {
           shouldShowAddPopup: await shouldShowAddPopup,
           shouldNotifiyForNewEpisodes: await shouldNotifiyForNewEpisodes,
           updateDelay: await updateDelay,
+          titleLanguagePreference: await titleLanguagePreference,
         },
       });
     })();
@@ -123,6 +132,13 @@ const OtherOptions = () => {
     });
   };
 
+  const setTitleLanguagePreference = (value) => {
+    dispatch({
+      type: "setTitleLanguagePreference",
+      payload: value,
+    });
+  };
+
   if (state === null) {
     return null;
   }
@@ -154,7 +170,7 @@ const OtherOptions = () => {
           onChange={(e) => toggleListUpdatEnabled(e.target.checked)}
           size="small"
         />
-        Automatically update my anime list after watching an episode.
+        {lang.autoUpdateList}
       </InputLabel>
       <InputLabel
         css={css`
@@ -203,7 +219,11 @@ const OtherOptions = () => {
         />
         {lang.askBeforeAdding}
       </InputLabel>
-      <FormGroup>
+      <FormGroup
+        css={css`
+          display: none;
+        `}
+      >
         <Typography>{lang.newEpisodeNotification}</Typography>
         <RadioGroup
           css={css`
@@ -254,6 +274,49 @@ const OtherOptions = () => {
               }
             />
             {lang.latestEpisodeRadio}
+          </InputLabel>
+        </RadioGroup>
+      </FormGroup>
+      <FormGroup>
+        <Typography>{lang.showTitleLanguage}</Typography>
+        <RadioGroup
+          css={css`
+            padding-left: 16px;
+            & > label {
+              padding-right: 12px;
+            }
+          `}
+          row
+        >
+          <InputLabel>
+            <Radio
+              name="show-title-language"
+              size="small"
+              checked={
+                state.titleLanguagePreference ===
+                TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE
+              }
+              onChange={() =>
+                setTitleLanguagePreference(
+                  TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE
+                )
+              }
+            />
+            {lang.defaultTitleLanguage}
+          </InputLabel>
+          <InputLabel>
+            <Radio
+              name="show-title-language"
+              size="small"
+              checked={
+                state.titleLanguagePreference ===
+                TITLE_LANGUAGE_PREFERENCES.ROMAJI
+              }
+              onChange={() =>
+                setTitleLanguagePreference(TITLE_LANGUAGE_PREFERENCES.ROMAJI)
+              }
+            />
+            {lang.romajiTitleLanguage}
           </InputLabel>
         </RadioGroup>
       </FormGroup>

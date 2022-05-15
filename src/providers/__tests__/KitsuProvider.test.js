@@ -461,7 +461,7 @@ describe("Kitsu api provider", () => {
     function buildFindAnimeUrl(text) {
       return `anime?filter[text]=${encodeURIComponent(
         text
-      )}?include=streamingLinks,genres&page[limit]=5&page[offset]=0`;
+      )}&include=streamingLinks,genres&page[limit]=5&page[offset]=0`;
     }
 
     it("returns nulls if the episode didn't resolve", async () => {

@@ -5,6 +5,11 @@ export const PROVIDERS = {
   ANILIST: 2,
 };
 
+export const BROWSER = {
+  CHROMIUM: 0,
+  FIREFOX: 1,
+};
+
 export const PROVIDER_NAMES = {
   0: "My Anime List",
   1: "Kitsu",
@@ -54,4 +59,9 @@ export const ANIME_STATUS = {
   ANNOUNCED: 2,
   UNRELEASED: 3,
   UPCOMING: 4,
+};
+
+export const TITLE_LANGUAGE_PREFERENCES = {
+  ROMAJI: 0,
+  UI_LANGUAGE: 1,
 };

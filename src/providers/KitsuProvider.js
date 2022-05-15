@@ -3,6 +3,7 @@ import { omitBy } from "lodash/fp";
 import levenshtein from "js-levenshtein";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
+import Settings from "../options/Settings";
 import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
@@ -37,11 +38,11 @@ export default class KitsuProvider extends ApiProvider {
 
     let adapter = undefined;
 
-    // if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
-    //   // this adapter allows us to use axios in a service worker context
-    //   // Unfortunately it doesn't work in node
-    //   adapter = require("@vespaiach/axios-fetch-adapter").default;
-    // }
+    if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
+      // this adapter allows us to use axios in a service worker context
+      // Unfortunately it doesn't work in node
+      adapter = require("@vespaiach/axios-fetch-adapter").default;
+    }
 
     this.#client = axios.create({
       baseURL: KITSU_BASE_URL,
@@ -97,7 +98,7 @@ export default class KitsuProvider extends ApiProvider {
     );
 
     return new PagedData({
-      data: items,
+      data: await Promise.all(items),
       page,
       limit,
       total: response.data.meta.statusCounts[kitsuStatus],
@@ -314,7 +315,7 @@ export default class KitsuProvider extends ApiProvider {
     const response = await this.#client.get(
       `anime?filter[text]=${encodeURIComponent(
         text
-      )}?include=streamingLinks,genres&page[limit]=${limit}&page[offset]=${
+      )}&include=streamingLinks,genres&page[limit]=${limit}&page[offset]=${
         limit * page
       }`
     );
@@ -323,7 +324,7 @@ export default class KitsuProvider extends ApiProvider {
     );
 
     return new PagedData({
-      data: shows,
+      data: await Promise.all(shows),
       page,
       limit,
       total: response.data.meta.count,
@@ -385,11 +386,13 @@ export default class KitsuProvider extends ApiProvider {
     this._setRefreshToken(response.data["refresh_token"]);
   }
 
-  static #mapData(type, data, included = []) {
+  static async #mapData(type, data, included = []) {
+    const titleLanguagePreference = Settings.getTitleLanguagePreference();
     return new type({
       ...data,
       included,
       provider: PROVIDERS.KITSU,
+      __langPref: await titleLanguagePreference,
     });
   }
 
