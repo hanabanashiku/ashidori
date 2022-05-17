@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      tag_version: ${{steps.tag_version.outputs}}
+      new_tag: ${{steps.tag_version.outputs.new_tag}}
 
     steps:
       - uses: actions/checkout@v3
@@ -67,7 +67,7 @@ jobs:
           if-no-files-found: error
 
   create-release:
-    if: ${{ needs.build.outputs.tag_version.new_tag != 'undefined' }}
+    if: ${{ needs.build.outputs.new_tag != 'undefined' }}
     needs: [build]
     runs-on: ubuntu-latest
 
@@ -83,7 +83,7 @@ jobs:
           files: |
             dist.crx
             dist.xpi
-          tag_name: ${{needs.build.output.tag_version.new_tag}}
+          tag_name: ${{needs.build.outputs.new_tag}
           prerelease: false
           draft: false
           generate_release_notes: true
@@ -98,11 +98,14 @@ jobs:
           client-secret: ${{secrets.CHROME_CLIENT_SECRET}}
           refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
 
+      - name: Get firefox manifest
+        run: unzip dist.xpi -d xpi
+
       - name: Publish to Firefox Store
         uses: trmcnvn/firefox-addon@v1
         with:
           uuid: ${{secrets.FIREFOX_UUID}}
           xpi: "./dist.xpi"
-          manifest: dist/xpi/manifest.json
+          manifest: "./xpi/manifest.json"
           api-key: ${{secrets.FIREFOX_API_KEY}}
           api-secret: ${{secrets.FIREFOX_API_SECRET}}
