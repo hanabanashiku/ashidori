@@ -47,6 +47,13 @@ $ npm run start
 $ npm run build
 ```
 
+Note that Firefox requires Manifest V2 to run, so it uses different scripts:
+
+```
+$ npm run start-firefox
+$ npm run build-firefox
+```
+
 The build will be located in the dist folder. Simply load into your browser as an unpacked extension.
 
 ## Contributing
@@ -55,4 +62,5 @@ Ashidori is free and completely open source. Any contributions are highly apprec
 
 1. Simply clone and create a new branch off of develop, preferrebly following [Git Flow symantics](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 2. Make changes, unit tests, and test.
-3. Make a pull request targeting develop. Changes will be live when they are merged to main.
+3. Make a pull request targeting develop. Changes will be pushed to the respective extension stores when they are merged to main.
+4. When merging to main, please follow the [Angular commit format](https://gist.github.com/brianclements/841ea7bffdb01346392c). This will ensure that the build is tagged appropriately.
