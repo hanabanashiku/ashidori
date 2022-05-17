@@ -54,8 +54,8 @@ jobs:
 
       - name: Package distribution
         run: |
-          (cd dist/crx; zip ../../dist.crx -r *) && \
-          (cd dist/xpi; zip ../../dist.xpi -r *) && \
+          (cd dist/crx; zip ../../dist.crx -r *) & \
+          (cd dist/xpi; zip ../../dist.xpi -r *)
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
