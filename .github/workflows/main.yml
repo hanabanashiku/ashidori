@@ -67,7 +67,7 @@ jobs:
           if-no-files-found: error
 
   create-release:
-    if: ${{ needs.build.outputs.new_tag != 'undefined' }}
+    if: needs.build.outputs.new_tag
     needs: [build]
     runs-on: ubuntu-latest
 
