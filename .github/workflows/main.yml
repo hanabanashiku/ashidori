@@ -8,6 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      tag_version: ${{steps.tag_version.outputs}}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -40,6 +43,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
 
       - name: Bump manifest version
         env:
@@ -50,29 +54,49 @@ jobs:
 
       - name: Package distribution
         run: |
-          (cd dist/crx; zip ../../dist.crx -r *) & \
-          (cd dist/xpi; zip ../../dist.xpi -r *)
+          (cd dist/crx; zip ../../dist.crx -r *) && \
+          (cd dist/xpi; zip ../../dist.xpi -r *) && \
 
-      - name: Create Release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packages
+          path: |
+            dist.crx
+            dist.xpi
+          if-no-files-found: error
+
+  create-release:
+    if: ${{ needs.build.outputs.tag_version.new_tag != undefined }}
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: packages
+
+      - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             dist.crx
             dist.xpi
-          tag_name: ${{steps.tag_version.outputs.new_tag}}
+          tag_name: ${{needs.build.output.tag_version.new_tag}}
           prerelease: false
           draft: false
           generate_release_notes: true
           fail_on_unmatched_files: true
 
       - name: Publish to Chrome Store
-        uses: mnao305/chrome-extension-upload@2.2.0
+        uses: trmcnvn/chrome-addon@v2
         with:
-          file-path: "./dist.crx"
-          extension-id: ${{secrets.CHROME_APP_ID}}
+          extension: ${{secrets.CHROME_APP_ID}}
+          zip: "./dist.crx"
           client-id: ${{secrets.CHROME_CLIENT_ID}}
+          client-secret: ${{secrets.CHROME_CLIENT_SECRET}}
           refresh-token: ${{secrets.CHROME_REFRESH_TOKEN}}
-          publish: true
 
       - name: Publish to Firefox Store
         uses: trmcnvn/firefox-addon@v1
