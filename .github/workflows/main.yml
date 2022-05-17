@@ -83,7 +83,7 @@ jobs:
           files: |
             dist.crx
             dist.xpi
-          tag_name: ${{needs.build.outputs.new_tag}
+          tag_name: ${{needs.build.outputs.new_tag}}
           prerelease: false
           draft: false
           generate_release_notes: true
