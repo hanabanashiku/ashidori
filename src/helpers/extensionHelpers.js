@@ -21,21 +21,26 @@ export function getBrowserType() {
 }
 
 /**
- * Send a browser notification. This method uses buttons, which is incompatible with Firefox.
+ * Send a basic browser notification.
+ * If a list of buttons is sent, it will not be shown on Firefox.
  * @param {string} title The title of the notification.
  * @param {string} message The message to send for the notification.
- * @param {[{title: string}]|null} buttons The list of options to choose from.
- * @param {notificationCallback} callback
+ * @param {[{title: string}]|null} buttons The list of buttons to display.
+ * @param {notificationCallback|null} callback
  */
-export async function sendNotification(title, message, buttons = [], callback) {
+export async function sendNotification(
+  title,
+  message,
+  buttons = null,
+  callback = null
+) {
   const notificationId = uuid();
-  await browser.notifications.create(notificationId, {
-    type: "basic",
-    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
-    title,
-    message,
-    buttons,
-  });
+
+  const body = buildNotificationBody(title, message);
+
+  if ((!buttons && !callback) || getBrowserType() === BROWSER.FIREFOX) {
+    return browser.notifications.create(notificationId, body);
+  }
 
   function listener(id, buttonIndex) {
     if (id !== notificationId) {
@@ -45,6 +50,11 @@ export async function sendNotification(title, message, buttons = [], callback) {
     callback(buttonIndex);
   }
   browser.notifications.onButtonClicked.addListener(listener);
+
+  return browser.notifications.create(notificationId, {
+    ...body,
+    buttons,
+  });
 }
 
 /**
@@ -61,12 +71,7 @@ export async function sendNotification(title, message, buttons = [], callback) {
  */
 export async function sendNotificationWithClick(title, message, callback) {
   const id = uuid();
-  await browser.notifications.create(id, {
-    type: "basic",
-    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
-    title,
-    message,
-  });
+  await browser.notifications.create(id, buildNotificationBody(title, message));
 
   function listener(notificationId) {
     if (notificationId !== id) {
@@ -76,6 +81,14 @@ export async function sendNotificationWithClick(title, message, callback) {
     callback();
   }
   browser.notifications.onClicked.addListener(listener);
+}
+
+export async function openLink(url) {
+  return browser.tabs.create({
+    url,
+    active: true,
+    selected: true,
+  });
 }
 
 /**
@@ -91,10 +104,7 @@ export async function sendNotificationWithClick(title, message, callback) {
 export async function openOptions(popupWindow = null) {
   const manifest = browser.runtime.getManifest();
   const file = manifest.options_ui.page;
-  const result = await browser.tabs.create({
-    url: browser.runtime.getURL(file),
-    active: true,
-  });
+  const result = await openLink(browser.runtime.getURL(file));
   popupWindow?.close();
   return result;
 }
@@ -123,4 +133,13 @@ export async function executeScript(tabId, files) {
       })
     )
   );
+}
+
+function buildNotificationBody(title, message) {
+  return {
+    type: "basic",
+    iconUrl: browser.runtime.getURL("/static/icons/icon16.png"),
+    title,
+    message,
+  };
 }
