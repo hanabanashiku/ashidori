@@ -7,6 +7,7 @@ import {
   sendNotification,
   getBrowserType,
   sendNotificationWithClick,
+  openLink,
 } from "../helpers/extensionHelpers";
 import {
   showCurrentWatchingAlertOnPopup,
@@ -245,13 +246,6 @@ async function showUpdatedPopupAsync(
     );
   }
 
-  function listener() {
-    browser.tabs.create({
-      url: listEntry.anime.externalLink,
-      selected: true,
-    });
-  }
-
   switch (getBrowserType()) {
     case BROWSER.CHROMIUM:
       return sendNotification(
@@ -264,15 +258,29 @@ async function showUpdatedPopupAsync(
               PROVIDER_NAMES[userData.apiSource]
             ),
           },
+          {
+            title: lang.undo,
+          },
         ],
-        listener
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0:
+              return openAnimePage(listEntry);
+
+            case 1:
+              return revertAnimeAsync(listEntry, userData);
+
+            default:
+              return Promise.reject("Invalid button");
+          }
+        }
       );
 
     case BROWSER.FIREFOX:
       return sendNotificationWithClick(
         lang.episodeUpdatedPopupTitle,
         message,
-        listener
+        () => openAnimePage(listEntry)
       );
   }
 }
@@ -285,10 +293,7 @@ async function showUpdatedPopupAsync(
  */
 async function showErrorPopupAsync(listEntry, userData) {
   function listener() {
-    browser.tabs.create({
-      url: listEntry.anime.externalLink,
-      selected: true,
-    });
+    return openAnimePage(listEntry);
   }
 
   switch (getBrowserType()) {
@@ -314,6 +319,18 @@ async function showErrorPopupAsync(listEntry, userData) {
         listener
       );
   }
+}
+
+/**
+ * Shows a push notification to tell the user that the anime was not able to be updated.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @returns {Promise<void>}
+ */
+async function showRevertedPopupAsync(listEntry) {
+  return sendNotification(
+    lang.episodeUpdatedPopupTitle,
+    util.format(lang.episodeRevertedPopupBody, listEntry.anime.title)
+  );
 }
 
 /**
@@ -358,6 +375,10 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
       status: LIST_STATUS.COMPLETED,
       finishedAt: new Date(),
     };
+
+    if (listEntry.rewatchCount > 0) {
+      patch.rewatchCount = listEntry.rewatchCount + 1;
+    }
   }
 
   try {
@@ -374,6 +395,47 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
   }
 
   showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
+}
+
+/**
+ * Reverts the list entry to the previous state.
+ * @param {LibraryEntry} listEntry The current library entry record to update.
+ * @param {UserData} userData Data about the user.
+ * @returns {Promise<void>}
+ */
+async function revertAnimeAsync(listEntry, userData) {
+  const api = await getApiInstance();
+
+  if (!api) {
+    return;
+  }
+
+  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+    try {
+      await api.removeLibraryItem(listEntry.id);
+      return showRevertedPopupAsync(listEntry);
+    } catch {
+      return showErrorPopupAsync(listEntry, userData);
+    }
+  }
+
+  const patch = {
+    progress: listEntry.progress,
+    status: listEntry.status,
+    finishedAt: listEntry.completedDate,
+    rewatchCount: listEntry.rewatchCount,
+  };
+
+  try {
+    await api.updateLibraryItem(listEntry.id, patch);
+    return showRevertedPopupAsync(listEntry);
+  } catch {
+    return showErrorPopupAsync(listEntry, userData);
+  }
+}
+
+async function openAnimePage(listEntry) {
+  return openLink(listEntry.anime.externalLink);
 }
 
 /**
