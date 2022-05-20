@@ -5,8 +5,8 @@
 <p align="center">
     <img src="https://github.com/hanabanashiku/ashidori/actions/workflows/integration.yml/badge.svg" alt="Integration" />
     <img src="https://github.com/hanabanashiku/ashidori/actions/workflows/main.yml/badge.svg" alt="Deploy" />
-      <a href="https://codecov.io/gh/hanabanashiku/ashidori">
-        <img src="https://codecov.io/gh/hanabanashiku/ashidori/branch/main/graph/badge.svg?token=BZGXNQQYOO"/>
+      <a href="https://app.codecov.io/gh/hanabanashiku/ashidori/branch/develop">
+        <img src="https://codecov.io/gh/hanabanashiku/ashidori/branch/develop/graph/badge.svg?token=BZGXNQQYOO"/>
       </a>
     <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" />
     <br />
