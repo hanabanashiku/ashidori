@@ -25,6 +25,7 @@ export const SERVICES = {
   HIDIVE: 5,
   TUBITV: 6,
   VRV: 7,
+  DISNEY_PLUS: 8,
 };
 
 export const SERVICE_NAMES = {
@@ -36,6 +37,7 @@ export const SERVICE_NAMES = {
   5: "Hidive",
   6: "TubiTV",
   7: "VRV",
+  8: "Disney+",
 };
 
 export const NOTIFY_EPSIODE_ANSWERS = {

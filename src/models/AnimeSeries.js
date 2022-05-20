@@ -268,7 +268,7 @@ export default class AnimeSeries {
    */
   #mapStreamingLinks(links = []) {
     const result = {};
-    const regex = /([a-zA-Z-]+\.(?:com|net|org|io|tv|co))/g;
+    const regex = /(?:www\.)?([a-zA-Z-]+\.(?:com|net|org|io|tv|co))/g;
 
     for (const link of links) {
       const domain = regex.exec(link)?.[1];
@@ -323,4 +323,5 @@ const SERVICE_DOMAINS = {
   "tubitv.com": SERVICES.TUBITV,
   "amazon.com": SERVICES.AMAZON_PRIME,
   "vrv.co": SERVICES.VRV,
+  "disneyplus.com": SERVICES.DISNEY_PLUS,
 };
