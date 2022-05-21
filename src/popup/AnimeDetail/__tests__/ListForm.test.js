@@ -7,7 +7,6 @@ import {
   fireEvent,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 import ListForm from "../ListForm";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import libraryEntry from "../../../__mocks__/libraryItem";
@@ -20,6 +19,7 @@ describe("Anime list form", () => {
     api: new MockApiProvider(),
     close: jest.fn(),
   };
+  const mockDate = new Date("2022-05-21");
 
   function getFields() {
     const status = screen.getByLabelText("Library status").nextSibling;
@@ -39,8 +39,13 @@ describe("Anime list form", () => {
     };
   }
 
+  beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(mockDate);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it("renders fields with default values", () => {
@@ -74,14 +79,74 @@ describe("Anime list form", () => {
     expect(props.api.updateLibraryItem).not.toHaveBeenCalled();
   });
 
-  it.skip("hitting save patches thte entry and closes the view", async () => {
+  it("hitting save for new show adds to list and closes the view", async () => {
+    const entry = new LibraryEntry({
+      ...libraryEntry,
+      _status: LIST_STATUS.NOT_WATCHING,
+    });
+    render(<ListForm {...props} entry={entry} />);
+
+    const { progress, notes } = getFields();
+    const button = screen.getByRole("button", { name: /save/i });
+
+    userEvent.click(screen.getByRole("button", { name: /library status /i }));
+    userEvent.click(screen.getByRole("option", { name: /Watching/ }));
+    userEvent.clear(progress);
+    userEvent.type(progress, "1");
+    userEvent.clear(notes);
+    userEvent.type(notes, "test");
+
+    act(() => userEvent.click(button));
+
+    await waitFor(() =>
+      expect(props.api.createLibraryItem).toHaveBeenCalledTimes(1)
+    );
+    expect(props.api.updateLibraryItem).not.toHaveBeenCalled();
+    const call = props.api.createLibraryItem.mock.calls[0];
+    expect(call[0]).toBe(props.entry.anime.id);
+    expect(call[1].status).toBe(LIST_STATUS.CURRENT);
+    expect(call[1].progress).toBe(1);
+    expect(call[1].notes).toBe("test");
+    expect(call[1].startDate - mockDate).toBeLessThan(1000);
+    expect(props.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("hitting save for new show adds to list and closes the view", async () => {
+    const entry = new LibraryEntry({
+      ...libraryEntry,
+      _anime: {
+        ...libraryEntry._anime,
+        _episodeCount: 1020,
+      },
+    });
+    render(<ListForm {...props} entry={entry} />);
+
+    const button = screen.getByRole("button", { name: /save/i });
+
+    userEvent.click(screen.getByRole("button", { name: /library status /i }));
+    userEvent.click(screen.getByRole("option", { name: /finished watching/i }));
+
+    act(() => userEvent.click(button));
+
+    await waitFor(() =>
+      expect(props.api.updateLibraryItem).toHaveBeenCalledTimes(1)
+    );
+    const call = props.api.updateLibraryItem.mock.calls[0];
+    expect(call[0]).toBe(props.entry.id);
+    expect(call[1].status).toBe(LIST_STATUS.COMPLETED);
+    expect(call[1].progress).toBe(1020);
+    expect(call[1].completedDate - mockDate).toBeLessThan(1000);
+    expect(props.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("hitting save patches the entry and closes the view", async () => {
     const { getByText } = render(<ListForm {...props} />);
 
     const { status, progress, rating, startDate, finishedDate, notes } =
       getFields();
     const button = getByText("Save");
 
-    fireEvent.change(status, { target: { value: `${LIST_STATUS.ON_HOLD}` } });
+    fireEvent.change(status, { target: { value: `${LIST_STATUS.CURRENT}` } });
 
     userEvent.clear(progress);
     userEvent.type(progress, "1005");
@@ -109,11 +174,8 @@ describe("Anime list form", () => {
     expect(props.api.updateLibraryItem).toHaveBeenLastCalledWith(
       props.entry.id,
       {
-        status: `${LIST_STATUS.ON_HOLD}`,
         progress: 1005,
         rating: 9.5,
-        startDate: "01/01/2018",
-        finishedDate: "01/02/2019",
         notes: "hello world",
       }
     );
@@ -193,11 +255,5 @@ describe("Anime list form", () => {
     await waitFor(() => expect(props.close).toHaveBeenCalledTimes(1));
     expect(props.api.removeLibraryItem).toHaveBeenCalledTimes(1);
     expect(props.api.removeLibraryItem).toHaveBeenCalledWith(props.entry.id);
-  });
-
-  it("has no aXe violations", async () => {
-    const { container } = render(<ListForm {...props} />);
-
-    expect(await axe(container)).toHaveNoViolations();
   });
 });

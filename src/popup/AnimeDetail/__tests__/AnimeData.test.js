@@ -1,5 +1,5 @@
 import React from "react";
-import { render, act } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import {
@@ -96,6 +96,23 @@ describe("Anime data", () => {
 
     expect(getByText("Crunchyroll")).toBeInTheDocument();
     expect(getByText("Funimation")).toBeInTheDocument();
+  });
+
+  test.each([
+    [ANIME_STATUS.AIRING, "Airing"],
+    [ANIME_STATUS.ANNOUNCED, "Announced"],
+    [ANIME_STATUS.FINISHED, "Finished"],
+    [ANIME_STATUS.UNRELEASED, "Unreleased"],
+    [ANIME_STATUS.UPCOMING, "Upcoming"],
+  ])("Anime status %p renders correct text", (status, expected) => {
+    const anime = new AnimeSeries({
+      ...props.anime,
+      _status: status,
+    });
+
+    render(<AnimeData anime={anime} />);
+
+    expect(screen.getAllByText(expected)).toBeTruthy();
   });
 
   it("has no aXe violations", async () => {

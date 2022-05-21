@@ -23,7 +23,7 @@ import DeleteModal from "./DeleteModal";
 import NumberInput from "../../components/NumberInput";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
-import { LIST_STATUS } from "../../enums";
+import { LIST_STATUS } from "enums";
 import lang from "lang";
 
 const ListForm = ({ entry, api, close }) => {
@@ -55,8 +55,9 @@ const ListForm = ({ entry, api, close }) => {
     }
 
     const toPatch = Object.keys(dirtyFields).filter((key) => dirtyFields[key]);
-    const patch = _.pick(values, toPatch);
-    if (entry.status == LIST_STATUS.NOT_WATCHING) {
+    let patch = _.pick(values, toPatch);
+
+    if (entry.status === LIST_STATUS.NOT_WATCHING) {
       await api.createLibraryItem(entry.anime.id, patch);
     } else {
       await api.updateLibraryItem(entry.id, patch);
@@ -91,12 +92,19 @@ const ListForm = ({ entry, api, close }) => {
                     e.target.value === LIST_STATUS.CURRENT &&
                     entry.status === LIST_STATUS.NOT_WATCHING
                   ) {
-                    setValue("startDate", new Date());
+                    setValue("startDate", new Date(), { shouldDirty: true });
                   } else if (
                     e.target.value === LIST_STATUS.COMPLETED &&
                     entry.status === LIST_STATUS.CURRENT
                   ) {
-                    setValue("completedDate", new Date());
+                    setValue("completedDate", new Date(), {
+                      shouldDirty: true,
+                    });
+                    if (entry.anime.episodeCount) {
+                      setValue("progress", entry.anime.episodeCount, {
+                        shouldDirty: true,
+                      });
+                    }
                   }
                 }}
                 onBlur={onBlur}
