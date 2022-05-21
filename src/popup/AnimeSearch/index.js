@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { css } from "@emotion/react";
@@ -23,18 +23,20 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
     toggleSearch();
   }
 
-  const submitSearchRef = useRef(
-    _.throttle(async (text) => {
-      try {
-        setLoading(true);
-        const data = await api.findAnime(text, page, 20);
-        setResults(data);
-      } catch {
-        setResults("error");
-      } finally {
-        setLoading(false);
-      }
-    }, 500)
+  const search = useMemo(
+    () =>
+      _.throttle(async (text, page) => {
+        try {
+          setLoading(true);
+          const data = await api.findAnime(text, page, 20);
+          setResults(data);
+        } catch {
+          setResults("error");
+        } finally {
+          setLoading(false);
+        }
+      }, 500),
+    []
   );
 
   // restore state between popup clicks
@@ -54,7 +56,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
       return;
     }
 
-    submitSearchRef.current(query);
+    search(query, page);
   }, [query, page]);
 
   return (

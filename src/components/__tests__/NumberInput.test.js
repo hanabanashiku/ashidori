@@ -9,7 +9,7 @@ describe("Number input", () => {
 
     const input = screen.getByRole("spinbutton");
     userEvent.type(input, "123");
-    fireEvent.scroll(input, { scrollY: 100 });
+    fireEvent.wheel(input, { scrollY: 100 });
     expect(input).toHaveValue(123);
   });
 });
