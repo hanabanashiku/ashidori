@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { v4 as uuid } from "uuid";
 import { BROWSER } from "../enums";
 
-/** istanbul ignore next */
+/* istanbul ignore next */
 export function getBrowserType() {
   const baseUrl = browser.runtime.getURL("");
 
