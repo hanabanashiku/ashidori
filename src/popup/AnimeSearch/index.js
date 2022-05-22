@@ -11,6 +11,7 @@ import {
   cacheSearchPage,
   getCachedSearchPage,
 } from "../../helpers/storageHelpers";
+import lang from "../../lang";
 
 const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
   const [query, setQuery] = useState("");
@@ -82,7 +83,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
         >
           <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
           <TextField
-            label="Search"
+            label={lang.search}
             variant="standard"
             value={query}
             onChange={(e) => {

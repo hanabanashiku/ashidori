@@ -14,17 +14,13 @@ const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
   if (!results) {
     return (
       <Typography height="450px" my="32px" mx="8px" textAlign="center">
-        Enter a search term to continue
+        {lang.enterSearchTerm}
       </Typography>
     );
   }
 
   if (isError) {
-    return (
-      <Alert severity="error">
-        An error occurred while returning search results.
-      </Alert>
-    );
+    return <Alert severity="error">{lang.errorOccurredOnSearch}</Alert>;
   }
 
   const columns = [
@@ -52,7 +48,7 @@ const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
   const rows = results.data.map((anime) => ({
     id: anime.id,
     title: anime.title,
-    episodeCount: anime.episodeCount ?? "Ongoing",
+    episodeCount: anime.episodeCount ?? lang.ongoing,
     startSeason: anime.startSeason,
   }));
 

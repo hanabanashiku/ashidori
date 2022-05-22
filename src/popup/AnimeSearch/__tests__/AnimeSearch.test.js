@@ -6,6 +6,7 @@ import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import {
   getCachedSearchPage,
   cacheSearchPage,
+  resetSearchPage,
 } from "../../../helpers/storageHelpers";
 import library from "../../../__mocks__/library";
 import PagedData from "../../../models/PagedData";
@@ -24,6 +25,7 @@ describe("Anime search window", () => {
   afterEach(() => {
     jest.useRealTimers();
     jest.clearAllMocks();
+    resetSearchPage();
   });
 
   it("renders the search box", () => {
@@ -87,6 +89,19 @@ describe("Anime search window", () => {
         name: /sono bisque doll wa koi wo suru 4 winter 2022/i,
       })
     );
+  });
+
+  it("shows error alert on error", async () => {
+    props.api.findAnime.mockRejectedValue("error");
+
+    render(<AnimeSearch {...props} />);
+    userEvent.type(screen.getByRole("textbox", { name: /search/i }), "f");
+
+    await waitFor(() => expect(props.api.findAnime).toHaveBeenCalled());
+
+    expect(
+      screen.getByText(/an error occurred while returning search results\./i)
+    ).toBeInTheDocument();
   });
 
   it("renders data from cache", async () => {
@@ -173,7 +188,6 @@ describe("Anime search window", () => {
 
     userEvent.click(screen.getByRole("button", { name: /go to next page/i }));
 
-    expect(props.api.findAnime).toHaveBeenCalledTimes(2);
     expect(props.api.findAnime).toHaveBeenNthCalledWith(1, "o", 0, 20);
     expect(props.api.findAnime).toHaveBeenNthCalledWith(2, "o", 1, 20);
   });
