@@ -1,6 +1,7 @@
 import ApiProvider from "../providers/ApiProvider";
 
 export default class MockApiProvider extends ApiProvider {
+  getUserData = jest.fn();
   getAnineList = jest.fn();
   getAnimeListByStatus = jest.fn();
   getSingleLibraryEntry = jest.fn();
@@ -13,4 +14,5 @@ export default class MockApiProvider extends ApiProvider {
   authorize = jest.fn();
   refresh = jest.fn();
   isAuthenticated = jest.fn();
+  signOut = jest.fn();
 }

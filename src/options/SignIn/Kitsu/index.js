@@ -30,7 +30,7 @@ const KitsuLogin = () => {
   useEffect(() => {
     (async () => {
       const api = await getApiInstance();
-      if ((await api?.isAuthenticated()) === true) {
+      if (await api?.isAuthenticated()) {
         returnToOptions(navigate);
       }
     })();
