@@ -83,7 +83,7 @@ const AnimeSearch = ({ api, toggleSearch, showAnime }) => {
         >
           <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
           <TextField
-            label={lang.search}
+            label={lang.searchButton}
             variant="standard"
             value={query}
             onChange={(e) => {
