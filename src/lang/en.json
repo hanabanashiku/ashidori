@@ -87,7 +87,7 @@
   "chooseProvider": "Choose your anime list provider below.",
   "enableIntegrations": "Enable integrations on",
   "autoUpdateList": "Automatically update my anime list after watching an episode.",
-  "askBeforeUpdating": "Ask before updating episode count",
+  "askBeforeUpdating": "Ask before updating episode progress",
   "askBeforeAdding": "Ask before adding a new series",
   "newEpisodeNotification": "Send a notification when a new epsiode is released for a current series",
   "showTitleLanguage": "Prefer to show titles with",

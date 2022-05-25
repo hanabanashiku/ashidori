@@ -188,7 +188,7 @@ const OtherOptions = () => {
           sx={{ width: "3.5rem" }}
           disabled={!state.listUpdatingEnabled}
         />
-        minutes before updating episode count.
+        minutes before updating episode progress.
       </InputLabel>
       <InputLabel
         css={css`

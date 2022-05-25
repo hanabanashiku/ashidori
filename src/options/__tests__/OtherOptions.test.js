@@ -31,13 +31,13 @@ describe("Other options section", () => {
 
     expect(
       screen.getByRole("spinbutton", {
-        name: /wait minutes before updating episode count\./i,
+        name: /wait minutes before updating episode progress\./i,
       })
     ).toHaveValue(10);
 
     expect(
       screen.getByRole("checkbox", {
-        name: /ask before updating episode count/i,
+        name: /ask before updating episode progress/i,
       })
     ).toBeChecked();
 
@@ -94,7 +94,7 @@ describe("Other options section", () => {
     await waitForLoad();
 
     const field = screen.getByRole("spinbutton", {
-      name: /wait minutes before updating episode count\./i,
+      name: /wait minutes before updating episode progress\./i,
     });
     userEvent.clear(field);
     userEvent.type(field, "5");
@@ -102,14 +102,14 @@ describe("Other options section", () => {
     expect(await Settings.shouldUpdateAfterMinutes()).toBe(5);
   });
 
-  it("toggling the ask before updating episode count field toggles the setting", async () => {
+  it("toggling the ask before updating episode progress field toggles the setting", async () => {
     await Settings.setShouldShowUpdatePopup(false);
     render(<OtherOptions />);
     await waitForLoad();
 
     screen
       .getByRole("checkbox", {
-        name: /ask before updating episode count/i,
+        name: /ask before updating episode progress/i,
       })
       .click();
 
@@ -136,13 +136,13 @@ describe("Other options section", () => {
 
     expect(
       screen.getByRole("spinbutton", {
-        name: /wait minutes before updating episode count\./i,
+        name: /wait minutes before updating episode progress\./i,
       })
     ).toBeEnabled();
 
     expect(
       screen.getByRole("checkbox", {
-        name: /ask before updating episode count/i,
+        name: /ask before updating episode progress/i,
       })
     ).toBeEnabled();
 
@@ -160,13 +160,13 @@ describe("Other options section", () => {
 
     expect(
       screen.getByRole("spinbutton", {
-        name: /wait minutes before updating episode count\./i,
+        name: /wait minutes before updating episode progress\./i,
       })
     ).toBeDisabled();
 
     expect(
       screen.getByRole("checkbox", {
-        name: /ask before updating episode count/i,
+        name: /ask before updating episode progress/i,
       })
     ).toBeDisabled();
 
