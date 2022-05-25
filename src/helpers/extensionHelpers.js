@@ -88,7 +88,6 @@ export async function openLink(url) {
   return browser.tabs.create({
     url,
     active: true,
-    selected: true,
   });
 }
 

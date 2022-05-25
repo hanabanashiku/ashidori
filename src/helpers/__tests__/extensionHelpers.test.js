@@ -211,7 +211,6 @@ describe("Extension helpers", () => {
     expect(browser.tabs.create).toHaveBeenLastCalledWith({
       url,
       active: true,
-      selected: true,
     });
   });
 
@@ -231,7 +230,6 @@ describe("Extension helpers", () => {
     expect(browser.tabs.create).toHaveBeenLastCalledWith({
       url: "chrome-extension://options.html",
       active: true,
-      selected: true,
     });
     expect(popupWindow.close).toHaveBeenCalledTimes(1);
   });

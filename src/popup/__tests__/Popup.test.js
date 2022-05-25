@@ -71,7 +71,6 @@ describe("Popup window", () => {
     expect(browser.tabs.create).toHaveBeenCalledTimes(1);
     expect(browser.tabs.create).toHaveBeenLastCalledWith({
       url: "chrome-extension://options.html",
-      selected: true,
       active: true,
     });
   });
