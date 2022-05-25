@@ -22,7 +22,7 @@ describe("App settings", () => {
         return Settings.shouldShowUpdatePopup();
       case "enable_add_popup":
         return Settings.shouldShowAddPopup();
-      case "should_notify_for_new_episodes":
+      case "should_notifiy_for_new_episodes":
         return Settings.shouldNotifiyForNewEpisodes();
       case "title_language_prefrence":
         return Settings.getTitleLanguagePreference();
@@ -53,15 +53,12 @@ describe("App settings", () => {
   }
 
   test.each([
-    [
-      "enabled_services",
-      Object.values(SERVICES),
-      ["update_enabled", true],
-      ["update_delay", 10],
-      ["enable_update_popup", true],
-      ["enable_add_popup", true],
-      ["should_notifiy_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.LATEST],
-    ],
+    ["enabled_services", Object.values(SERVICES)],
+    ["update_enabled", true],
+    ["update_delay", 10],
+    ["enable_update_popup", true],
+    ["enable_add_popup", true],
+    ["should_notifiy_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.LATEST],
   ])("returns default value for %p", async function (key, expected) {
     expect(await callGetter(key)).toStrictEqual(expected);
   });

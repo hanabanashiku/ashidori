@@ -97,7 +97,7 @@ const OtherOptions = () => {
     })();
   }, [dispatch]);
 
-  const toggleListUpdatEnabled = (value) => {
+  const toggleListUpdateEnabled = (value) => {
     dispatch({
       type: "enableUpdating",
       payload: value,
@@ -167,7 +167,7 @@ const OtherOptions = () => {
         <Checkbox
           name="enable-list-update"
           checked={state.listUpdatingEnabled}
-          onChange={(e) => toggleListUpdatEnabled(e.target.checked)}
+          onChange={(e) => toggleListUpdateEnabled(e.target.checked)}
           size="small"
         />
         {lang.autoUpdateList}
