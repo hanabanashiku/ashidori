@@ -51,8 +51,8 @@ async function onEpisodeStarted(message, sender) {
   }
   browser.tabs.onRemoved.addListener(onTabClose);
 
-  const currentTabs = await browser.storage.local.get("CURRENT_TABS")
-    .CURRENT_TABS;
+  const currentTabs =
+    (await browser.storage.local.get("CURRENT_TABS").CURRENT_TABS) ?? {};
   currentTabs[sender.tab.id] = {
     episodeData,
     listener: onTabClose,

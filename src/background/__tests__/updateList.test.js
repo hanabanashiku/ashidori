@@ -10,20 +10,19 @@ import { LIST_STATUS } from "../../enums";
 import LibraryEntry from "../../models/LibraryEntry";
 import AnimeSeries from "../../models/AnimeSeries";
 
+jest.mock("../../options/Settings");
+
 describe("Update list background script", () => {
-  const now = new Date("2022-03-05");
+  const now = new Date();
   const oneMinute = 60000;
 
   let showCurrentWatchingAlertOnPopupSpy = jest.spyOn(
     storageHelpers,
     "showCurrentWatchingAlertOnPopup"
   );
-  let apiInstanceSpy;
-  /* eslint-disable no-unused-vars */
-  let shouldUpdateAfterMinutesSpy;
-  let shouldShowUpdatePopupSpy;
-  /* eslint-enable no-unused-vars */
   let api = new MockApiProvider();
+
+  let apiInstanceSpy;
   let onEpisodeStarted;
   let onUpdateRequest;
 
@@ -61,53 +60,45 @@ describe("Update list background script", () => {
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
     jest.useFakeTimers().setSystemTime(now.getTime());
-    // listUpdatingEnabledSpy = jest.spyOn(Settings, "listUpdatingEnabled");
-    shouldUpdateAfterMinutesSpy = jest
-      .spyOn(Settings, "shouldUpdateAfterMinutes")
-      .mockResolvedValue(0);
-    shouldShowUpdatePopupSpy = jest
-      .spyOn(Settings, "shouldShowUpdatePopup")
-      .mockResolvedValue(false);
 
     apiInstanceSpy = jest
       .spyOn(builder, "getApiInstance")
       .mockResolvedValue(api);
     api.isAuthenticated.mockResolvedValue(true);
     api.updateLibraryItem.mockResolvedValue(true);
-    browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
-      onEpisodeStarted = fn;
+    Settings.listUpdatingEnabled = jest.fn().mockResolvedValue(true);
+
+    browser.runtime.onMessage.addListener.mockImplementation(function (fn) {
+      switch (fn.name) {
+        case "onEpisodeStarted":
+          onEpisodeStarted = fn;
+          return;
+
+        case "onUpdateRequest":
+          onUpdateRequest = fn;
+          return;
+      }
     });
-    browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
-      onUpdateRequest = fn;
-    });
-    browser.tabs = {
-      ...browser.tabs,
-      onRemoved: {
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-      },
-    };
   });
 
-  afterEach(async () => {
-    // await browser.storage.sync.clear();
+  browser.tabs = {
+    ...browser.tabs,
+    onRemoved: {
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+    },
+  };
+
+  afterEach(() => {
     jest.useRealTimers();
-    // getListUpdatingEnabled.mockClear();
-    // jest.clearAllMocks();
-    jest.resetModules();
-    showCurrentWatchingAlertOnPopupSpy.mockReset();
-    onUpdateRequest = undefined;
-  });
-
-  afterAll(() => {
-    apiInstanceSpy.mockRestore();
+    jest.clearAllMocks();
   });
 
   async function requireScript() {
     require("../updateList");
     await waitFor(() => expect(onUpdateRequest).toBeDefined());
+    await waitFor(() => expect(onEpisodeStarted).toBeDefined());
   }
 
   it("adds message listeners", async () => {
@@ -115,7 +106,7 @@ describe("Update list background script", () => {
     expect(browser.runtime.onMessage.addListener).toHaveBeenCalledTimes(2);
   });
 
-  it.skip("shows current watching alert on start", async () => {
+  it("shows current watching alert on start", async () => {
     await requireScript();
     onEpisodeStarted(
       {
@@ -142,6 +133,7 @@ describe("Update list background script", () => {
   });
 
   it("does not update if the load time has not been met", async () => {
+    await Settings.setShouldUpdateAfterMinutes(10);
     await requireScript();
     await onUpdateRequest(baseMessage, sender);
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
@@ -188,28 +180,36 @@ describe("Update list background script", () => {
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
   });
 
-  it.skip("does update if all conditions have been met", async () => {
+  it("does update if all conditions have been met", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+    await waitFor(async () =>
+      expect(await Settings.shouldShowUpdatePopup()).toBeFalsy()
+    );
     await requireScript();
     await onUpdateRequest(
       _.merge({}, baseMessage, {
         payload: {
           loadTime: now.getTime() - 11 * oneMinute,
         },
-      })
+      }),
+      sender
     );
 
     await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
   });
 
-  it.skip("shows notification before updating if the notification setting is enabled", async () => {
-    shouldShowUpdatePopupSpy.mockResolvedValueOnce(true);
+  it("shows notification before updating if the notification setting is enabled", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValueOnce(true);
     await requireScript();
     await onUpdateRequest(
       _.merge({}, baseMessage, {
         payload: {
           loadTime: now.getTime() - 11 * oneMinute,
         },
-      })
+      }),
+      sender
     );
 
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
