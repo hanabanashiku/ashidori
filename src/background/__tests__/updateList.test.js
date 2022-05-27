@@ -10,15 +10,14 @@ import MESSAGE_TYPES from "../../messageTypes";
 import { BROWSER, LIST_STATUS } from "../../enums";
 import LibraryEntry from "../../models/LibraryEntry";
 import AnimeSeries from "../../models/AnimeSeries";
-import { updatedPopupTestCases } from "./updateListTestCases";
+import {
+  updatedPopupTestCases,
+  updatePopupTestCases,
+} from "./updateListTestCases";
 
 jest.mock("../../options/Settings");
 
 /*/////// TODO ////////
-  - show update/completed popup chrome/firefox
-  - clicking update button on update popup
-  - show add popup chrome/firefox
-  - clicking update button on add popup
   - clicking open anime on updated popup
   - reverting changes
   - change reverted popup
@@ -523,22 +522,254 @@ describe("Update list background script", () => {
     );
   });
 
-  it.skip("shows notification before updating if the notification setting is enabled", async () => {
-    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
-    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValueOnce(true);
+  test.each(updatePopupTestCases)(
+    "shows notification before %p if the notification setting is enabled on %p",
+    async function (action, browserName, browser, expectedMessage) {
+      getBrowserTypeSpy.mockReturnValue(browser);
+      Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+      Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValueOnce(true);
+      Settings.shouldShowAddPopup = jest.fn().mockResolvedValueOnce(true);
+      await requireScript();
+
+      let payload;
+      if (action === "updating") {
+        payload = {
+          loadTime: now.getTime() - 11 * oneMinute,
+        };
+      } else {
+        payload = {
+          loadTime: now.getTime() - 11 * oneMinute,
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+            _anime: {
+              _episodeCount: 115,
+            },
+          },
+        };
+      }
+
+      await onUpdateRequest(
+        _.merge({}, baseMessage, {
+          payload,
+        }),
+        sender
+      );
+
+      if (browser === BROWSER.CHROMIUM) {
+        await waitFor(() =>
+          expect(sendNotificationSpy).toHaveBeenCalledTimes(1)
+        );
+        expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+          "Finished watching an episode",
+          expectedMessage,
+          [
+            {
+              title: "Update",
+            },
+            {
+              title: "No thanks",
+            },
+          ],
+          expect.any(Function)
+        );
+      } else if (browser === BROWSER.FIREFOX) {
+        await waitFor(() =>
+          expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1)
+        );
+        expect(sendNotificationWithClickSpy).toHaveBeenLastCalledWith(
+          "Finished watching an episode",
+          expectedMessage,
+          expect.any(Function)
+        );
+      }
+
+      expect(api.updateLibraryItem).not.toHaveBeenCalled();
+    }
+  );
+
+  it("updates the anime when pressing the update button on the update popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(true);
+
     await requireScript();
     await onUpdateRequest(
       _.merge({}, baseMessage, {
         payload: {
-          loadTime: now.getTime() - 11 * oneMinute,
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+          },
         },
       }),
       sender
     );
 
-    expect(api.updateLibraryItem).not.toHaveBeenCalled();
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener(0);
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 114,
+      }
+    );
+  });
+
+  it("updates the anime when clicking the update popup on firefox", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.FIREFOX);
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(true);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+          },
+        },
+      }),
+      sender
+    );
+
     await waitFor(() =>
-      expect(browser.notifications.create).toHaveBeenCalledTimes(1)
+      expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1)
+    );
+    const buttonListener = sendNotificationWithClickSpy.mock.calls[0][2];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener();
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 114,
+      }
+    );
+  });
+
+  it("does not update the anime when pressing the cancel button on the update popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(true);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener(1);
+
+    expect(api.updateLibraryItem).not.toHaveBeenCalled();
+  });
+
+  it("adds the anime when pressing the update button on the add popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(true);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener(0);
+
+    await waitFor(() => expect(api.createLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.createLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._anime._id,
+      {
+        progress: 1,
+        status: LIST_STATUS.CURRENT,
+        startedAt: expect.any(Date),
+      }
+    );
+  });
+
+  it("adds the anime when clicking the add popup on firefox", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.FIREFOX);
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(true);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() =>
+      expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1)
+    );
+    const buttonListener = sendNotificationWithClickSpy.mock.calls[0][2];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener();
+
+    await waitFor(() => expect(api.createLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.createLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._anime._id,
+      {
+        progress: 1,
+        status: LIST_STATUS.CURRENT,
+        startedAt: expect.any(Date),
+      }
     );
   });
 
@@ -594,6 +825,54 @@ describe("Update list background script", () => {
       }
 
       expect.hasAssertions();
+    }
+  );
+
+  test.each([
+    ["chrome", BROWSER.CHROMIUM],
+    ["firefox", BROWSER.FIREFOX],
+  ])(
+    "shows error popup on update error for %p",
+    async function (browser, browserType) {
+      getBrowserTypeSpy.mockReturnValue(browserType);
+      api.updateLibraryItem.mockRejectedValueOnce("error");
+      Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+      Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+      await requireScript();
+      await onUpdateRequest(
+        _.merge({}, baseMessage, {
+          payload: {
+            loadTime: now.getTime() - 11 * oneMinute,
+          },
+        }),
+        sender
+      );
+
+      await waitFor(() =>
+        expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
+      );
+
+      if (browser === "chrome") {
+        expect(sendNotificationSpy).toHaveBeenCalledTimes(1);
+        expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+          "An error has occurred.",
+          "The series progress was unable to be updated automatically.",
+          [
+            {
+              title: "See anime on My Anime List",
+            },
+          ],
+          expect.any(Function)
+        );
+      } else if (browser === "firefox") {
+        expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1);
+        expect(sendNotificationWithClickSpy).toHaveBeenLastCalledWith(
+          "An error has occurred.",
+          "The series progress was unable to be updated automatically.",
+          expect.any(Function)
+        );
+      }
     }
   );
 });

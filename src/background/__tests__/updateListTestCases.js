@@ -1,4 +1,31 @@
-import { LIST_STATUS } from "../../enums";
+import { LIST_STATUS, BROWSER } from "../../enums";
+
+export const updatePopupTestCases = [
+  [
+    "updating",
+    "chrome",
+    BROWSER.CHROMIUM,
+    "Looks like you've finished watching episode 113 of My Hero Academia. Should we update your progress on john.doe's anime list?",
+  ],
+  [
+    "adding",
+    "chrome",
+    BROWSER.CHROMIUM,
+    "Looks like you've finished watching episode 1 of My Hero Academia. Should we add the show to john.doe's anime list?",
+  ],
+  [
+    "updating",
+    "firefox",
+    BROWSER.FIREFOX,
+    "Looks like you've finished watching episode 113 of My Hero Academia. Click on this notification to update john.doe's anime list.",
+  ],
+  [
+    "adding",
+    "firefox",
+    BROWSER.FIREFOX,
+    "Looks like you've finished watching episode 1 of My Hero Academia. Click on this notification to add the show to john.doe's anime list.",
+  ],
+];
 
 export const updatedPopupTestCases = ["chrome", "firefox"]
   .map((browser) => [

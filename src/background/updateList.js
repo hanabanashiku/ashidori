@@ -160,7 +160,7 @@ async function showUpdatePopupAsyncChrome(episodeData, listEntry, userData) {
   }
 
   const body =
-    listEntry === LIST_STATUS.NOT_WATCHING
+    listEntry.status === LIST_STATUS.NOT_WATCHING
       ? lang.newAnimeEpisodeCompletedPopupBody
       : lang.episodeCompletedPopupBody;
 
@@ -190,7 +190,7 @@ async function showUpdatePopupAsyncFirefox(episodeData, listEntry, userData) {
   }
 
   const body =
-    listEntry === LIST_STATUS.NOT_WATCHING
+    listEntry.status === LIST_STATUS.NOT_WATCHING
       ? lang.newAnimeEpisodeCompletedPopupClickBody
       : lang.episodeCompletedPopupClickBody;
 
