@@ -348,7 +348,7 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
 
   let episode = episodeData.number;
   let lastEpisode = listEntry.anime.episodeCount;
-  let isComplete = episode === lastEpisode;
+  let isComplete = lastEpisode && episode === lastEpisode;
 
   let patch = {
     progress: episode,
@@ -373,11 +373,12 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
     patch = {
       ...patch,
       status: LIST_STATUS.COMPLETED,
-      finishedAt: new Date(),
     };
 
-    if (listEntry.rewatchCount > 0) {
+    if (listEntry.rewatchCount > 0 || listEntry.completedDate) {
       patch.rewatchCount = listEntry.rewatchCount + 1;
+    } else {
+      patch.finishedAt = new Date();
     }
   }
 

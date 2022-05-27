@@ -3,33 +3,54 @@ import _ from "lodash";
 import Settings from "../../options/Settings";
 import * as builder from "../../providers/builder";
 import * as storageHelpers from "../../helpers/storageHelpers";
+import * as extensionHelpers from "../../helpers/extensionHelpers";
 import MockApiProvider from "../../__mocks__/MockApiProvider";
 import AnimeEpisode from "../../models/AnimeEpisode";
 import MESSAGE_TYPES from "../../messageTypes";
-import { LIST_STATUS } from "../../enums";
+import { BROWSER, LIST_STATUS } from "../../enums";
 import LibraryEntry from "../../models/LibraryEntry";
 import AnimeSeries from "../../models/AnimeSeries";
+import { updatedPopupTestCases } from "./updateListTestCases";
 
 jest.mock("../../options/Settings");
 
+/*/////// TODO ////////
+  - show update/completed popup chrome/firefox
+  - clicking update button on update popup
+  - show add popup chrome/firefox
+  - clicking update button on add popup
+  - clicking open anime on updated popup
+  - reverting changes
+  - change reverted popup
+  - error popup on update fail chrome/firefox
+*/
 describe("Update list background script", () => {
   const now = new Date();
   const oneMinute = 60000;
+  let api = new MockApiProvider();
 
   let showCurrentWatchingAlertOnPopupSpy = jest.spyOn(
     storageHelpers,
     "showCurrentWatchingAlertOnPopup"
   );
-  let api = new MockApiProvider();
+  let sendNotificationSpy = jest
+    .spyOn(extensionHelpers, "sendNotification")
+    .mockResolvedValue({});
+  let sendNotificationWithClickSpy = jest
+    .spyOn(extensionHelpers, "sendNotificationWithClick")
+    .mockResolvedValue({});
+  let getBrowserTypeSpy = jest
+    .spyOn(extensionHelpers, "getBrowserType")
+    .mockReturnValue(BROWSER.CHROMIUM);
 
-  let apiInstanceSpy;
   let onEpisodeStarted;
   let onUpdateRequest;
+  let onTabClose;
 
   const baseMessage = {
     type: MESSAGE_TYPES.UPDATE_EPISODE,
     payload: {
-      loadTime: now,
+      loadTime: now + 10,
       userData: {
         _id: "12345",
         _name: "john.doe",
@@ -53,18 +74,17 @@ describe("Update list background script", () => {
     },
   };
 
+  const tabId = 123;
   const sender = {
     tab: {
-      id: 123,
+      id: tabId,
     },
   };
 
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(now.getTime());
 
-    apiInstanceSpy = jest
-      .spyOn(builder, "getApiInstance")
-      .mockResolvedValue(api);
+    jest.spyOn(builder, "getApiInstance").mockResolvedValue(api);
     api.isAuthenticated.mockResolvedValue(true);
     api.updateLibraryItem.mockResolvedValue(true);
     Settings.listUpdatingEnabled = jest.fn().mockResolvedValue(true);
@@ -79,6 +99,9 @@ describe("Update list background script", () => {
           onUpdateRequest = fn;
           return;
       }
+    });
+    browser.tabs.onRemoved.addListener.mockImplementation(function (fn) {
+      onTabClose = fn;
     });
   });
 
@@ -140,12 +163,14 @@ describe("Update list background script", () => {
   });
 
   test.each([
-    ["not watching", LIST_STATUS.NOT_WATCHING],
     ["completed", LIST_STATUS.COMPLETED],
     ["dropped", LIST_STATUS.DROPPED],
   ])(
     "does not update if the library status is %s",
     async (_name, listStatus) => {
+      Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+      Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
       await requireScript();
       await onUpdateRequest(
         _.merge({}, baseMessage, {
@@ -157,9 +182,248 @@ describe("Update list background script", () => {
         }),
         sender
       );
+
       expect(api.updateLibraryItem).not.toHaveBeenCalled();
+      expect(api.createLibraryItem).not.toHaveBeenCalled();
+      expect(browser.notifications.create).not.toHaveBeenCalled();
     }
   );
+
+  it("does update if the library status is current", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 114,
+      }
+    );
+  });
+
+  it("does update if the library status is planned", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.PLANNED,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      expect.objectContaining({
+        progress: 1,
+        status: LIST_STATUS.CURRENT,
+        startedAt: expect.any(Date),
+      })
+    );
+    expect(api.updateLibraryItem.mock.calls[0][1].startedAt - now).toBeLessThan(
+      1000
+    );
+  });
+
+  it("does create library entry if the library status is not watching", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _id: undefined,
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.createLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.createLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._anime._id,
+      expect.objectContaining({
+        progress: 1,
+        status: LIST_STATUS.CURRENT,
+        startedAt: expect.any(Date),
+      })
+    );
+    expect(api.createLibraryItem.mock.calls[0][1].startedAt - now).toBeLessThan(
+      1000
+    );
+  });
+
+  it("does change to current if the library status is on hold", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.ON_HOLD,
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 114,
+        status: LIST_STATUS.CURRENT,
+      }
+    );
+  });
+
+  it("does complete the series when the status is current and the user is on the last episode", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 115,
+          },
+          listEntry: {
+            _progress: 114,
+            _status: LIST_STATUS.CURRENT,
+            _anime: {
+              _episodeCount: 115,
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      expect.objectContaining({
+        progress: 115,
+        status: LIST_STATUS.COMPLETED,
+        finishedAt: expect.any(Date),
+      })
+    );
+    expect(
+      api.updateLibraryItem.mock.calls[0][1].finishedAt - now
+    ).toBeLessThan(1000);
+  });
+
+  it("does increment the rewatch count on series finish if the user has watched before", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 115,
+          },
+          listEntry: {
+            _progress: 114,
+            _status: LIST_STATUS.CURRENT,
+            _rewatchCount: 0,
+            _completedDate: new Date("2020-05-25"),
+            _anime: {
+              _episodeCount: 115,
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 115,
+        status: LIST_STATUS.COMPLETED,
+        rewatchCount: 1,
+      }
+    );
+  });
+
+  it("does increment the rewatch count on series finish if the user has rewatched before", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 115,
+          },
+          listEntry: {
+            _progress: 114,
+            _status: LIST_STATUS.CURRENT,
+            _rewatchCount: 1,
+            _anime: {
+              _episodeCount: 115,
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        progress: 115,
+        status: LIST_STATUS.COMPLETED,
+        rewatchCount: 2,
+      }
+    );
+  });
 
   it("does not update if the episode number is less than the current progress", async () => {
     await requireScript();
@@ -180,12 +444,50 @@ describe("Update list background script", () => {
     expect(api.updateLibraryItem).not.toHaveBeenCalled();
   });
 
-  it("does update if all conditions have been met", async () => {
+  it("does not update if the episode number is equal to the current progress", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 113,
+          },
+          listEntry: {
+            _progress: 113,
+          },
+        },
+      }),
+      sender
+    );
+
+    expect(api.updateLibraryItem).not.toHaveBeenCalled();
+  });
+
+  it("does not update if list updating is disabled", async () => {
+    Settings.listUpdatingEnabled = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    expect(
+      await onUpdateRequest(
+        _.merge({}, baseMessage, {
+          payload: {
+            loadTime: now.getTime() - 11 * oneMinute,
+          },
+        }),
+        sender
+      )
+    ).toBeFalsy();
+
+    expect(api.updateLibraryItem).not.toBeCalled();
+  });
+
+  it("does update on message if the episode number is greater than the current progress", async () => {
     Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
     Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
-    await waitFor(async () =>
-      expect(await Settings.shouldShowUpdatePopup()).toBeFalsy()
-    );
+
     await requireScript();
     await onUpdateRequest(
       _.merge({}, baseMessage, {
@@ -199,7 +501,29 @@ describe("Update list background script", () => {
     await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
   });
 
-  it("shows notification before updating if the notification setting is enabled", async () => {
+  it("does update on tab close", async () => {
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onEpisodeStarted(
+      _.merge({}, baseMessage, {
+        type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+        payload: {
+          loadTime: now.getTime() - 11 * oneMinute,
+        },
+      }),
+      sender
+    );
+    await onTabClose(tabId);
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+    expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
+      onTabClose
+    );
+  });
+
+  it.skip("shows notification before updating if the notification setting is enabled", async () => {
     Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
     Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValueOnce(true);
     await requireScript();
@@ -217,4 +541,59 @@ describe("Update list background script", () => {
       expect(browser.notifications.create).toHaveBeenCalledTimes(1)
     );
   });
+
+  test.each(updatedPopupTestCases)(
+    "shows updated popup for new library status %p on %p",
+    async function (statusText, browser, payload, expectedText) {
+      switch (browser) {
+        case "chrome":
+          getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+          break;
+        case "firefox":
+          getBrowserTypeSpy.mockReturnValue(BROWSER.FIREFOX);
+          break;
+      }
+
+      Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+      Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+      await requireScript();
+      await onUpdateRequest(
+        _.merge({}, baseMessage, {
+          payload,
+        }),
+        sender
+      );
+
+      await waitFor(() =>
+        expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
+      );
+
+      if (browser === "chrome") {
+        expect(sendNotificationSpy).toHaveBeenCalledTimes(1);
+        expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+          "List updated",
+          expectedText,
+          [
+            {
+              title: "See anime on My Anime List",
+            },
+            {
+              title: "Undo",
+            },
+          ],
+          expect.any(Function)
+        );
+      } else if (browser === "firefox") {
+        expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1);
+        expect(sendNotificationWithClickSpy).toHaveBeenLastCalledWith(
+          "List updated",
+          expectedText,
+          expect.any(Function)
+        );
+      }
+
+      expect.hasAssertions();
+    }
+  );
 });

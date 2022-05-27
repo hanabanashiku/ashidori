@@ -22,12 +22,12 @@ describe("App settings", () => {
         return Settings.shouldShowUpdatePopup();
       case "enable_add_popup":
         return Settings.shouldShowAddPopup();
-      case "should_notifiy_for_new_episodes":
+      case "should_notify_for_new_episodes":
         return Settings.shouldNotifiyForNewEpisodes();
-      case "title_language_prefrence":
+      case "title_language_preference":
         return Settings.getTitleLanguagePreference();
       default:
-        return Promise.reject();
+        return Promise.reject("bad key");
     }
   }
 
@@ -48,7 +48,7 @@ describe("App settings", () => {
       case "title_language_preference":
         return Settings.setTitleLanguagePreference(value);
       default:
-        return Promise.reject();
+        return Promise.reject("bad key");
     }
   }
 
@@ -58,7 +58,7 @@ describe("App settings", () => {
     ["update_delay", 10],
     ["enable_update_popup", true],
     ["enable_add_popup", true],
-    ["should_notifiy_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.LATEST],
+    ["should_notify_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.LATEST],
   ])("returns default value for %p", async function (key, expected) {
     expect(await callGetter(key)).toStrictEqual(expected);
   });
@@ -82,17 +82,17 @@ describe("App settings", () => {
   });
 
   test.each([
-    [
-      "enabled_services",
-      [SERVICES.CRUNCHYROLL],
-      ["update_enabled", false],
-      ["update_delay", 5],
-      ["enable_update_popup", false],
-      ["enable_add_popup", false],
-      ["should_notifiy_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.NEVER],
-      ["title_language_preference", TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE],
-    ],
+    ["enabled_services", [SERVICES.CRUNCHYROLL]],
+    ["update_enabled", false],
+    ["update_delay", 5],
+    ["enable_update_popup", false],
+    ["enable_add_popup", false],
+    ["should_notify_for_new_episodes", NOTIFY_EPSIODE_ANSWERS.NEVER],
+    ["title_language_preference", TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE],
   ])("gets and sets data for %p", async function (key, value) {
+    browser.storage.sync.get.mockResolvedValueOnce({
+      [key]: value,
+    });
     await callSetter(key, value);
     expect(browser.storage.sync.set).toHaveBeenCalledTimes(1);
     expect(browser.storage.sync.set).toHaveBeenCalledWith({
@@ -101,6 +101,11 @@ describe("App settings", () => {
 
     const actualValue = await callGetter(key);
     expect(actualValue).toStrictEqual(value);
+
+    expect(browser.storage.sync.get).toHaveBeenCalledTimes(1);
+    expect(Object.keys(browser.storage.sync.get.mock.calls[0][0])).toContain(
+      key
+    );
   });
 
   it("returns whether or not a service is enabled", async function () {

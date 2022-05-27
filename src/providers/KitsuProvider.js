@@ -38,6 +38,7 @@ export default class KitsuProvider extends ApiProvider {
 
     let adapter = undefined;
 
+    /* istanbul ignore if */
     if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
       // this adapter allows us to use axios in a service worker context
       // Unfortunately it doesn't work in node
