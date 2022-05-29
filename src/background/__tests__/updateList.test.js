@@ -17,14 +17,12 @@ import {
 
 jest.mock("../../options/Settings");
 
-/*/////// TODO ////////
-  - error popup on update fail chrome/firefox
-*/
 describe("Update list background script", () => {
   const now = new Date();
   const oneMinute = 60000;
   let api = new MockApiProvider();
 
+  ///// spies
   let showCurrentWatchingAlertOnPopupSpy = jest.spyOn(
     storageHelpers,
     "showCurrentWatchingAlertOnPopup"

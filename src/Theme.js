@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
