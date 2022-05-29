@@ -411,28 +411,23 @@ async function revertAnimeAsync(listEntry, userData) {
     return;
   }
 
-  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-    try {
-      await api.removeLibraryItem(listEntry.id);
-      return showRevertedPopupAsync(listEntry);
-    } catch {
-      return showErrorPopupAsync(listEntry, userData);
-    }
-  }
-
-  const patch = {
-    progress: listEntry.progress,
-    status: listEntry.status,
-    finishedAt: listEntry.completedDate,
-    rewatchCount: listEntry.rewatchCount,
-  };
-
   try {
-    await api.updateLibraryItem(listEntry.id, patch);
-    return showRevertedPopupAsync(listEntry);
+    if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+      await api.removeLibraryItem(listEntry.id);
+    } else {
+      const patch = {
+        progress: listEntry.progress,
+        status: listEntry.status,
+        finishedAt: listEntry.completedDate,
+        rewatchCount: listEntry.rewatchCount,
+      };
+      await api.updateLibraryItem(listEntry.id, patch);
+    }
   } catch {
     return showErrorPopupAsync(listEntry, userData);
   }
+
+  return showRevertedPopupAsync(listEntry);
 }
 
 async function openAnimePage(listEntry) {

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { LIST_STATUS, BROWSER } from "../../enums";
 
 export const updatePopupTestCases = [

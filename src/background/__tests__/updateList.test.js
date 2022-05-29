@@ -18,9 +18,6 @@ import {
 jest.mock("../../options/Settings");
 
 /*/////// TODO ////////
-  - clicking open anime on updated popup
-  - reverting changes
-  - change reverted popup
   - error popup on update fail chrome/firefox
 */
 describe("Update list background script", () => {
@@ -828,6 +825,223 @@ describe("Update list background script", () => {
     }
   );
 
+  it("opens the anime in a new tab when clicking the open anime button on the updated popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+    buttonListener(0);
+
+    expect(browser.tabs.create).toHaveBeenCalledTimes(1);
+    expect(browser.tabs.create).toHaveBeenLastCalledWith({
+      active: true,
+      url: "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+    });
+  });
+
+  it("opens the anime in a new tab when clicking updated popup on firefox", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.FIREFOX);
+
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() =>
+      expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1)
+    );
+    const buttonListener = sendNotificationWithClickSpy.mock.calls[0][2];
+    expect(buttonListener).toBeDefined();
+    buttonListener();
+
+    expect(browser.tabs.create).toHaveBeenCalledTimes(1);
+    expect(browser.tabs.create).toHaveBeenLastCalledWith({
+      active: true,
+      url: "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+    });
+  });
+
+  it("reverts the anime and shows the reverted popup when clicking the undo button on the updated popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 114,
+          },
+          listEntry: {
+            _progress: 113,
+            _status: LIST_STATUS.CURRENT,
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+    buttonListener(1);
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(2));
+    expect(api.updateLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id,
+      {
+        finishedAt: null,
+        progress: 113,
+        rewatchCount: 0,
+        status: LIST_STATUS.CURRENT,
+      }
+    );
+    expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
+    expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+      "List updated",
+      "The change to My Hero Academia has been reverted."
+    );
+  });
+
+  it("reverts the anime and shows the reverted popup when clicking the undo button on the added popup", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+    buttonListener(1);
+
+    await waitFor(() => expect(api.removeLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id
+    );
+    expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
+    expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+      "List updated",
+      "The change to My Hero Academia has been reverted."
+    );
+  });
+
+  it("shows error message when reverting fails", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+    api.removeLibraryItem.mockRejectedValueOnce("error");
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          episodeData: {
+            _number: 1,
+          },
+          listEntry: {
+            _progress: 0,
+            _status: LIST_STATUS.NOT_WATCHING,
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(sendNotificationSpy).toHaveBeenCalledTimes(1));
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+    buttonListener(1);
+
+    await waitFor(() => expect(api.removeLibraryItem).toHaveBeenCalledTimes(1));
+    expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
+      baseMessage.payload.listEntry._id
+    );
+    expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
+    expect(sendNotificationSpy).toHaveBeenLastCalledWith(
+      "An error has occurred.",
+      "The series progress was unable to be updated automatically.",
+      [
+        {
+          title: "See anime on My Anime List",
+        },
+      ],
+      expect.any(Function)
+    );
+  });
+
   test.each([
     ["chrome", BROWSER.CHROMIUM],
     ["firefox", BROWSER.FIREFOX],
@@ -875,4 +1089,78 @@ describe("Update list background script", () => {
       }
     }
   );
+
+  it("clicking the see anime button on error popup opens the anime in a new tab", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+    api.updateLibraryItem.mockRejectedValueOnce("error");
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          loadTime: now.getTime() - 11 * oneMinute,
+          listEntry: {
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+
+    expect(sendNotificationSpy).toHaveBeenCalledTimes(1);
+    const buttonListener = sendNotificationSpy.mock.calls[0][3];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener(0);
+
+    expect(browser.tabs.create).toHaveBeenCalledTimes(1);
+    expect(browser.tabs.create).toHaveBeenLastCalledWith({
+      active: true,
+      url: "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+    });
+  });
+
+  it("clicking the error popup opens the anime in a new tab on Firefox", async () => {
+    getBrowserTypeSpy.mockReturnValue(BROWSER.FIREFOX);
+    api.updateLibraryItem.mockRejectedValueOnce("error");
+    Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+    Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+    await requireScript();
+    await onUpdateRequest(
+      _.merge({}, baseMessage, {
+        payload: {
+          loadTime: now.getTime() - 11 * oneMinute,
+          listEntry: {
+            _anime: {
+              _link:
+                "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+            },
+          },
+        },
+      }),
+      sender
+    );
+
+    await waitFor(() => expect(api.updateLibraryItem).toHaveBeenCalledTimes(1));
+
+    expect(sendNotificationWithClickSpy).toHaveBeenCalledTimes(1);
+    const buttonListener = sendNotificationWithClickSpy.mock.calls[0][2];
+    expect(buttonListener).toBeDefined();
+
+    buttonListener();
+
+    expect(browser.tabs.create).toHaveBeenCalledTimes(1);
+    expect(browser.tabs.create).toHaveBeenLastCalledWith({
+      active: true,
+      url: "https://myanimelist.net/anime/31964/Boku_no_Hero_Academia",
+    });
+  });
 });
