@@ -32,6 +32,9 @@ const ServiceImage = ({ service }) => {
     case SERVICES.VRV:
       img = "../static/images/vrv_icon.png";
       break;
+    case SERVICES.DISNEY_PLUS:
+      img = "../static/images/disneyplus_icon.png";
+      break;
     default:
       return null;
   }

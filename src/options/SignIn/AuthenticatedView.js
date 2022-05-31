@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { css } from "@emotion/react";
 import { Card, Typography, Avatar, Link, Button } from "@mui/material";
 import util from "util";
-import UserData from "../models/UserData";
-import { getApiInstance } from "../providers/builder";
-import { PROVIDER_NAMES } from "../enums";
+import UserData from "../../models/UserData";
+import { getApiInstance } from "../../providers/builder";
+import { PROVIDER_NAMES } from "../../enums";
 import lang from "lang";
 
 const AuthenticatedView = ({ userData, reset }) => {

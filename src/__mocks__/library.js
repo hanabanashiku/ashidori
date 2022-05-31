@@ -8,7 +8,7 @@ export default [
     _status: LIST_STATUS.CURRENT,
     _progress: 500,
     _notes: "note",
-    _startDate: new Date("Jan 1 2022"),
+    _startDate: new Date("October 1 1999"),
     _completedDate: new Date("Jan 2 2022"),
     _lastUpdated: new Date("Jan 2 2022"),
     _rating: 8,

@@ -13,6 +13,7 @@ describe("Streaming links", () => {
       5: "https://hidive.com/one-piece",
       6: "https://tubitv.com/one-piece",
       7: "https://vrv.co/one-piece",
+      8: "https://disneyplus.com/one-piece",
     };
     const { getByText } = render(<StreamingLinks links={links} />);
 
@@ -36,6 +37,10 @@ describe("Streaming links", () => {
     expect(getByText("Hidive").parentElement).toHaveAttribute("href", links[5]);
     expect(getByText("TubiTV").parentElement).toHaveAttribute("href", links[6]);
     expect(getByText("VRV").parentElement).toHaveAttribute("href", links[7]);
+    expect(getByText("Disney+").parentElement).toHaveAttribute(
+      "href",
+      links[8]
+    );
   });
 
   it("does not render links for missing services", () => {

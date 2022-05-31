@@ -7,4 +7,12 @@ global.beforeAll(() => {
   browser.scripting = {
     executeScript: jest.fn(),
   };
+  browser.tabs.executeScript = jest.fn();
+  browser.notifications.onButtonClicked.removeListener = jest.fn();
+  browser.notifications.onClicked.removeListener = jest.fn();
+  browser.runtime = {
+    ...browser.runtime,
+    getManifest: jest.fn(),
+    getURL: jest.fn(),
+  };
 });

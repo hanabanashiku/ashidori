@@ -61,7 +61,9 @@ const SignInButtons = () => {
         <ProviderButton
           name="Kitsu"
           logo="../../static/images/kitsu.png"
-          onClick={() => navigate("signin/kitsu")}
+          onClick={() => {
+            navigate("signin/kitsu");
+          }}
         />
 
         {/* <ProviderButton

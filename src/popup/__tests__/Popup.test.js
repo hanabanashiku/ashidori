@@ -1,5 +1,5 @@
 import React from "react";
-import { render, act, waitFor } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Popup from "../Popup";
@@ -9,6 +9,13 @@ import PagedData from "../../models/PagedData";
 import LibraryEntry from "../../models/LibraryEntry";
 import { LIST_STATUS } from "../../enums";
 import MESSAGE_TYPES from "../../messageTypes";
+
+const mockNavigate = jest.fn();
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
+}));
 
 describe("Popup window", () => {
   let apiInstanceSpy;
@@ -45,49 +52,61 @@ describe("Popup window", () => {
     expect(getByRole("progressbar")).toBeInTheDocument();
   });
 
-  it.skip("clicking the settings cog opens the options page", async () => {
-    browser.runtime.getUrl.mockReturnValueOnce(
-      "chrome-extension://test/popup.html"
-    );
+  it("clicking the settings cog opens the options page", async () => {
+    window.close = jest.fn();
+    browser.runtime.getManifest.mockReturnValue({
+      options_ui: {
+        page: "options.html",
+      },
+    });
+    browser.runtime.getURL.mockReturnValue("chrome-extension://options.html");
 
-    const { queryByRole, getByLabelText } = render(<Component />);
+    render(<Component />);
 
     await waitFor(() =>
-      expect(queryByRole("progressbar")).not.toBeInTheDocument()
+      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument()
     );
 
-    userEvent.click(getByLabelText("Settings"));
+    userEvent.click(screen.getByLabelText("Settings"));
     expect(browser.tabs.create).toHaveBeenCalledTimes(1);
     expect(browser.tabs.create).toHaveBeenLastCalledWith({
-      url: "chrome-extension://test/popup.html",
+      url: "chrome-extension://options.html",
+      active: true,
     });
   });
 
-  it.skip("shows login page when the user is not logged in", async () => {
+  it("shows login page when the user is not logged in", async () => {
     apiInstanceSpy.mockResolvedValueOnce(null);
+    window.close = jest.fn();
+    browser.runtime.getManifest.mockReturnValue({
+      options_ui: {
+        page: "options.html",
+      },
+    });
+    browser.runtime.getURL.mockReturnValue("chrome-extension://options.html");
 
-    const { getByText, queryByRole } = render(<Component />);
+    render(<Component />);
 
     await waitFor(() =>
-      expect(queryByRole("progressbar")).not.toBeInTheDocument()
+      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument()
     );
 
-    const loginButton = getByText("Log In");
+    const loginButton = screen.getByText("Log In");
     expect(loginButton).toBeInTheDocument();
     userEvent.click(loginButton);
-    expect(browser.runtime.openOptionsPage).toHaveBeenCalledTimes(1);
+    expect(browser.tabs.create).toHaveBeenCalledTimes(1);
   });
 
-  it.skip("shows error page when an error occurs", async () => {
+  it("shows error page when an error occurs", async () => {
     api.getAnimeListByStatus.mockRejectedValueOnce();
 
-    const { getByText, queryByRole } = render(<Component />);
+    render(<Component />);
 
     await waitFor(() =>
-      expect(queryByRole("progressbar")).not.toBeInTheDocument()
+      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument()
     );
 
-    expect(getByText("An error has occurred.")).toBeInTheDocument();
+    expect(screen.getByText(/An error has occurred\./i)).toBeInTheDocument();
   });
 
   describe("currently watching alert", () => {
@@ -214,7 +233,7 @@ describe("Popup window", () => {
     expect(getByText("One Piece")).toBeInTheDocument();
   });
 
-  it.skip("recieving a show anime redirect opens the anime detail page", async () => {
+  it("recieving a show anime redirect opens the anime detail page", async () => {
     api.getAnimeListByStatus.mockResolvedValueOnce(
       new PagedData({
         data: [
@@ -245,16 +264,10 @@ describe("Popup window", () => {
       })
     );
 
-    const { getByText, queryAllByRole } = render(
-      <Component search="?detail=12345" />
-    );
+    render(<Component search="?detail=12345" />);
 
-    await waitFor(() => expect(queryAllByRole("tab")).not.toHaveLength(0));
-
-    expect(api.getSingleLibraryEntry).toHaveBeenCalled();
-    expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
-    await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
-    expect(getByText("One Piece")).toBeInTheDocument();
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+    expect(mockNavigate).toHaveBeenLastCalledWith("detail/12345");
   });
 
   it("recieving a show anime message opens the anime detail page", async () => {
@@ -302,5 +315,17 @@ describe("Popup window", () => {
     expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith("12345");
     await waitFor(() => expect(queryAllByRole("progressbar")).toHaveLength(0));
     expect(getByText("One Piece")).toBeInTheDocument();
+  });
+
+  it("shows the search page when clicking on the fab button", async () => {
+    render(<Component />);
+
+    await waitFor(() =>
+      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument()
+    );
+    userEvent.click(screen.getByRole("button", { name: /search/i }));
+    expect(
+      screen.getByText(/enter a search term to continue/i)
+    ).toBeInTheDocument();
   });
 });

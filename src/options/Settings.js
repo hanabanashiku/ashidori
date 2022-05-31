@@ -145,15 +145,17 @@ export default class Settings {
   }
 
   static async #getStoredKey(key, defaultValue) {
-    const request = {};
-    request[key] = defaultValue;
+    const request = {
+      [key]: defaultValue,
+    };
     const result = await browser.storage.sync.get(request);
     return result[key];
   }
 
   static async #setStoredKey(key, value) {
-    const request = {};
-    request[key] = value;
+    const request = {
+      [key]: value,
+    };
     return browser.storage.sync.set(request);
   }
 }

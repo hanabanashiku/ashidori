@@ -6,10 +6,12 @@
   "seeMore": "もっと見る",
   "seeLess": "しめる",
   "saveButton": "保存する",
+  "searchButton": "検索",
   "deleteButton": "削除する",
   "cancelButton": "キャンセル",
   "backButton": "戻る",
   "closeButton": "閉じる",
+  "undo": "元に戻す",
   "removeFromList": "リストから外す",
   "enableAll": "全て可能",
   "disableAll": "全て無効",
@@ -45,6 +47,7 @@
   "finishedDate": "完成日",
   "notes": "ノート",
   "deletingIndicator": "削除中",
+  "enterSearchTerm": "続行するには検索語を入力してください",
 
   "episode": "話",
   "rate": "評価して",
@@ -67,6 +70,7 @@
   "finished": "完成",
   "unreleased": "未発表",
   "upcoming": "近刊",
+  "ongoing": "放送中",
 
   "fall": "秋",
   "winter": "冬",
@@ -102,11 +106,13 @@
   "episodeUpdatedPopupTitle": "リストがアップデートされました。",
   "episodeUpdatedPopupBody": "%sは%s話にアップデートされました。",
   "episodeUpdatedCompleteBody": "%sは完成として記録されました。",
+  "episodeRevertedPopupBody": "%sへの変更は元に戻されました。",
   "episodeUpdatedCurrentBody": "%sは現行中として記録されました。",
   "episodeUpdatedNewBody": "%sはリストに追加されました。.",
   "currentlyWatchingTip": "今は%d話からの%sを見ています.",
 
   "errorOccurredTitle": "エラーが発生しまいました",
   "errorOccurredBody": "インターネット接続を確認して、もう一度お試しください。",
-  "errorOccurredOnUpdateBody": "シリスを自動的にアップデートできませんでした。"
+  "errorOccurredOnUpdateBody": "シリスを自動的にアップデートできませんでした。",
+  "errorOccurredOnSearch": "検索中の間にエラーが発生しまいました。"
 }
