@@ -1,7 +1,9 @@
+import { waitFor } from "@testing-library/react";
 import MESSAGE_TYPES from "../../messageTypes";
 
 describe("Popup background script", () => {
   let onStartupFunction;
+
   beforeEach(() => {
     global.fetch = jest.fn();
     global.fetch.mockResolvedValue({
@@ -29,7 +31,7 @@ describe("Popup background script", () => {
     expect(onStartupFunction).toBeDefined();
   });
 
-  it.skip("creates a new popup when recieving the show anime detail popup message", () => {
+  it("creates a new popup when recieving the show anime detail popup message", async () => {
     browser.runtime.sendMessage({
       type: MESSAGE_TYPES.SHOW_ANIME_DETAIL_POPUP,
       payload: {
@@ -37,7 +39,17 @@ describe("Popup background script", () => {
       },
     });
 
-    expect(browser.windows.create).toHaveBeenCalledTimes(1);
+    await waitFor(() =>
+      expect(browser.windows.create).toHaveBeenCalledTimes(1)
+    );
+  });
+
+  it("does not create a new popup for other messages", async () => {
+    browser.runtime.sendMessage({
+      type: "test",
+    });
+
+    expect(browser.windows.create).not.toHaveBeenCalled();
   });
 
   it("resets the current watching message on the popup window", async () => {

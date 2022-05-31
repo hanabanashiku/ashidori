@@ -1,8 +1,13 @@
+import { waitFor } from "@testing-library/react";
 import MESSAGE_TYPES from "../../messageTypes";
+import * as extensionHelpers from "../../helpers/extensionHelpers";
 
 describe("Background script injector", () => {
   let onHistoryStateUpdated;
-  let mockFetch = jest.fn();
+
+  const executeScriptSpy = jest
+    .spyOn(extensionHelpers, "executeScript")
+    .mockImplementation(() => Promise.resolve());
 
   beforeEach(() => {
     browser.webNavigation.onHistoryStateUpdated.addListener.mockImplementation(
@@ -10,20 +15,16 @@ describe("Background script injector", () => {
         onHistoryStateUpdated = fn;
       }
     );
-    global.fetch = mockFetch;
     require("../inject.js");
     expect(onHistoryStateUpdated).not.toBeNull();
     jest.resetAllMocks();
-    mockFetch.mockReturnValue({
-      json: () =>
-        Promise.resolve({
-          content_scripts: [
-            {
-              matches: ["*://beta.crunchyroll.com/watch/**"],
-              js: ["video.js"],
-            },
-          ],
-        }),
+    browser.runtime.getManifest.mockReturnValue({
+      content_scripts: [
+        {
+          matches: ["*://beta.crunchyroll.com/watch/**"],
+          js: ["video.js"],
+        },
+      ],
     });
   });
 
@@ -61,16 +62,13 @@ describe("Background script injector", () => {
     );
   });
 
-  it.skip("executes script for Crunchyroll video", () => {
+  it("executes script for Crunchyroll video", async () => {
     onHistoryStateUpdated({
       tabId: 1,
       frameId: 2,
       url: "https://beta.crunchyroll.com/watch/GPWUK5WJ8/backlighting-is-the-best",
     });
-    expect(browser.scripting.executeScript).toHaveBeenCalledTimes(1);
-    expect(browser.scripting.executeScript).toHaveBeenLastCalledWith({
-      files: ["video.js"],
-      target: { tabId: 1 },
-    });
+    await waitFor(() => expect(executeScriptSpy).toHaveBeenCalledTimes(1));
+    expect(executeScriptSpy).toHaveBeenLastCalledWith(1, ["video.js"]);
   });
 });

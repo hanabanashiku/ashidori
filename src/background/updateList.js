@@ -51,8 +51,8 @@ async function onEpisodeStarted(message, sender) {
   }
   browser.tabs.onRemoved.addListener(onTabClose);
 
-  const currentTabs = await browser.storage.local.get("CURRENT_TABS")
-    .CURRENT_TABS;
+  const currentTabs =
+    (await browser.storage.local.get("CURRENT_TABS").CURRENT_TABS) ?? {};
   currentTabs[sender.tab.id] = {
     episodeData,
     listener: onTabClose,
@@ -160,7 +160,7 @@ async function showUpdatePopupAsyncChrome(episodeData, listEntry, userData) {
   }
 
   const body =
-    listEntry === LIST_STATUS.NOT_WATCHING
+    listEntry.status === LIST_STATUS.NOT_WATCHING
       ? lang.newAnimeEpisodeCompletedPopupBody
       : lang.episodeCompletedPopupBody;
 
@@ -190,7 +190,7 @@ async function showUpdatePopupAsyncFirefox(episodeData, listEntry, userData) {
   }
 
   const body =
-    listEntry === LIST_STATUS.NOT_WATCHING
+    listEntry.status === LIST_STATUS.NOT_WATCHING
       ? lang.newAnimeEpisodeCompletedPopupClickBody
       : lang.episodeCompletedPopupClickBody;
 
@@ -348,7 +348,7 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
 
   let episode = episodeData.number;
   let lastEpisode = listEntry.anime.episodeCount;
-  let isComplete = episode === lastEpisode;
+  let isComplete = lastEpisode && episode === lastEpisode;
 
   let patch = {
     progress: episode,
@@ -373,11 +373,12 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
     patch = {
       ...patch,
       status: LIST_STATUS.COMPLETED,
-      finishedAt: new Date(),
     };
 
-    if (listEntry.rewatchCount > 0) {
+    if (listEntry.rewatchCount > 0 || listEntry.completedDate) {
       patch.rewatchCount = listEntry.rewatchCount + 1;
+    } else {
+      patch.finishedAt = new Date();
     }
   }
 
@@ -410,28 +411,23 @@ async function revertAnimeAsync(listEntry, userData) {
     return;
   }
 
-  if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-    try {
-      await api.removeLibraryItem(listEntry.id);
-      return showRevertedPopupAsync(listEntry);
-    } catch {
-      return showErrorPopupAsync(listEntry, userData);
-    }
-  }
-
-  const patch = {
-    progress: listEntry.progress,
-    status: listEntry.status,
-    finishedAt: listEntry.completedDate,
-    rewatchCount: listEntry.rewatchCount,
-  };
-
   try {
-    await api.updateLibraryItem(listEntry.id, patch);
-    return showRevertedPopupAsync(listEntry);
+    if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
+      await api.removeLibraryItem(listEntry.id);
+    } else {
+      const patch = {
+        progress: listEntry.progress,
+        status: listEntry.status,
+        finishedAt: listEntry.completedDate,
+        rewatchCount: listEntry.rewatchCount,
+      };
+      await api.updateLibraryItem(listEntry.id, patch);
+    }
   } catch {
     return showErrorPopupAsync(listEntry, userData);
   }
+
+  return showRevertedPopupAsync(listEntry);
 }
 
 async function openAnimePage(listEntry) {

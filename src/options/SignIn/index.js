@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Container, CircularProgress } from "@mui/material";
-import { getApiInstance } from "../../providers/builder";
-import AuthenticatedView from "../AuthenticatedView";
+import AuthenticatedView from "./AuthenticatedView";
 import SignInButtons from "./SignInButtons";
+import { getApiInstance } from "../../providers/builder";
 
 const SignIn = () => {
   const [userData, setUserData] = useState(undefined);
