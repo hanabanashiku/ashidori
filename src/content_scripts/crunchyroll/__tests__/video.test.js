@@ -1,6 +1,5 @@
 import { waitFor } from "@testing-library/react";
 import Settings from "../../../options/Settings";
-import * as builder from "../../../providers/builder";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import CrunchyrollService from "../../../services/Crunchyroll";
 import MESSAGE_TYPES from "../../../messageTypes";
@@ -71,14 +70,6 @@ describe("Crunchyroll video content script", () => {
     browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
       historyStateUpdatedListener = fn;
     });
-    jest.spyOn(builder, "getApiInstance").mockResolvedValue(api);
-
-    CrunchyrollService.mockReturnValue({
-      authenticate: jest.fn(),
-      getEpisodeData: jest.fn().mockResolvedValue(mockAnimeEpisode),
-    });
-    api.getUserData.mockResolvedValue(mockUserData);
-    api.resolveLibraryEntryFromAnimeEpisode.mockResolvedValue(mockLibraryEntry);
 
     initBody();
   });
@@ -86,6 +77,11 @@ describe("Crunchyroll video content script", () => {
   afterEach(() => {
     document.getElementsByTagName("html")[0].innerHTML = "";
     mediaInfo = null;
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.resetModules();
   });
 
   function initBody() {
@@ -107,7 +103,26 @@ describe("Crunchyroll video content script", () => {
   }
 
   function requireScript() {
-    require("../video");
+    jest.isolateModules(() => {
+      jest
+        .spyOn(
+          jest.requireActual("../../../providers/builder"),
+          "getApiInstance"
+        )
+        .mockResolvedValue(api);
+
+      CrunchyrollService.mockReturnValue({
+        authenticate: jest.fn(),
+        getEpisodeData: jest.fn().mockResolvedValue(mockAnimeEpisode),
+      });
+
+      api.getUserData.mockResolvedValue(mockUserData);
+      api.resolveLibraryEntryFromAnimeEpisode.mockResolvedValue(
+        mockLibraryEntry
+      );
+
+      require("../video");
+    });
   }
 
   it("does not activate if crunchyroll is not enabled", () => {
@@ -117,30 +132,81 @@ describe("Crunchyroll video content script", () => {
     expect(historyStateUpdatedListener).toBeNull();
   });
 
-  it.skip("does activate if crunchyroll is enabled", async () => {
-    jest.isolateModules(async () => {
-      jest.spyOn(builder, "getApiInstance").mockResolvedValue(api);
-      jest.mock("../../../options/Settings");
-      jest.genMockFromModule("../../../services/Crunchyroll");
-      jest.mock("../../../services/Crunchyroll");
+  it("does activate if crunchyroll is enabled", async () => {
+    Settings.getEnabledServices = jest
+      .fn()
+      .mockResolvedValue([SERVICES.CRUNCHYROLL]);
 
-      CrunchyrollService.mockReturnValue({
-        authenticate: jest.fn(),
-        getEpisodeData: jest.fn().mockResolvedValue(mockAnimeEpisode),
-      });
-
-      Settings.getEnabledServices = jest
-        .fn()
-        .mockResolvedValue([SERVICES.CRUNCHYROLL]);
-
-      requireScript();
-      expect(Settings.getEnabledServices).toBeCalled();
-      await waitFor(() =>
-        expect(
-          document.querySelector("#ashidori-list-info")
-        ).toBeInTheDocument()
-      );
-      expect(historyStateUpdatedListener).toBeDefined();
+    requireScript();
+    expect(Settings.getEnabledServices).toBeCalled();
+    await waitFor(() =>
+      expect(document.querySelector("#ashidori-list-info")).toBeInTheDocument()
+    );
+    expect(historyStateUpdatedListener).toBeDefined();
+    expect(browser.runtime.sendMessage).toHaveBeenNthCalledWith(1, {
+      type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+      payload: {
+        loadTime: expect.any(Date),
+        userData: mockUserData,
+        listEntry: mockLibraryEntry,
+        episodeData: mockAnimeEpisode,
+      },
     });
+  });
+
+  it("sends update episode message on unload", async () => {
+    Settings.getEnabledServices = jest
+      .fn()
+      .mockResolvedValue([SERVICES.CRUNCHYROLL]);
+
+    requireScript();
+    await waitFor(() => expect(historyStateUpdatedListener).not.toBeNull());
+    historyStateUpdatedListener({
+      type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
+      payload: {
+        url: "https://beta.crunchyroll.com/watchlist",
+      },
+    });
+
+    expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(2);
+    expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
+      type: MESSAGE_TYPES.UPDATE_EPISODE,
+      payload: {
+        episodeData: mockAnimeEpisode,
+        loadTime: expect.any(Date),
+        userData: mockUserData,
+        listEntry: mockLibraryEntry,
+      },
+    });
+    expect(document.querySelector("#ashidori-list-info")).toBeFalsy();
+  });
+
+  it("re-inits the script when switching to a new episode", async () => {
+    Settings.getEnabledServices = jest
+      .fn()
+      .mockResolvedValue([SERVICES.CRUNCHYROLL]);
+
+    requireScript();
+    await waitFor(() => expect(historyStateUpdatedListener).not.toBeNull());
+    historyStateUpdatedListener({
+      type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
+      payload: {
+        url: "https://beta.crunchyroll.com/watch/GJWU2520V/the-counter-secret-police-cover-operation",
+      },
+    });
+
+    await waitFor(() =>
+      expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(3)
+    );
+    expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
+      type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+      payload: {
+        episodeData: mockAnimeEpisode,
+        loadTime: expect.any(Date),
+        userData: mockUserData,
+        listEntry: mockLibraryEntry,
+      },
+    });
+    expect(document.querySelector("#ashidori-list-info")).toBeInTheDocument();
   });
 });
