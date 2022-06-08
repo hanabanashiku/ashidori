@@ -1,4 +1,5 @@
 import ApiProvider from "./ApiProvider";
+import MyAnimeListProvider from "./MyAnimeListProvider";
 import KitsuProvider from "./KitsuProvider";
 import { PROVIDERS } from "../enums";
 
@@ -10,6 +11,8 @@ let instance = null;
  */
 function buildApiInstance(provider) {
   switch (provider) {
+    case PROVIDERS.MY_ANIME_LIST:
+      return new MyAnimeListProvider();
     case PROVIDERS.KITSU:
       return new KitsuProvider();
 

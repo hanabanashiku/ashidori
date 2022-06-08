@@ -45,3 +45,14 @@ export function resetSearchPage() {
   window.sessionStorage.removeItem("search_query");
   window.sessionStorage.removeItem("search_page");
 }
+
+export async function setPkce(pkce) {
+  return browser.storage.local.set({
+    pkce,
+  });
+}
+
+export async function getPkce() {
+  const result = await browser.storage.local.get({ pkce: null });
+  return result.pkce;
+}

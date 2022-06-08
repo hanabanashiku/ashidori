@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { Box, Button, Typography } from "@mui/material";
+import MyAnimeListProvider from "../../providers/MyAnimeListProvider";
 import lang from "lang";
 
 const ProviderButton = ({ name, logo, onClick }) => (
@@ -52,11 +53,11 @@ const SignInButtons = () => {
           }
         `}
       >
-        {/*<ProviderButton
+        <ProviderButton
           name="My Anime List"
           logo="../../static/images/mal.png"
-          onClick={() => {}}
-        />*/}
+          onClick={() => MyAnimeListProvider.authorize()}
+        />
 
         <ProviderButton
           name="Kitsu"

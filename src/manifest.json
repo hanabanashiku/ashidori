@@ -32,7 +32,13 @@
     "activeTab",
     "webNavigation",
     "notifications",
-    "scripting"
+    "scripting",
+    "identity"
   ],
-  "host_permissions": ["*://*.crunchyroll.com/*"]
+  "host_permissions": ["*://*.crunchyroll.com/*"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{de146335-43f9-46bc-8c2d-51aa82bab4f5}"
+    }
+  }
 }

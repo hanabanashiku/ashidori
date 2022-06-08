@@ -51,7 +51,7 @@ describe("Sign In component", () => {
     render(<Component />);
     await waitFor(() => expect(api.getUserData).toHaveBeenCalled());
 
-    expect(screen.getByText(/sign in/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /sign in/i })).toHaveLength(2);
   });
 
   it("shows authenticated view when the user is logged in", async () => {
@@ -77,7 +77,9 @@ describe("Sign In component", () => {
     userEvent.click(screen.getByRole("button", { name: /sign out/i }));
 
     await waitFor(() =>
-      expect(screen.getByText(/sign in/i)).toBeInTheDocument()
+      expect(
+        screen.getAllByRole("button", { name: /sign in/i })
+      ).not.toBeFalsy()
     );
     expect(screen.queryByText(/you are logged in using kitsu/i)).toBeFalsy();
   });
