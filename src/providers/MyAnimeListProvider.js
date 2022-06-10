@@ -106,9 +106,4 @@ export default class MyAnimeListProvider extends ApiProvider {
       throw new Error("Unable to get user info.");
     }
   }
-
-  async refresh() {
-    console.log("hello");
-    super.refresh;
-  }
 }
