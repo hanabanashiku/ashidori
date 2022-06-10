@@ -38,7 +38,8 @@
   ],
   "host_permissions": [
     "*://*.crunchyroll.com/*",
-    "https://myanimelist.net/v1/oauth2/token"
+    "https://myanimelist.net/v1/oauth2/*",
+    "https://api.myanimelist.net/v2/*"
   ],
   "browser_specific_settings": {
     "gecko": {

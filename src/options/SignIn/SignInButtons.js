@@ -56,7 +56,9 @@ const SignInButtons = () => {
         <ProviderButton
           name="My Anime List"
           logo="../../static/images/mal.png"
-          onClick={() => MyAnimeListProvider.authorize()}
+          onClick={() =>
+            MyAnimeListProvider.authorize().then(() => window.location.reload())
+          }
         />
 
         <ProviderButton

@@ -94,7 +94,7 @@ export default class MyAnimeListProvider extends ApiProvider {
 
   async fetchUserData() {
     try {
-      const response = await this.#client.get("/user");
+      const response = await this.#client.get("/users/@me");
       const userData = new UserData({
         ...response.data,
         provider: PROVIDERS.MY_ANIME_LIST,
