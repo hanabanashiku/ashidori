@@ -1,0 +1,9 @@
+{
+  "id": 30000,
+  "name": "john.doe",
+  "gender": "male",
+  "birthday": "195-06-30",
+  "location": "Japan",
+  "joined_at": "2014-02-24T21:38:54+00:00",
+  "picture": "https://api-cdn.myanimelist.net/images/userimages/30000.jpg?t=1654881600"
+}

@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 export function getHttpAdapter() {
   if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
     // this adapter allows us to use axios in a service worker context

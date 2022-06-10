@@ -1,9 +1,9 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import * as extensionHelpers from "../../../helpers/extensionHelpers";
 import SignInButtons from "../SignInButtons";
+import MyAnimeListProvider from "../../../providers/MyAnimeListProvider";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -12,10 +12,28 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("Sign in buttons", () => {
-  const openLinkSpy = jest.spyOn(extensionHelpers, "openLink");
+  const originalWindow = window.location;
+  const malAuthorizeSpy = jest.spyOn(MyAnimeListProvider, "authorize");
+
+  beforeAll(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: {
+        ...originalWindow,
+        reload: jest.fn(),
+      },
+    });
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalWindow,
+    });
   });
 
   function Component() {
@@ -49,7 +67,9 @@ describe("Sign in buttons", () => {
     expect(mockNavigate).toHaveBeenCalledWith("signin/kitsu");
   });
 
-  it("clicking the MyAnimeList sign in button starts the MAL OAuth2 redirect", () => {
+  it("clicking the MyAnimeList sign in button starts the MAL OAuth2 redirect", async () => {
+    malAuthorizeSpy.mockResolvedValue();
+
     render(<Component />);
 
     userEvent.click(
@@ -58,16 +78,9 @@ describe("Sign in buttons", () => {
       ).getByRole("button", /sign in/i)
     );
 
-    expect(openLinkSpy).toHaveBeenCalledTimes(1);
-    const actualUrlParts = openLinkSpy.mock.calls[0][0].split("?");
-    const params = new URLSearchParams(actualUrlParts[1]);
-
-    expect(actualUrlParts[0]).toBe(
-      "https://myanimelist.net/v1/oauth2/authorize"
+    expect(malAuthorizeSpy).toHaveBeenCalledTimes(1);
+    await waitFor(() =>
+      expect(window.location.reload).toHaveBeenCalledTimes(1)
     );
-    expect(params.get("response_type")).toBe("token");
-    expect(params.get("client_id")).toBeDefined();
-    expect(params.get("redirect_uri")).toBeDefined();
-    expect(params.get("scope")).toBe("write:users");
   });
 });

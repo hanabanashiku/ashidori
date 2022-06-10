@@ -47,7 +47,6 @@ export default class MyAnimeListProvider extends ApiProvider {
     url += "?response_type=code";
     url += `&client_id=${CLIENT_ID}`;
     url += "&scope=write:users";
-    url += `&state=provider:${PROVIDERS.MY_ANIME_LIST},showOptions:true`;
     url += `&redirect_uri=${browser.identity.getRedirectURL()}`;
     url += `&code_challenge=${pkce}`;
     url += "&code_challenge_method=plain";
