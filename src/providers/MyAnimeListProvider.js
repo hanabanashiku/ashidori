@@ -78,17 +78,23 @@ export default class MyAnimeListProvider extends ApiProvider {
       return Promise.reject();
     }
 
-    const token = response.data.access_token;
-    const refresh = response.data.refresh_token;
-    const expiresAt =
-      ((new Date().getTime() / 1000) | 0) + Number(response.data.expires_in);
-
-    await Promise.all([
-      this._setAuthToken(token, expiresAt),
-      this._setRefreshToken(refresh),
-    ]);
-
+    await this.#setTokenResponse(response);
     return this.fetchUserData();
+  }
+
+  async refresh() {
+    const token = this.getRefreshToken();
+    const params = new URLSearchParams();
+    params.append("grant_type", "refresh_token");
+    params.append("refresh_token", await token);
+
+    try {
+      const response = await axios.post(MAL_TOKEN_URL, params);
+      await this.#setTokenResponse(response);
+      return true;
+    } catch {
+      throw "Unalve to authenticate. Check refresh token.";
+    }
   }
 
   async fetchUserData() {
@@ -104,5 +110,17 @@ export default class MyAnimeListProvider extends ApiProvider {
     } catch (e) {
       throw new Error("Unable to get user info.");
     }
+  }
+
+  async #setTokenResponse(response) {
+    const token = response.data.access_token;
+    const refresh = response.data.refresh_token;
+    const expiresAt =
+      ((new Date().getTime() / 1000) | 0) + Number(response.data.expires_in);
+
+    return Promise.all([
+      this._setAuthToken(token, expiresAt),
+      this._setRefreshToken(refresh),
+    ]);
   }
 }

@@ -42,6 +42,7 @@ describe("MyAnimeList provider", () => {
       "def50200356fc22794608cfdfe5c291f95d88466e3387a79f5f8dae9d8084ace8ba29397b82dac1bc2ee22ea530e1276916210b5912d50dbcbf11f2d62919e26d8c7297f9fc3fcaf330d12950db9ee8a800899397f70e77cff0d83cd4c37d47e004d5151a2e3c35252fa6ba5628a3f2b02f4f3994cae3ae2e8eebf0a7dc675d30fe6130db3c50c251fa4a889c2e92ba670a558889027443b57fe8d77d9d584bd20cbf6236b98884afa192b7f4699e011ed260801062700deb07ab0921b0448748dd95ff8ab496704d9662ea8a3bb46debdcdeea5747c9ab1f4370965f9e99303c6968076f84cbecd6f3e77d2c82c009c90f0e02989b6b9f15bed0b415dbfff73ab7a779a9e6b9d36c40cb5676ef369398bc4318bce769feb27b6a69d842e71a5a7c57153a8829aadf0d5b223906552e809788baddcc3a2f31abe7cf9bcabf8444e88ce7ba19f97f565884410e4b3fc120e5c76e7ae48a352efb2eca55bcd86230975a1f002344ec9bfff5bcd46eb9cfc5030f04c5e2dea38c68a6af471a9db6fb29f9cd68d51502f";
     axios.post.mockResolvedValueOnce({
       data: {
+        token_type: "Bearer",
         access_token: bearerToken,
         refresh_token: refreshToken,
         expires_in: 3600,
@@ -89,6 +90,37 @@ describe("MyAnimeList provider", () => {
 
     // populate user data
     expect(axios.get).toHaveBeenCalledWith("/users/@me");
+  });
+
+  it("refresh feches a new bearer token", async () => {
+    const oldRefresh = "abc123456";
+    const bearer = "defg1576";
+    const refresh = "xyz786";
+    browser.storage.local.set({
+      access_token: "abc12345",
+      refresh_token: oldRefresh,
+    });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        access_token: bearer,
+        expires_in: 3600,
+        refresh_token: refresh,
+        token_type: "bearer",
+      },
+    });
+    const expected = new URLSearchParams();
+    expected.append("grant_type", "refresh_token");
+    expected.append("refresh_token", oldRefresh);
+
+    const actual = await mal.refresh();
+
+    expect(actual).toBe(true);
+    expect(await mal.getAuthToken()).toBe(bearer);
+    expect(await mal.getRefreshToken()).toBe(refresh);
+    expect(
+      (await browser.storage.local.get({ access_token_expires_on: null }))
+        .access_token_expires_on
+    ).toBe(now.getTime() / 1000 + 3600);
   });
 
   it("fetchUserData fetches user data", async () => {
