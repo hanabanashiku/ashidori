@@ -1,6 +1,7 @@
 {
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAia6tBil2arPOFEmxFGYbn0bz1D/1AvRxEww4xT/3GPUznXc8ww6rVJS/ey/YQ9zvAWE0N1tNw6gSbaSgyTO/kaNiFK2TcNIbOx+klWpYm85rPNDfmYanYIm7VMZ5fbSq04krHNVz86gq24QmlEuM6YIL+GDQENp0c7QD7YX0sexIAsoNamRqosJWCqUBQ2amCVWy01AYJFEilwMYjjH2X7MCWwFP5TcAbgwpnPQ6daysl+baBzstGrXkGWQWnhlaxT2XBlWdFLfJU7xHRvUCUXa0X0nR960DsdTqW8VX8jceM47QSteZXDK2SKXm9KDc0fp3BCmq7G4QtBkPhmplfQIDAQAB",
   "default_locale": "en",
   "version": "0.0.1",
   "manifest_version": 3,
@@ -35,7 +36,10 @@
     "scripting",
     "identity"
   ],
-  "host_permissions": ["*://*.crunchyroll.com/*"],
+  "host_permissions": [
+    "*://*.crunchyroll.com/*",
+    "https://myanimelist.net/v1/oauth2/token"
+  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "{de146335-43f9-46bc-8c2d-51aa82bab4f5}"

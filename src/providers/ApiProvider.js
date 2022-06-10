@@ -141,6 +141,8 @@ export default class ApiProvider {
       access_token_expires_on: null,
     });
     const expirationDate = data["access_token_expires_on"];
+    console.log(expirationDate);
+    console.log(new Date().getTime() / 1000);
     return (
       expirationDate != null &&
       new Date().getTime() / 1000 > data["access_token_expires_on"] - 600

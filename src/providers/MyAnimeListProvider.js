@@ -13,7 +13,6 @@ const MAL_BASE_URL = "https://api.myanimelist.net/v2";
 const MAL_AUTH_URL = "https://myanimelist.net/v1/oauth2/authorize";
 const MAL_TOKEN_URL = "https://myanimelist.net/v1/oauth2/token";
 const CLIENT_ID = "e62f583191ca06e8a96bd8fc66769c09";
-const REDIRECT_URL = browser.identity.getRedirectURL();
 
 export default class MyAnimeListProvider extends ApiProvider {
   #client = null;
@@ -49,7 +48,7 @@ export default class MyAnimeListProvider extends ApiProvider {
     url += `&client_id=${CLIENT_ID}`;
     url += "&scope=write:users";
     url += `&state=provider:${PROVIDERS.MY_ANIME_LIST},showOptions:true`;
-    url += `&redirect_uri=${REDIRECT_URL}`;
+    url += `&redirect_uri=${browser.identity.getRedirectURL()}`;
     url += `&code_challenge=${pkce}`;
     url += "&code_challenge_method=plain";
 
@@ -71,7 +70,7 @@ export default class MyAnimeListProvider extends ApiProvider {
     params.append("code", recievedParams.get("code"));
     params.append("code_verifier", await getPkce());
     params.append("grant_type", "authorization_code");
-    params.append("redirect_uri", REDIRECT_URL);
+    params.append("redirect_uri", browser.identity.getRedirectURL());
 
     let response;
     try {
@@ -83,7 +82,7 @@ export default class MyAnimeListProvider extends ApiProvider {
     const token = response.data.access_token;
     const refresh = response.data.refresh_token;
     const expiresAt =
-      ((new Date().getTime / 1000) | 0) + Number(response.data.expires_in);
+      ((new Date().getTime() / 1000) | 0) + Number(response.data.expires_in);
 
     await Promise.all([
       this._setAuthToken(token, expiresAt),
@@ -91,5 +90,25 @@ export default class MyAnimeListProvider extends ApiProvider {
     ]);
 
     return this.fetchUserData();
+  }
+
+  async fetchUserData() {
+    try {
+      const response = await this.#client.get("/user");
+      const userData = new UserData({
+        ...response.data,
+        provider: PROVIDERS.MY_ANIME_LIST,
+      });
+      await super.fetchUserData(userData);
+      this.#userId = response.data.id;
+      return userData;
+    } catch (e) {
+      throw new Error("Unable to get user info.");
+    }
+  }
+
+  async refresh() {
+    console.log("hello");
+    super.refresh;
   }
 }
