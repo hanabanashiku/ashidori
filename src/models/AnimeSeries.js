@@ -24,6 +24,10 @@ export default class AnimeSeries {
         this.#mapFromKitsu(data);
         return;
 
+      case PROVIDERS.MY_ANIME_LIST:
+        this.#mapFromMal(data);
+        return;
+
       default:
         _.defaultsDeep(this, data, DEFAULT_VALUES);
         return this;
@@ -215,6 +219,39 @@ export default class AnimeSeries {
     );
   }
 
+  #mapFromMal(data) {
+    const title = this.#mapTitle(
+      {
+        ...data.alternative_titles,
+        canonicalTitle: data.title,
+      },
+      data.__langPref
+    );
+
+    const genres = data.genres.map((genre) => genre.name);
+
+    _.defaultsDeep(
+      this,
+      {
+        _id: data.id,
+        _title: title,
+        _englishTitle: data.alternative_titles.en,
+        _description: data.synopsis,
+        _coverImage: Object.values(data.main_picture)[0],
+        _startDate: new Date(data.start_date),
+        _endDate: data.end_date ? new Date(data.end_date) : null,
+        _status: MAL_ANIME_STATUS[data.status],
+        _episodeCount: data.num_episodes,
+        _episodeLength: Math.round(data.average_episode_duration / 60),
+        _genres: genres,
+        // currently not available through the MAL API - coming soon?
+        _streamingLinks: [],
+        _link: `https://myanimelist.net/anime/${data.id}`,
+      },
+      DEFAULT_VALUES
+    );
+  }
+
   #mapFromCrunchyroll(data) {
     _.defaultsDeep(
       this,
@@ -312,6 +349,12 @@ const KITSU_ANIME_STATUS = {
   tba: ANIME_STATUS.ANNOUNCED,
   unreleased: ANIME_STATUS.UNRELEASED,
   upcoming: ANIME_STATUS.UPCOMING,
+};
+
+const MAL_ANIME_STATUS = {
+  finished_airing: ANIME_STATUS.FINISHED,
+  currently_airing: ANIME_STATUS.AIRING,
+  not_yet_aired: ANIME_STATUS.UPCOMING,
 };
 
 const SERVICE_DOMAINS = {

@@ -8,6 +8,7 @@ import AnimeSeries from "../AnimeSeries";
 
 // mock data
 import kitsu_anime from "../../__mocks__/kitsu/anime.json";
+import mal_anime from "../../__mocks__/mal/anime.json";
 import crunchyroll_series from "../../__mocks__/crunchyroll/series.json";
 
 describe("Anime series model", () => {
@@ -72,6 +73,31 @@ describe("Anime series model", () => {
       6: "https://tubitv.com/one-piece",
       7: "https://vrv.co/series/GRMG8ZQZR/One-Piece",
     });
+  });
+
+  it("loads data from MyAnimeList", () => {
+    const actual = new AnimeSeries({
+      ...mal_anime,
+      provider: PROVIDERS.MY_ANIME_LIST,
+    });
+
+    expect(actual.id).toBe(34572);
+    expect(actual.title).toBe("Black Clover");
+    expect(actual.englishTitle).toBe("Black Clover");
+    expect(actual.description).toBe(mal_anime.synopsis);
+    expect(actual.coverImageUrl).toBe(mal_anime.main_picture.medium);
+    expect(actual.startDate).toStrictEqual(new Date(mal_anime.start_date));
+    expect(actual.endDate).toStrictEqual(new Date(mal_anime.end_date));
+    expect(actual.status).toBe(ANIME_STATUS.FINISHED);
+    expect(actual.episodeCount).toBe(170);
+    expect(actual.episodeLength).toBe(24);
+    expect(actual.genres).toStrictEqual([
+      "Action",
+      "Comedy",
+      "Fantasy",
+      "Shounen",
+    ]);
+    expect(actual.externalLink).toBe("https://myanimelist.net/anime/34572");
   });
 
   it("loads data from Crunchyroll", () => {

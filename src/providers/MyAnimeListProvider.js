@@ -6,13 +6,26 @@ import Settings from "../options/Settings";
 import UserData from "../models/UserData";
 import { PROVIDERS, LIST_STATUS } from "../enums";
 import { getHttpAdapter, generateRandomString } from "./helper";
-import { openLink, getRootPath } from "../helpers/extensionHelpers";
 import { getPkce, setPkce } from "../helpers/storageHelpers";
+import PagedData from "../models/PagedData";
+import LibraryEntry from "../models/LibraryEntry";
 
 const MAL_BASE_URL = "https://api.myanimelist.net/v2";
 const MAL_AUTH_URL = "https://myanimelist.net/v1/oauth2/authorize";
 const MAL_TOKEN_URL = "https://myanimelist.net/v1/oauth2/token";
 const CLIENT_ID = "e62f583191ca06e8a96bd8fc66769c09";
+
+export const STATUS_MAP = {
+  watching: LIST_STATUS.CURRENT,
+  completed: LIST_STATUS.COMPLETED,
+  on_hold: LIST_STATUS.ON_HOLD,
+  dropped: LIST_STATUS.DROPPED,
+  plan_to_watch: LIST_STATUS.PLANNED,
+};
+
+function mapStatus(status) {
+  return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
+}
 
 export default class MyAnimeListProvider extends ApiProvider {
   #client = null;
@@ -37,6 +50,52 @@ export default class MyAnimeListProvider extends ApiProvider {
     this.getUserData().then((data) => {
       const userId = data?.id ?? null;
       this.#userId = userId;
+    });
+  }
+
+  /**
+   * Gets the user's anime list for a given status.
+   * @param status {number} The anime status from the LIST_STATUS enum.
+   * @param page {number} Which page number to grab for, starting from 0.
+   * @param limit {number} The number of items per page.
+   * @param sort {string} The name of the field to sort by.
+   * @param sortBy {string} Not implemented by the MyAnimeList API at this time. Left here for contractual reasons.
+   * @returns {Promise<PagedData<LibraryEntry>>]} The list of library entries.
+   */
+  async getAnimeListByStatus(
+    status,
+    page = 0,
+    limit = 20,
+    sort = null,
+    // eslint-disable-next-line no-unused-vars
+    sortBy = "asc"
+  ) {
+    if (!Object.values(STATUS_MAP).includes(status)) {
+      return new PagedData({
+        data: [],
+      });
+    }
+
+    const fields =
+      "fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}";
+    const sortString = MyAnimeListProvider.#mapSort(sort);
+
+    const response = await this.#client.get(
+      `/users/@me/animelist?status=${mapStatus(status)}&${fields}${
+        (sortString && `&sort=${sortString}`) || ""
+      }&limit=${limit}%offset=${limit * page}`
+    );
+
+    const items = response.data.data.map((entry) =>
+      MyAnimeListProvider.#mapData(LibraryEntry, entry)
+    );
+
+    return new PagedData({
+      data: await Promise.all(items),
+      page,
+      limit,
+      // a cheap guess to keep pagination working - MAL doesn't send a total...
+      total: items.length + (response.data.paging.next ? limit : 0),
     });
   }
 
@@ -122,5 +181,33 @@ export default class MyAnimeListProvider extends ApiProvider {
       this._setAuthToken(token, expiresAt),
       this._setRefreshToken(refresh),
     ]);
+  }
+
+  static async #mapData(type, data) {
+    const titleLanguagePreference = Settings.getTitleLanguagePreference();
+    return new type({
+      ...data,
+      provider: PROVIDERS.MY_ANIME_LIST,
+      __langPref: await titleLanguagePreference,
+    });
+  }
+
+  static #mapSort(field) {
+    if (!field) {
+      return null;
+    }
+
+    switch (field) {
+      case "rating":
+        return "list_score";
+      case "lastUpdated":
+        return "list_updated_at";
+      case "title":
+        return "anime_title";
+      case "startDate":
+        return "anime_start_date";
+      default:
+        return null;
+    }
   }
 }

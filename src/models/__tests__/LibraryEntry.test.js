@@ -4,6 +4,7 @@ import { LIST_STATUS, PROVIDERS } from "../../enums";
 
 // mock data
 import kitsu_library_entry from "../../__mocks__/kitsu/libraryEntry.json";
+import mal_library_entry from "../../__mocks__/mal/libraryEntry.json";
 
 describe("Library entry model", () => {
   it("default constructor loads default values", () => {
@@ -44,5 +45,27 @@ describe("Library entry model", () => {
     expect(actual.anime).not.toBeNull();
     expect(actual.anime.title).toBe("Black Clover");
     expect(actual.anime.id).toBe("13209");
+  });
+
+  it("loads data from MyAnimeList", () => {
+    const actual = new LibraryEntry({
+      ...mal_library_entry,
+      provider: PROVIDERS.MY_ANIME_LIST,
+    });
+
+    expect(actual.id).toBe(21);
+    expect(actual.status).toBe(LIST_STATUS.CURRENT);
+    expect(actual.progress).toBe(736);
+    expect(actual.notes).toBe("Sunday");
+    expect(actual.startDate).toStrictEqual(new Date("2002-10-05"));
+    expect(actual.completedDate).toBeNull();
+    expect(actual.rewatchCount).toBe(0);
+    expect(actual.lastUpdated).toStrictEqual(
+      new Date("2017-09-25T21:07:41+00:00")
+    );
+    expect(actual.rating).toBe(10);
+    expect(actual.anime).not.toBeNull();
+    expect(actual.anime.title).toBe("One Piece");
+    expect(actual.anime.id).toBe(21);
   });
 });

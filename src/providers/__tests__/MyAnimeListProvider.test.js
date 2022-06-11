@@ -1,14 +1,13 @@
 import MyAnimeListProvider from "../MyAnimeListProvider";
 import axios from "../../__mocks__/axios";
-import { PROVIDERS } from "../../enums";
+import { PROVIDERS, LIST_STATUS } from "../../enums";
 
 // mock data
 import userData from "../../__mocks__/userData.json";
 import malUserData from "../../__mocks__/mal/user.json";
+import libraryEntry from "../../__mocks__/mal/libraryEntry.json";
 
 describe("MyAnimeList provider", () => {
-  // const userId = 30000;
-
   let mal;
   let now = new Date("2022-06-10 13:00");
 
@@ -27,6 +26,133 @@ describe("MyAnimeList provider", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe("getAnimeListByStatus", () => {
+    beforeEach(() => {
+      axios.get.mockResolvedValueOnce({
+        data: {
+          data: [libraryEntry],
+          paging: {
+            previous: "",
+          },
+        },
+      });
+    });
+
+    it("returns an empty list for a bad status", async () => {
+      const actual = await mal.getAnimeListByStatus("garbage");
+
+      expect(axios.get).not.toHaveBeenCalled();
+      expect(actual.data).toStrictEqual([]);
+      expect(actual.total).toBe(0);
+    });
+
+    it("returns the anime list data for current status", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.CURRENT);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=watching&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+      );
+      expect(actual).not.toBeNull();
+      expect(actual.total).toBe(1);
+      expect(actual.page).toBe(0);
+      expect(actual.limit).toBe(20);
+      expect(actual.data.length).toBe(1);
+      const entry = actual.data[0];
+      expect(entry.id).toBe(21);
+      expect(entry.anime.id).toBe(21);
+    });
+
+    it("returns the anime list data for completed status", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.COMPLETED);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=completed&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+      );
+
+      expect(actual).not.toBeNull();
+    });
+
+    it("returns the anime list data for dropped status", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.DROPPED);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=dropped&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+      );
+
+      expect(actual).not.toBeNull();
+    });
+
+    it("returns the anime list data for on hold status", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.ON_HOLD);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=on_hold&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+      );
+
+      expect(actual).not.toBeNull();
+    });
+
+    it("returns the anime list data for planned status", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.PLANNED);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=plan_to_watch&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+      );
+
+      expect(actual).not.toBeNull();
+    });
+
+    describe("allows for sorting", () => {
+      test.each([
+        ["rating", "list_score"],
+        ["lastUpdated", "list_updated_at"],
+        ["title", ["anime_title"]],
+        ["startDate", "anime_start_date"],
+      ])("%s", async (field, expectedMalField) => {
+        const actual = await mal.getAnimeListByStatus(
+          LIST_STATUS.CURRENT,
+          0,
+          20,
+          field
+        );
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(axios.get).toHaveBeenCalledWith(
+          `/users/@me/animelist?status=watching&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&sort=${expectedMalField}&limit=20%offset=0`
+        );
+
+        expect(actual).not.toBeNull();
+      });
+
+      it("but does not sort by an invalid field", async () => {
+        const actual = await mal.getAnimeListByStatus(
+          LIST_STATUS.CURRENT,
+          0,
+          20,
+          "garbage"
+        );
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(axios.get).toHaveBeenCalledWith(
+          "/users/@me/animelist?status=watching&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=20%offset=0"
+        );
+
+        expect(actual).not.toBeNull();
+      });
+    });
+
+    it("allows for pagination", async () => {
+      const actual = await mal.getAnimeListByStatus(LIST_STATUS.CURRENT, 2, 30);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        "/users/@me/animelist?status=watching&fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}&limit=30%offset=60"
+      );
+
+      expect(actual).not.toBeNull();
+      expect(actual.page).toBe(2);
+      expect(actual.total).toBe(1);
+      expect(actual.limit).toBe(30);
+    });
   });
 
   it("authorize begins the implicit OAuth flow", async () => {
