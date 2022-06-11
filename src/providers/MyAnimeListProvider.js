@@ -45,7 +45,7 @@ export default class MyAnimeListProvider extends ApiProvider {
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);
     });
-    this._setProvider(PROVIDERS.KITSU);
+    this._setProvider(PROVIDERS.MY_ANIME_LIST);
 
     this.getUserData().then((data) => {
       const userId = data?.id ?? null;
