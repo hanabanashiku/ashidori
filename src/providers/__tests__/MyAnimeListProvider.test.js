@@ -6,6 +6,7 @@ import { PROVIDERS, LIST_STATUS } from "../../enums";
 import userData from "../../__mocks__/userData.json";
 import malUserData from "../../__mocks__/mal/user.json";
 import libraryEntry from "../../__mocks__/mal/libraryEntry.json";
+import animeData from "../../__mocks__/mal/anime.json";
 
 describe("MyAnimeList provider", () => {
   let mal;
@@ -292,6 +293,55 @@ describe("MyAnimeList provider", () => {
     expect(axios.delete).toHaveBeenCalledWith(
       `/anime/${itemId}/my_list_status`
     );
+  });
+
+  describe("getAnime", () => {
+    it("returns anime data", async () => {
+      axios.get.mockResolvedValueOnce({
+        data: animeData,
+      });
+
+      const actual = await mal.getAnime(34572);
+
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(34572);
+      expect(actual.title).toBe("Black Clover");
+    });
+
+    it("returns null if the anime was not found", async () => {
+      axios.get.mockRejectedValueOnce({
+        response: {
+          data: null,
+          status: 404,
+        },
+      });
+
+      const actual = await mal.getAnime(20);
+
+      expect(actual).toBeNull();
+    });
+  });
+
+  it("finds anime returns search results", async () => {
+    axios.get.mockResolvedValueOnce({
+      data: {
+        data: [libraryEntry],
+        paging: {
+          previous: "",
+        },
+      },
+    });
+
+    const actual = await mal.findAnime("one");
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith(
+      "/anime?q=one&fields=id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration&limit=30&offset=0"
+    );
+
+    expect(actual.page).toBe(0);
+    expect(actual.total).toBe(1);
+    expect(actual.data[0].title).toBe("One Piece");
   });
 
   it("authorize begins the implicit OAuth flow", async () => {

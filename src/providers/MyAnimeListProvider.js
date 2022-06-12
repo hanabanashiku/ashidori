@@ -11,6 +11,7 @@ import { getHttpAdapter, generateRandomString } from "./helper";
 import { getPkce, setPkce } from "../helpers/storageHelpers";
 import PagedData from "../models/PagedData";
 import LibraryEntry from "../models/LibraryEntry";
+import AnimeSeries from "../models/AnimeSeries";
 
 const MAL_BASE_URL = "https://api.myanimelist.net/v2";
 const MAL_AUTH_URL = "https://myanimelist.net/v1/oauth2/authorize";
@@ -168,6 +169,46 @@ export default class MyAnimeListProvider extends ApiProvider {
 
   async removeLibraryItem(itemId) {
     return this.#client.delete(`/anime/${itemId}/my_list_status`);
+  }
+
+  /**
+   * Get an anime series based on anime id.
+   * @param {number} animeId The id of the anime series.
+   * @returns {Promise<AnimeSeries?>} The anime series, or null if not found.
+   */
+  async getAnime(animeId) {
+    try {
+      const response = await this.#client.get(
+        `/anime/${animeId}?fields=${anime_fields}`
+      );
+
+      return MyAnimeListProvider.#mapData(AnimeSeries, response.data);
+    } catch (e) {
+      if (e.response?.status === 404) {
+        return null;
+      }
+      throw e;
+    }
+  }
+
+  async findAnime(text, page = 0, limit = 30) {
+    const response = await this.#client.get(
+      `/anime?q=${encodeURIComponent(
+        text
+      )}&fields=${anime_fields}&limit=${limit}&offset=${limit * page}`
+    );
+
+    const shows = response.data.data.map((show) =>
+      MyAnimeListProvider.#mapData(AnimeSeries, show.node)
+    );
+
+    return new PagedData({
+      data: await Promise.all(shows),
+      page,
+      limit,
+      // a cheap guess to keep pagination working - MAL doesn't send a total...
+      total: shows.length + (response.data.paging.next ? limit : 0),
+    });
   }
 
   static async authorize() {

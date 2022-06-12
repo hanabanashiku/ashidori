@@ -391,7 +391,8 @@ describe("Kitsu api provider", () => {
       const actual = await kitsu.getAnime(animeId);
 
       expect(actual).not.toBeNull();
-      expect(actual).anim;
+      expect(actual.title).toBe("One Piece");
+      expect(actual.id).toBe(animeId);
     });
 
     it("returns null if the anime was not found", async () => {
