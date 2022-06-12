@@ -145,7 +145,7 @@ export default class LibraryEntry {
 
   #mapFromMal(data) {
     const anime = data.node;
-    const list = data.list_status;
+    const list = data.list_status ?? {};
 
     _.defaultsDeep(
       this,

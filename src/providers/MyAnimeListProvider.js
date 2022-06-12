@@ -15,6 +15,11 @@ const MAL_AUTH_URL = "https://myanimelist.net/v1/oauth2/authorize";
 const MAL_TOKEN_URL = "https://myanimelist.net/v1/oauth2/token";
 const CLIENT_ID = "e62f583191ca06e8a96bd8fc66769c09";
 
+const anime_fields =
+  "id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration";
+const library_entry_fields =
+  "start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments";
+
 export const STATUS_MAP = {
   watching: LIST_STATUS.CURRENT,
   completed: LIST_STATUS.COMPLETED,
@@ -76,8 +81,7 @@ export default class MyAnimeListProvider extends ApiProvider {
       });
     }
 
-    const fields =
-      "fields=node(id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration),list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}";
+    const fields = `fields=node(${anime_fields}),list_status{${library_entry_fields}}`;
     const sortString = MyAnimeListProvider.#mapSort(sort);
 
     const response = await this.#client.get(
@@ -96,6 +100,22 @@ export default class MyAnimeListProvider extends ApiProvider {
       limit,
       // a cheap guess to keep pagination working - MAL doesn't send a total...
       total: items.length + (response.data.paging.next ? limit : 0),
+    });
+  }
+
+  /**
+   * Get a single library entry for the current user.
+   * @param {string} entryId The id of the anime.
+   * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
+   */
+  async getSingleLibraryEntry(entryId) {
+    const response = await this.#client.get(
+      `/anime/${entryId}?fields=${anime_fields},my_list_status{${library_entry_fields}}`
+    );
+
+    return MyAnimeListProvider.#mapData(LibraryEntry, {
+      node: response.data,
+      list_status: response.data.my_list_status,
     });
   }
 

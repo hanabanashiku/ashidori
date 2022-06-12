@@ -26,6 +26,8 @@ describe("MyAnimeList provider", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
+    axios.get.mockReset();
   });
 
   describe("getAnimeListByStatus", () => {
@@ -152,6 +154,41 @@ describe("MyAnimeList provider", () => {
       expect(actual.page).toBe(2);
       expect(actual.total).toBe(1);
       expect(actual.limit).toBe(30);
+    });
+  });
+
+  describe("getSingleLibraryEntry", () => {
+    it("grabs a library item", async () => {
+      axios.get.mockResolvedValueOnce({
+        data: {
+          ...libraryEntry.node,
+          my_list_status: libraryEntry.list_status,
+        },
+      });
+
+      const actual = await mal.getSingleLibraryEntry(21);
+
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(21);
+      expect(actual.status).toBe(LIST_STATUS.CURRENT);
+      expect(actual.rating).toBe(10);
+      expect(actual.anime).not.toBeNull();
+      expect(actual.anime.id).toBe(21);
+    });
+
+    it("grabs an empty library item if the user has not added the anime to their list", async () => {
+      axios.get.mockResolvedValueOnce({
+        data: libraryEntry.node,
+      });
+
+      const actual = await mal.getSingleLibraryEntry(21);
+
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(21);
+      expect(actual.status).toBe(LIST_STATUS.NOT_WATCHING);
+      expect(actual.startDate).toBeNull();
+      expect(actual.anime).not.toBeNull();
+      expect(actual.anime.id).toBe(21);
     });
   });
 
