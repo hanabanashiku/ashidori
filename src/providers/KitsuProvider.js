@@ -56,6 +56,13 @@ export default class KitsuProvider extends ApiProvider {
   }
 
   /**
+   * @returns The provider type for this api client.
+   */
+  get providerType() {
+    return PROVIDERS.KITSU;
+  }
+
+  /**
    * Gets the user's anime list for a given status.
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.

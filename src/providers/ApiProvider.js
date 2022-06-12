@@ -16,6 +16,13 @@ export default class ApiProvider {
   }
 
   /**
+   * @returns The provider type for this api client.
+   */
+  get providerType() {
+    return PROVIDERS.UNSELECTED;
+  }
+
+  /**
    * Get the user's anime list.
    * @returns {Promise<Library>} The user's library.
    */

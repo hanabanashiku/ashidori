@@ -30,6 +30,10 @@ describe("MyAnimeList provider", () => {
     axios.get.mockReset();
   });
 
+  it("providerType returns MyAnimeList", () => {
+    expect(mal.providerType).toBe(PROVIDERS.MY_ANIME_LIST);
+  });
+
   describe("getAnimeListByStatus", () => {
     beforeEach(() => {
       axios.get.mockResolvedValueOnce({

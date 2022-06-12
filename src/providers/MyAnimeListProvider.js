@@ -61,6 +61,13 @@ export default class MyAnimeListProvider extends ApiProvider {
   }
 
   /**
+   * @returns The provider type for this api client.
+   */
+  get providerType() {
+    return PROVIDERS.MY_ANIME_LIST;
+  }
+
+  /**
    * Gets the user's anime list for a given status.
    * @param status {number} The anime status from the LIST_STATUS enum.
    * @param page {number} Which page number to grab for, starting from 0.

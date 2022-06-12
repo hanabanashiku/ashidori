@@ -23,7 +23,7 @@ import DeleteModal from "./DeleteModal";
 import NumberInput from "../../components/NumberInput";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
-import { LIST_STATUS } from "enums";
+import { LIST_STATUS, PROVIDERS } from "enums";
 import lang from "lang";
 
 const ListForm = ({ entry, api, close }) => {
@@ -47,6 +47,8 @@ const ListForm = ({ entry, api, close }) => {
     },
   });
   const modalRef = useRef();
+  // Dates are automatic and cannot be changed through patch with MyAnimeList.
+  const shouldDisableDateFields = api.providerType === PROVIDERS.MY_ANIME_LIST;
 
   async function onSubmit(values) {
     if (!isDirty) {
@@ -204,6 +206,7 @@ const ListForm = ({ entry, api, close }) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 renderInput={(props) => <TextField {...props} />}
+                disabled={shouldDisableDateFields}
               />
             </LocalizationProvider>
           )}
@@ -220,6 +223,7 @@ const ListForm = ({ entry, api, close }) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 renderInput={(props) => <TextField {...props} />}
+                disabled={shouldDisableDateFields}
               />
             </LocalizationProvider>
           )}

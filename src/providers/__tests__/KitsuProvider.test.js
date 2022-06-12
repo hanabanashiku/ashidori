@@ -29,6 +29,10 @@ describe("Kitsu api provider", () => {
     jest.clearAllMocks();
   });
 
+  it("providerType returns Kitsu", () => {
+    expect(kitsu.providerType).toBe(PROVIDERS.KITSU);
+  });
+
   it("authorize calls to authorize the user", async () => {
     const username = "testAccount";
     const password = "password1";

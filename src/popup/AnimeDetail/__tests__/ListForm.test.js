@@ -10,8 +10,9 @@ import userEvent from "@testing-library/user-event";
 import ListForm from "../ListForm";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import libraryEntry from "../../../__mocks__/libraryItem";
-import { LIST_STATUS } from "enums";
+import { LIST_STATUS, PROVIDERS } from "enums";
 import LibraryEntry from "../../../models/LibraryEntry";
+import ApiProvider from "../../../providers/ApiProvider";
 
 describe("Anime list form", () => {
   const props = {
@@ -63,17 +64,17 @@ describe("Anime list form", () => {
   });
 
   it("hitting the cancel button closes the window", () => {
-    const { getByText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
-    const button = getByText("Cancel");
+    const button = screen.getByRole("button", { name: /cancel/i });
     act(() => userEvent.click(button));
     expect(props.close).toHaveBeenCalledTimes(1);
   });
 
   it("hitting save when no fields are dirty does not call the api", async () => {
-    const { getByText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
-    const button = getByText("Save");
+    const button = screen.getByRole("button", { name: /save/i });
     act(() => userEvent.click(button));
     await waitFor(() => expect(props.close).toHaveBeenCalledTimes(1));
     expect(props.api.updateLibraryItem).not.toHaveBeenCalled();
@@ -140,11 +141,11 @@ describe("Anime list form", () => {
   });
 
   it("hitting save patches the entry and closes the view", async () => {
-    const { getByText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
     const { status, progress, rating, startDate, finishedDate, notes } =
       getFields();
-    const button = getByText("Save");
+    const button = screen.getByRole("button", { name: /save/i });
 
     fireEvent.change(status, { target: { value: `${LIST_STATUS.CURRENT}` } });
 
@@ -183,11 +184,11 @@ describe("Anime list form", () => {
   });
 
   it("hitting save patches dirty fields only", async () => {
-    const { getByText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
     const { progress, notes } = getFields();
 
-    const button = getByText("Save");
+    const button = screen.getByRole("button", { name: /save/i });
 
     userEvent.clear(progress);
     userEvent.type(progress, "1006");
@@ -210,47 +211,60 @@ describe("Anime list form", () => {
     expect(props.close).toHaveBeenCalledTimes(1);
   });
 
+  it("disables the date fields for MyAnimeList", () => {
+    const providerTypeSpy = jest
+      .spyOn(ApiProvider.prototype, "providerType", "get")
+      .mockReturnValue(PROVIDERS.MY_ANIME_LIST);
+
+    render(<ListForm {...props} />);
+
+    const { startDate, finishedDate } = getFields();
+    expect(startDate).toBeDisabled();
+    expect(finishedDate).toBeDisabled();
+    providerTypeSpy.mockRestore();
+  });
+
   it("hides the delete button if the list status is not watching", () => {
     const entry = new LibraryEntry({
       ...libraryEntry,
       _status: LIST_STATUS.NOT_WATCHING,
     });
 
-    const { queryByLabelText } = render(<ListForm {...props} entry={entry} />);
+    render(<ListForm {...props} entry={entry} />);
 
-    expect(queryByLabelText("Remove from list")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /remove from list/i })
+    ).toBeNull();
   });
 
   it("clicking the delete button shows the delete modal", () => {
-    const { getByText, getByLabelText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
-    const button = getByLabelText("Remove from list");
+    const button = screen.getByRole("button", { name: /remove from list/i });
     act(() => userEvent.click(button));
 
-    expect(getByText("Delete this library entry?")).toBeInTheDocument();
+    expect(screen.getByText("Delete this library entry?")).toBeInTheDocument();
   });
 
   it("clicking cancel on the delete modal closes the delete modal", async () => {
-    const { queryByText, getByTestId, getByLabelText } = render(
-      <ListForm {...props} />
-    );
+    render(<ListForm {...props} />);
 
-    const button = getByLabelText("Remove from list");
+    const button = screen.getByRole("button", { name: /remove from list/i });
     act(() => userEvent.click(button));
-    userEvent.click(getByTestId("delete-modal-cancel"));
+    userEvent.click(screen.getByTestId("delete-modal-cancel"));
 
     await waitFor(() =>
-      expect(queryByText("Delete this library entry?")).toBeFalsy()
+      expect(screen.queryByText("Delete this library entry?")).toBeFalsy()
     );
     expect(props.api.removeLibraryItem).not.toHaveBeenCalled();
   });
 
   it("clicking delete on the delete modal callse the delete endpoint", async () => {
-    const { getByText, getByLabelText } = render(<ListForm {...props} />);
+    render(<ListForm {...props} />);
 
-    const button = getByLabelText("Remove from list");
+    const button = screen.getByRole("button", { name: /remove from list/i });
     act(() => userEvent.click(button));
-    userEvent.click(getByText("Delete"));
+    userEvent.click(screen.getByRole("button", { name: /delete/i }));
 
     await waitFor(() => expect(props.close).toHaveBeenCalledTimes(1));
     expect(props.api.removeLibraryItem).toHaveBeenCalledTimes(1);
