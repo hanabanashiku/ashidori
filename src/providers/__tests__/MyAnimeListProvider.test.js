@@ -192,6 +192,104 @@ describe("MyAnimeList provider", () => {
     });
   });
 
+  describe("getSingleLibraryEntryByAnime", () => {
+    it("grabs a library item", async () => {
+      axios.get.mockResolvedValueOnce({
+        data: {
+          ...libraryEntry.node,
+          my_list_status: libraryEntry.list_status,
+        },
+      });
+
+      const actual = await mal.getSingleLibraryEntryByAnime(21);
+
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(21);
+      expect(actual.status).toBe(LIST_STATUS.CURRENT);
+      expect(actual.rating).toBe(10);
+      expect(actual.anime).not.toBeNull();
+      expect(actual.anime.id).toBe(21);
+    });
+
+    it("grabs an empty library item if the user has not added the anime to their list", async () => {
+      axios.get.mockResolvedValueOnce({
+        data: libraryEntry.node,
+      });
+
+      const actual = await mal.getSingleLibraryEntryByAnime(21);
+
+      expect(actual).not.toBeNull();
+      expect(actual.id).toBe(21);
+      expect(actual.status).toBe(LIST_STATUS.NOT_WATCHING);
+      expect(actual.startDate).toBeNull();
+      expect(actual.anime).not.toBeNull();
+      expect(actual.anime.id).toBe(21);
+    });
+  });
+
+  it("create item creates a library item", async () => {
+    axios.patch.mockResolvedValueOnce();
+    const itemId = 21;
+    const patch = {
+      status: LIST_STATUS.CURRENT,
+      progress: 5,
+      notes: undefined,
+      startDate: new Date("Jan 20 2022"),
+      completedDate: null,
+      rating: 8.5,
+    };
+    const expectedPatch = new URLSearchParams();
+    expectedPatch.append("status", "watching");
+    expectedPatch.append("score", 8.5);
+    expectedPatch.append("num_watched_episodes", 5);
+
+    expect(
+      async () => await mal.createLibraryItem(itemId, patch)
+    ).not.toThrow();
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(axios.patch).toHaveBeenCalledWith(
+      `/anime/${itemId}/my_list_status`,
+      expectedPatch
+    );
+  });
+
+  it("update item updates a library item", async () => {
+    axios.patch.mockResolvedValueOnce();
+    const itemId = 21;
+    const patch = {
+      status: LIST_STATUS.CURRENT,
+      progress: 5,
+      notes: undefined,
+      startDate: new Date("Jan 20 2022"),
+      completedDate: null,
+      rating: 8.5,
+    };
+    const expectedPatch = new URLSearchParams();
+    expectedPatch.append("status", "watching");
+    expectedPatch.append("score", 8.5);
+    expectedPatch.append("num_watched_episodes", 5);
+
+    expect(
+      async () => await mal.updateLibraryItem(itemId, patch)
+    ).not.toThrow();
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(axios.patch).toHaveBeenCalledWith(
+      `/anime/${itemId}/my_list_status`,
+      expectedPatch
+    );
+  });
+
+  it("removeLibraryItem deletes the library item from the list", async () => {
+    const itemId = 20;
+
+    expect(async () => await mal.removeLibraryItem(itemId)).not.toThrow();
+
+    expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(axios.delete).toHaveBeenCalledWith(
+      `/anime/${itemId}/my_list_status`
+    );
+  });
+
   it("authorize begins the implicit OAuth flow", async () => {
     const clientId = "e62f583191ca06e8a96bd8fc66769c09";
     const code =

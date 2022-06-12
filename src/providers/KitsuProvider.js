@@ -22,7 +22,7 @@ export const STATUS_MAP = {
   planned: LIST_STATUS.PLANNED,
 };
 
-function mapStatus(status) {
+function mapStatusToKitsuStatus(status) {
   return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
@@ -75,7 +75,7 @@ export default class KitsuProvider extends ApiProvider {
       throw "Missing user data";
     }
 
-    const kitsuStatus = mapStatus(status);
+    const kitsuStatus = mapStatusToKitsuStatus(status);
 
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
@@ -255,26 +255,6 @@ export default class KitsuProvider extends ApiProvider {
     });
   }
 
-  static #createPatch(patch) {
-    return _.flow(
-      omitBy(_.isUndefined),
-      omitBy(_.isNaN)
-    )({
-      status: mapStatus(patch.status),
-      progress: patch.progress,
-      notes: patch.notes,
-      startedAt:
-        patch.startDate === null
-          ? null
-          : patch.startDate?.toISOString() ?? undefined,
-      finishedAt:
-        patch.completedDate === null
-          ? null
-          : patch.completedDate?.toISOString() ?? undefined,
-      ratingTwenty: patch.rating * 2,
-    });
-  }
-
   async removeLibraryItem(itemId) {
     return this.#client.delete(`/library-entries/${itemId}`);
   }
@@ -370,12 +350,25 @@ export default class KitsuProvider extends ApiProvider {
     }
   }
 
-  async #setTokenResponse(response) {
-    this._setAuthToken(
-      response.data["access_token"],
-      response.data["created_at"] + response.data["expires_in"]
-    );
-    this._setRefreshToken(response.data["refresh_token"]);
+  static #createPatch(patch) {
+    return _.flow(
+      omitBy(_.isUndefined),
+      omitBy(_.isNaN)
+    )({
+      status: mapStatusToKitsuStatus(patch.status),
+      progress: patch.progress,
+      notes: patch.notes,
+      startedAt:
+        patch.startDate === null
+          ? null
+          : patch.startDate?.toISOString() ?? undefined,
+      finishedAt:
+        patch.completedDate === null
+          ? null
+          : patch.completedDate?.toISOString() ?? undefined,
+      ratingTwenty: patch.rating * 2,
+      reconsumeCount: patch.rewatchCount,
+    });
   }
 
   static async #mapData(type, data, included = []) {
@@ -418,5 +411,13 @@ export default class KitsuProvider extends ApiProvider {
     }
 
     return `&sort=${sortBy === "desc" ? "-" : ""}${kitsuField}`;
+  }
+
+  async #setTokenResponse(response) {
+    this._setAuthToken(
+      response.data["access_token"],
+      response.data["created_at"] + response.data["expires_in"]
+    );
+    this._setRefreshToken(response.data["refresh_token"]);
   }
 }

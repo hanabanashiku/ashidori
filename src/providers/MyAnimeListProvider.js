@@ -1,3 +1,5 @@
+import _ from "lodash";
+import { omitBy } from "lodash/fp";
 import browser from "webextension-polyfill";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
@@ -28,7 +30,7 @@ export const STATUS_MAP = {
   plan_to_watch: LIST_STATUS.PLANNED,
 };
 
-function mapStatus(status) {
+function mapStatusToMalStatus(status) {
   return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
@@ -85,7 +87,7 @@ export default class MyAnimeListProvider extends ApiProvider {
     const sortString = MyAnimeListProvider.#mapSort(sort);
 
     const response = await this.#client.get(
-      `/users/@me/animelist?status=${mapStatus(status)}&${fields}${
+      `/users/@me/animelist?status=${mapStatusToMalStatus(status)}&${fields}${
         (sortString && `&sort=${sortString}`) || ""
       }&limit=${limit}%offset=${limit * page}`
     );
@@ -117,6 +119,48 @@ export default class MyAnimeListProvider extends ApiProvider {
       node: response.data,
       list_status: response.data.my_list_status,
     });
+  }
+
+  /**
+   * Get a single library entry for the current user.
+   * @param {string} animeId The id of the anime series to search for.
+   * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
+   */
+  async getSingleLibraryEntryByAnime(animeId) {
+    // The library entry id key is the username + the anime id,
+    // so these calls are synonymous for MAL.
+    return this.getSingleLibraryEntry(animeId);
+  }
+
+  /**
+   * Resolves a library entry from an anime episode object retrieved from a streaming service.
+   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
+   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
+   */
+  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
+    super.resolveLibraryEntryFromAnimeEpisode(animeEpisode);
+  }
+
+  async createLibraryItem(animeId, patch) {
+    // In the MAL API, PATCH functions as an upsert.
+    // Additionally, the key is simply the username + anime id
+    // so we can pass in the animeId as the itemId directly.
+    return this.updateLibraryItem(animeId, patch);
+  }
+
+  async updateLibraryItem(itemId, patch) {
+    const data = MyAnimeListProvider.#createPatch(patch);
+    const params = new URLSearchParams();
+
+    for (const key in data) {
+      params.append(key, data[key]);
+    }
+
+    return this.#client.patch(`/anime/${itemId}/my_list_status`, params);
+  }
+
+  async removeLibraryItem(itemId) {
+    return this.#client.delete(`/anime/${itemId}/my_list_status`);
   }
 
   static async authorize() {
@@ -189,6 +233,20 @@ export default class MyAnimeListProvider extends ApiProvider {
     } catch (e) {
       throw new Error("Unable to get user info.");
     }
+  }
+
+  static #createPatch(patch) {
+    // For MAL, start date and end date are automatic.
+    return _.flow(
+      omitBy(_.isUndefined),
+      omitBy(_.isNaN)
+    )({
+      status: mapStatusToMalStatus(patch.status),
+      score: patch.rating,
+      num_watched_episodes: patch.progress,
+      num_times_rewatched: patch.rewatchCount,
+      comments: patch.notes,
+    });
   }
 
   async #setTokenResponse(response) {
