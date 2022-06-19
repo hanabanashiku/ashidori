@@ -10,9 +10,8 @@ import userEvent from "@testing-library/user-event";
 import ListForm from "../ListForm";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import libraryEntry from "../../../__mocks__/libraryItem";
-import { LIST_STATUS, PROVIDERS } from "enums";
+import { LIST_STATUS } from "enums";
 import LibraryEntry from "../../../models/LibraryEntry";
-import ApiProvider from "../../../providers/ApiProvider";
 
 describe("Anime list form", () => {
   const props = {
@@ -209,19 +208,6 @@ describe("Anime list form", () => {
       }
     );
     expect(props.close).toHaveBeenCalledTimes(1);
-  });
-
-  it("disables the date fields for MyAnimeList", () => {
-    const providerTypeSpy = jest
-      .spyOn(ApiProvider.prototype, "providerType", "get")
-      .mockReturnValue(PROVIDERS.MY_ANIME_LIST);
-
-    render(<ListForm {...props} />);
-
-    const { startDate, finishedDate } = getFields();
-    expect(startDate).toBeDisabled();
-    expect(finishedDate).toBeDisabled();
-    providerTypeSpy.mockRestore();
   });
 
   it("hides the delete button if the list status is not watching", () => {

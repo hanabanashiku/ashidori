@@ -204,9 +204,11 @@ export default class AnimeSeries {
         _coverImage:
           data.attributes.posterImage?.tiny ??
           data.attributes.posterImage.original,
-        _startDate: new Date(data.attributes.startDate),
+        _startDate: data.attributes.startDate
+          ? new Date(`${data.attributes.startDate} 0:00`)
+          : null,
         _endDate: data.attributes.endDate
-          ? new Date(data.attributes.endDate)
+          ? new Date(`${data.attributes.endDate} 0:00`)
           : null,
         _status: KITSU_ANIME_STATUS[data.attributes.status],
         _episodeCount: data.attributes.episodeCount,
@@ -238,8 +240,10 @@ export default class AnimeSeries {
         _englishTitle: data.alternative_titles.en,
         _description: data.synopsis,
         _coverImage: Object.values(data.main_picture)[0],
-        _startDate: new Date(data.start_date),
-        _endDate: data.end_date ? new Date(data.end_date) : null,
+        _startDate: data.start_date
+          ? new Date(`${data.start_date} 0:00`)
+          : null,
+        _endDate: data.end_date ? new Date(`${data.end_date} 0:00`) : null,
         _status: MAL_ANIME_STATUS[data.status],
         _episodeCount: data.num_episodes,
         _episodeLength: Math.round(data.average_episode_duration / 60),

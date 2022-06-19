@@ -47,7 +47,7 @@ describe("Anime series model", () => {
       kitsu_anime.data.attributes.posterImage.tiny
     );
     expect(actual.startDate).toStrictEqual(
-      new Date(kitsu_anime.data.attributes.startDate)
+      new Date(`${kitsu_anime.data.attributes.startDate} 0:00`)
     );
     expect(actual.endDate).toBeNull();
     expect(actual.status).toBe(ANIME_STATUS.AIRING);
@@ -86,8 +86,12 @@ describe("Anime series model", () => {
     expect(actual.englishTitle).toBe("Black Clover");
     expect(actual.description).toBe(mal_anime.synopsis);
     expect(actual.coverImageUrl).toBe(mal_anime.main_picture.medium);
-    expect(actual.startDate).toStrictEqual(new Date(mal_anime.start_date));
-    expect(actual.endDate).toStrictEqual(new Date(mal_anime.end_date));
+    expect(actual.startDate.getDate()).toStrictEqual(
+      new Date(`${mal_anime.start_date} 0:00`).getDate()
+    );
+    expect(actual.endDate.getDate()).toStrictEqual(
+      new Date(`${mal_anime.end_date} 0:00`).getDate()
+    );
     expect(actual.status).toBe(ANIME_STATUS.FINISHED);
     expect(actual.episodeCount).toBe(170);
     expect(actual.episodeLength).toBe(24);

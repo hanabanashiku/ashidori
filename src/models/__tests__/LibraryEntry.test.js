@@ -57,7 +57,7 @@ describe("Library entry model", () => {
     expect(actual.status).toBe(LIST_STATUS.CURRENT);
     expect(actual.progress).toBe(736);
     expect(actual.notes).toBe("Sunday");
-    expect(actual.startDate).toStrictEqual(new Date("2002-10-05"));
+    expect(actual.startDate).toStrictEqual(new Date("2002-10-05 0:00"));
     expect(actual.completedDate).toBeNull();
     expect(actual.rewatchCount).toBe(0);
     expect(actual.lastUpdated).toStrictEqual(

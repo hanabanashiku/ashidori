@@ -247,6 +247,8 @@ describe("MyAnimeList provider", () => {
     expectedPatch.append("status", "watching");
     expectedPatch.append("score", 8.5);
     expectedPatch.append("num_watched_episodes", 5);
+    expectedPatch.append("start_date", "2022-01-20");
+    expectedPatch.append("finish_date", null);
 
     expect(
       async () => await mal.createLibraryItem(itemId, patch)
@@ -254,7 +256,12 @@ describe("MyAnimeList provider", () => {
     expect(axios.patch).toHaveBeenCalledTimes(1);
     expect(axios.patch).toHaveBeenCalledWith(
       `/anime/${itemId}/my_list_status`,
-      expectedPatch
+      expectedPatch,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
     );
   });
 
@@ -266,13 +273,15 @@ describe("MyAnimeList provider", () => {
       progress: 5,
       notes: undefined,
       startDate: new Date("Jan 20 2022"),
-      completedDate: null,
+      completedDate: new Date("Jan 25 2022"),
       rating: 8.5,
     };
     const expectedPatch = new URLSearchParams();
     expectedPatch.append("status", "watching");
     expectedPatch.append("score", 8.5);
     expectedPatch.append("num_watched_episodes", 5);
+    expectedPatch.append("start_date", "2022-01-20");
+    expectedPatch.append("finish_date", "2022-01-25");
 
     expect(
       async () => await mal.updateLibraryItem(itemId, patch)
@@ -280,7 +289,12 @@ describe("MyAnimeList provider", () => {
     expect(axios.patch).toHaveBeenCalledTimes(1);
     expect(axios.patch).toHaveBeenCalledWith(
       `/anime/${itemId}/my_list_status`,
-      expectedPatch
+      expectedPatch,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
     );
   });
 
