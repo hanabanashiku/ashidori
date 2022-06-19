@@ -246,7 +246,7 @@ describe("MyAnimeList provider", () => {
     const expectedPatch = new URLSearchParams();
     expectedPatch.append("status", "watching");
     expectedPatch.append("score", 8.5);
-    expectedPatch.append("num_watched_episodes", 5);
+    expectedPatch.append("num_watched_episodes", "5");
     expectedPatch.append("start_date", "2022-01-20");
     expectedPatch.append("finish_date", null);
 
@@ -279,7 +279,7 @@ describe("MyAnimeList provider", () => {
     const expectedPatch = new URLSearchParams();
     expectedPatch.append("status", "watching");
     expectedPatch.append("score", 8.5);
-    expectedPatch.append("num_watched_episodes", 5);
+    expectedPatch.append("num_watched_episodes", "5");
     expectedPatch.append("start_date", "2022-01-20");
     expectedPatch.append("finish_date", "2022-01-25");
 
