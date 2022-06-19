@@ -7,7 +7,7 @@
     "start-firefox": "parcel watch src/v2/manifest.json --target webext-dev --no-hmr --no-content-hash",
     "build": "parcel build src/manifest.json --target webext-prod --no-content-hash",
     "build-firefox": "parcel build src/v2/manifest.json --target webext-prod-ff --no-content-hash",
-    "build-all": "npm run build & npm run build-firefox",
+    "build-all": "npm run build && npm run build-firefox",
     "test": "jest",
     "cover": "jest --collectCoverage",
     "clear-build-cache": "rm -rf .cache/ .parcel-cache/ dist/",
