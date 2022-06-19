@@ -1,15 +1,14 @@
 import _ from "lodash";
 import { omitBy } from "lodash/fp";
-import levenshtein from "js-levenshtein";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
 import Settings from "../options/Settings";
-import { PROVIDERS } from "../enums";
 import UserData from "../models/UserData";
 import LibraryEntry from "../models/LibraryEntry";
 import AnimeSeries from "../models/AnimeSeries";
 import PagedData from "../models/PagedData";
-import { LIST_STATUS } from "../enums";
+import { getHttpAdapter } from "./helper";
+import { PROVIDERS, LIST_STATUS } from "../enums";
 
 const KITSU_BASE_URL = "https://kitsu.io/api/edge";
 const KITSU_AUTH_URL = "https://kitsu.io/api/oauth";
@@ -22,7 +21,7 @@ export const STATUS_MAP = {
   planned: LIST_STATUS.PLANNED,
 };
 
-function mapStatus(status) {
+function mapStatusToKitsuStatus(status) {
   return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
@@ -36,22 +35,13 @@ export default class KitsuProvider extends ApiProvider {
   constructor() {
     super();
 
-    let adapter = undefined;
-
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
-      // this adapter allows us to use axios in a service worker context
-      // Unfortunately it doesn't work in node
-      adapter = require("@vespaiach/axios-fetch-adapter").default;
-    }
-
     this.#client = axios.create({
       baseURL: KITSU_BASE_URL,
       headers: {
         Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
       },
-      adapter: adapter,
+      adapter: getHttpAdapter(),
     });
     this.#client.interceptors.request.use(async (config) => {
       return this._requestInterceptor(config);
@@ -62,6 +52,13 @@ export default class KitsuProvider extends ApiProvider {
       const userId = data?.id ?? null;
       this.#userId = userId;
     });
+  }
+
+  /**
+   * @returns The provider type for this api client.
+   */
+  get providerType() {
+    return PROVIDERS.KITSU;
   }
 
   /**
@@ -84,7 +81,7 @@ export default class KitsuProvider extends ApiProvider {
       throw "Missing user data";
     }
 
-    const kitsuStatus = mapStatus(status);
+    const kitsuStatus = mapStatusToKitsuStatus(status);
 
     const response = await this.#client.get(
       `library-entries?filter[kind]=anime&filter[userId]=${
@@ -159,74 +156,6 @@ export default class KitsuProvider extends ApiProvider {
     );
   }
 
-  /**
-   * Resolves a library entry from an anime episode object retrieved from a streaming service.
-   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
-   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
-   */
-  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
-    if (!animeEpisode) {
-      return null;
-    }
-
-    const searchBySeason = await this.findAnime(
-      `${animeEpisode.season.name}`,
-      0,
-      5
-    );
-    let result = searchBySeason.data.find((anime) =>
-      KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
-    );
-
-    if (!result) {
-      const searchBySeries = await this.findAnime(
-        animeEpisode.series.title,
-        0,
-        5
-      );
-      result = searchBySeries.data.find((anime) =>
-        KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
-      );
-    }
-
-    if (!result) {
-      return null;
-    }
-
-    return this.getSingleLibraryEntryByAnime(result.id);
-  }
-
-  /**
-
-   * @param {AnimeSeries} series 
-   * @param {AnimeEpisode} episode 
-   */
-  static verifyResolvedAnime(series, episode) {
-    const STRING_THRESHOLD = 7;
-    const extractedTitle = this.normalizeString(episode.series.title);
-    const guessTitle = this.normalizeString(series.englishTitle);
-    return (
-      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
-      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
-      levenshtein(
-        this.normalizeString(episode.season.name),
-        this.normalizeString(series.title)
-      ) < STRING_THRESHOLD ||
-      levenshtein(
-        this.normalizeString(episode.season.name),
-        this.normalizeString(series.englishTitle)
-      ) < STRING_THRESHOLD
-    );
-  }
-
-  /**
-   * @param {string} str
-   * @returns {string}
-   */
-  static normalizeString(str) {
-    return str.toLowerCase().replace(/^[a-z0-9]/g, "");
-  }
-
   async createLibraryItem(animeId, patch) {
     const attributes = KitsuProvider.#createPatch(patch);
 
@@ -261,26 +190,6 @@ export default class KitsuProvider extends ApiProvider {
         id: `${itemId}`,
         attributes,
       },
-    });
-  }
-
-  static #createPatch(patch) {
-    return _.flow(
-      omitBy(_.isUndefined),
-      omitBy(_.isNaN)
-    )({
-      status: mapStatus(patch.status),
-      progress: patch.progress,
-      notes: patch.notes,
-      startedAt:
-        patch.startDate === null
-          ? null
-          : patch.startDate?.toISOString() ?? undefined,
-      finishedAt:
-        patch.completedDate === null
-          ? null
-          : patch.completedDate?.toISOString() ?? undefined,
-      ratingTwenty: patch.rating * 2,
     });
   }
 
@@ -379,12 +288,25 @@ export default class KitsuProvider extends ApiProvider {
     }
   }
 
-  async #setTokenResponse(response) {
-    this._setAuthToken(
-      response.data["access_token"],
-      response.data["created_at"] + response.data["expires_in"]
-    );
-    this._setRefreshToken(response.data["refresh_token"]);
+  static #createPatch(patch) {
+    return _.flow(
+      omitBy(_.isUndefined),
+      omitBy(_.isNaN)
+    )({
+      status: mapStatusToKitsuStatus(patch.status),
+      progress: patch.progress,
+      notes: patch.notes,
+      startedAt:
+        patch.startDate === null
+          ? null
+          : patch.startDate?.toISOString() ?? undefined,
+      finishedAt:
+        patch.completedDate === null
+          ? null
+          : patch.completedDate?.toISOString() ?? undefined,
+      ratingTwenty: patch.rating * 2,
+      reconsumeCount: patch.rewatchCount,
+    });
   }
 
   static async #mapData(type, data, included = []) {
@@ -427,5 +349,13 @@ export default class KitsuProvider extends ApiProvider {
     }
 
     return `&sort=${sortBy === "desc" ? "-" : ""}${kitsuField}`;
+  }
+
+  async #setTokenResponse(response) {
+    this._setAuthToken(
+      response.data["access_token"],
+      response.data["created_at"] + response.data["expires_in"]
+    );
+    this._setRefreshToken(response.data["refresh_token"]);
   }
 }

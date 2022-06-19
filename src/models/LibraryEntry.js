@@ -2,6 +2,7 @@ import _ from "lodash";
 import AnimeSeries from "./AnimeSeries";
 import { LIST_STATUS, PROVIDERS } from "../enums";
 import { STATUS_MAP as KITSU_STATUSES } from "../providers/KitsuProvider";
+import { STATUS_MAP as MAL_STATUES } from "../providers/MyAnimeListProvider";
 
 /**
  * An entry in the user's anime library.
@@ -11,6 +12,10 @@ export default class LibraryEntry {
     switch (data.provider) {
       case PROVIDERS.KITSU:
         this.#mapFromKitsu(data);
+        break;
+
+      case PROVIDERS.MY_ANIME_LIST:
+        this.#mapFromMal(data);
         break;
 
       default:
@@ -133,6 +138,37 @@ export default class LibraryEntry {
               __langPref: data.__langPref,
             })
           : null,
+      },
+      DEFAULT_VALUES
+    );
+  }
+
+  #mapFromMal(data) {
+    const anime = data.node;
+    const list = data.list_status ?? {};
+
+    _.defaultsDeep(
+      this,
+      {
+        // the key for library entries in MAL is username + animeId
+        _id: anime.id,
+        _status: MAL_STATUES[list.status],
+        _progress: list.num_episodes_watched,
+        _notes: list.comments,
+        _startDate: list.start_date
+          ? new Date(`${list.start_date} 0:00`)
+          : null,
+        _completedDate: list.finish_date
+          ? new Date(`${list.finish_date} 0:00`)
+          : null,
+        _rewatchCount: list.num_times_rewatched,
+        _lastUpdated: list.updated_at ? new Date(list.updated_at) : null,
+        _rating: list.score,
+        _anime: new AnimeSeries({
+          ...anime,
+          provider: PROVIDERS.MY_ANIME_LIST,
+          __langPref: data.__langPref,
+        }),
       },
       DEFAULT_VALUES
     );

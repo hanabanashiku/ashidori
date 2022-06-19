@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import levenshtein from "js-levenshtein";
 import UserData from "../models/UserData";
 import { PROVIDERS } from "../enums";
 
@@ -13,6 +14,13 @@ export default class ApiProvider {
       selected_provider: PROVIDERS.UNSELECTED,
     });
     return result["selected_provider"];
+  }
+
+  /**
+   * @returns The provider type for this api client.
+   */
+  get providerType() {
+    return PROVIDERS.UNSELECTED;
   }
 
   /**
@@ -91,10 +99,68 @@ export default class ApiProvider {
    * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
    * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
    */
-  async resolveLibraryEntryFromAnimeEpisode() {
-    return ApiProvider.#defaultImplAsync();
+  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
+    if (!animeEpisode) {
+      return null;
+    }
+
+    const searchBySeason = await this.findAnime(
+      `${animeEpisode.season.name}`,
+      0,
+      5
+    );
+    let result = searchBySeason.data.find((anime) =>
+      ApiProvider.verifyResolvedAnime(anime, animeEpisode)
+    );
+
+    if (!result) {
+      const searchBySeries = await this.findAnime(
+        animeEpisode.series.title,
+        0,
+        5
+      );
+      result = searchBySeries.data.find((anime) =>
+        ApiProvider.verifyResolvedAnime(anime, animeEpisode)
+      );
+    }
+
+    if (!result) {
+      return null;
+    }
+
+    return this.getSingleLibraryEntryByAnime(result.id);
   }
 
+  /**
+
+   * @param {AnimeSeries} series 
+   * @param {AnimeEpisode} episode 
+   */
+  static verifyResolvedAnime(series, episode) {
+    const STRING_THRESHOLD = 7;
+    const extractedTitle = this.normalizeString(episode.series.title);
+    const guessTitle = this.normalizeString(series.englishTitle);
+    return (
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.title)
+      ) < STRING_THRESHOLD ||
+      levenshtein(
+        this.normalizeString(episode.season.name),
+        this.normalizeString(series.englishTitle)
+      ) < STRING_THRESHOLD
+    );
+  }
+
+  /**
+   * @param {string} str
+   * @returns {string}
+   */
+  static normalizeString(str) {
+    return str.toLowerCase().replace(/^[a-z0-9]/g, "");
+  }
   /**
    * Gets data about the currently authenticated user.
    * @returns {Promise<UserData>} A promise containing data about the current user.

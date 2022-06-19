@@ -29,6 +29,10 @@ describe("Kitsu api provider", () => {
     jest.clearAllMocks();
   });
 
+  it("providerType returns Kitsu", () => {
+    expect(kitsu.providerType).toBe(PROVIDERS.KITSU);
+  });
+
   it("authorize calls to authorize the user", async () => {
     const username = "testAccount";
     const password = "password1";
@@ -387,7 +391,8 @@ describe("Kitsu api provider", () => {
       const actual = await kitsu.getAnime(animeId);
 
       expect(actual).not.toBeNull();
-      expect(actual).anim;
+      expect(actual.title).toBe("One Piece");
+      expect(actual.id).toBe(animeId);
     });
 
     it("returns null if the anime was not found", async () => {

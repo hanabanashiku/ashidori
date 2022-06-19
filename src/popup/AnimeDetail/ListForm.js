@@ -23,7 +23,7 @@ import DeleteModal from "./DeleteModal";
 import NumberInput from "../../components/NumberInput";
 import LibraryEntry from "../../models/LibraryEntry";
 import ApiProvider from "../../providers/ApiProvider";
-import { LIST_STATUS } from "enums";
+import { LIST_STATUS, PROVIDERS } from "enums";
 import lang from "lang";
 
 const ListForm = ({ entry, api, close }) => {
@@ -47,6 +47,8 @@ const ListForm = ({ entry, api, close }) => {
     },
   });
   const modalRef = useRef();
+
+  const supportsHalfStepRatings = api.providerType !== PROVIDERS.MY_ANIME_LIST;
 
   async function onSubmit(values) {
     if (!isDirty) {
@@ -183,7 +185,7 @@ const ListForm = ({ entry, api, close }) => {
                 value={value}
                 min={0}
                 max={10}
-                step={0.5}
+                step={supportsHalfStepRatings ? 0.5 : 1}
                 onChange={onChange}
                 onBlur={onBlur}
                 valueLabelDisplay="auto"

@@ -13,6 +13,10 @@ export default class UserData {
         this.#populateFromKitsu(data);
         break;
 
+      case PROVIDERS.MY_ANIME_LIST:
+        this.#populateFromMal(data);
+        break;
+
       default:
         _.defaultsDeep(this, data, DEFAULT_VALUES);
     }
@@ -67,6 +71,16 @@ export default class UserData {
       _name: user.attributes.name,
       _url: `https://kitsu.io/users/${user.attributes.slug}`,
       _avatarUrl: user.attributes.avatar.small,
+    });
+  }
+
+  #populateFromMal(data) {
+    _.assign(this, {
+      _provider: PROVIDERS.MY_ANIME_LIST,
+      _id: data.id,
+      _name: data.name,
+      _url: `https://myanimelist.net/profile/${data.name}`,
+      _avatarUrl: data.picture,
     });
   }
 }
