@@ -2,9 +2,13 @@ import browser from "webextension-polyfill";
 import { v4 as uuid } from "uuid";
 import { BROWSER } from "../enums";
 
+export function getRootPath() {
+  return browser.runtime.getURL("");
+}
+
 /* istanbul ignore next */
 export function getBrowserType() {
-  const baseUrl = browser.runtime.getURL("");
+  const baseUrl = getRootPath();
 
   if (process.env.NODE_ENV === "test") {
     return BROWSER.CHROMIUM;

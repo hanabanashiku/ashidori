@@ -19,9 +19,9 @@ Ashidori is a tool that connects to your favorite anime list website which will 
 
 ### Features:
 
-- Track your Kitsu.io anime list
+- Track your [MyAnimeList](https://myanimelist.net) or [Kitsu](https://kitsu.io) anime list
 - Automatically update your list when closing an episode page
-- Integration with Crunchyroll
+- Integrations with Crunchyroll
 - View, edit, and add to your anime list on the fly
 
 ## Downloads

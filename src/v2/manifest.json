@@ -36,7 +36,10 @@
     "activeTab",
     "webNavigation",
     "notifications",
+    "identity",
     "*://*.crunchyroll.com/*",
-    "*://kitsu.io/api/*"
+    "*://kitsu.io/api/*",
+    "https://myanimelist.net/v1/oauth2/*",
+    "https://api.myanimelist.net/v2/*"
   ]
 }

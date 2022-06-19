@@ -3,6 +3,7 @@ import { PROVIDERS } from "../../enums";
 
 // mock data
 import kitsu_user from "../../__mocks__/kitsu/user.json";
+import mal_user from "../../__mocks__/mal/user.json";
 
 describe("User data model", () => {
   it("loads default values from constructor", () => {
@@ -45,5 +46,20 @@ describe("User data model", () => {
       "https://media.kitsu.io/users/avatars/30000/small.jpeg"
     );
     expect(actual.apiSource).toBe(PROVIDERS.KITSU);
+  });
+
+  it("loads values from my anime list", () => {
+    const actual = new UserData({
+      ...mal_user,
+      provider: PROVIDERS.MY_ANIME_LIST,
+    });
+
+    expect(actual.id).toBe(30000);
+    expect(actual.username).toBe("john.doe");
+    expect(actual.url).toBe("https://myanimelist.net/profile/john.doe");
+    expect(actual.avatarUrl).toBe(
+      "https://api-cdn.myanimelist.net/images/userimages/30000.jpg?t=1654881600"
+    );
+    expect(actual.apiSource).toBe(PROVIDERS.MY_ANIME_LIST);
   });
 });

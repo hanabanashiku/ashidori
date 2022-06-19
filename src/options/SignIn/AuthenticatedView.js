@@ -37,9 +37,12 @@ const AuthenticatedView = ({ userData, reset }) => {
         alt={userData.username}
         css={css`
           float: left;
-          padding-right: 16px;
-          height: 64px;
-          width: 64px;
+          display: block;
+          margin-right: 16px;
+          max-height: 64px;
+          max-width: 64px;
+          width: auto;
+          height: auto;
         `}
       />
       <Typography

@@ -15,4 +15,10 @@ global.beforeAll(() => {
     getManifest: jest.fn(),
     getURL: jest.fn(),
   };
+  browser.identity = {
+    getRedirectURL: jest.fn(
+      () => "https://chiejjofmfnepjchjenapocjafpkipaj.chromiumapp.org/"
+    ),
+    launchWebAuthFlow: jest.fn(() => Promise.resolve()),
+  };
 });

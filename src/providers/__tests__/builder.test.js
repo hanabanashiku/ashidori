@@ -1,5 +1,6 @@
 import { getApiInstance, resetApiInstance } from "../builder";
 import KitsuProvider from "../KitsuProvider";
+import MyAnimeListProvider from "../MyAnimeListProvider";
 import { PROVIDERS } from "../../enums";
 import userData from "../../__mocks__/userData.json";
 
@@ -12,6 +13,7 @@ describe("Api instance builder", () => {
 
   afterEach(() => {
     browser.storage.local.clear();
+    resetApiInstance();
   });
 
   describe("getApiInstance", () => {
@@ -26,6 +28,15 @@ describe("Api instance builder", () => {
       expect(await getApiInstance()).toBeInstanceOf(KitsuProvider);
     });
 
+    it("returns MyAnimeList provider for MyAnimeList", async () => {
+      // The browser mock refuses to set 0 so we override the mock
+      browser.storage.local.get.mockResolvedValueOnce({
+        selected_provider: PROVIDERS.MY_ANIME_LIST,
+      });
+
+      expect(await getApiInstance()).toBeInstanceOf(MyAnimeListProvider);
+    });
+
     it("does not call constructor twice", async () => {
       browser.storage.local.set({
         selected_provider: PROVIDERS.KITSU,
@@ -38,6 +49,9 @@ describe("Api instance builder", () => {
   });
 
   it("reset resets the instance", async () => {
+    browser.storage.local.set({
+      selected_provider: PROVIDERS.KITSU,
+    });
     const instance = await getApiInstance();
     resetApiInstance();
     expect(await getApiInstance()).not.toBe(instance);
