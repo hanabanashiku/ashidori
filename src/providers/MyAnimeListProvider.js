@@ -2,6 +2,7 @@ import _ from "lodash";
 import { omitBy } from "lodash/fp";
 import browser from "webextension-polyfill";
 import axios from "axios";
+import moment from "moment";
 import ApiProvider from "./ApiProvider";
 import { createApiInstance } from "./builder";
 import Settings from "../options/Settings";
@@ -155,7 +156,9 @@ export default class MyAnimeListProvider extends ApiProvider {
       params.append(key, data[key]);
     }
 
-    return this.#client.patch(`/anime/${itemId}/my_list_status`, params);
+    return this.#client.patch(`/anime/${itemId}/my_list_status`, params, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
   }
 
   async removeLibraryItem(itemId) {
@@ -284,8 +287,23 @@ export default class MyAnimeListProvider extends ApiProvider {
       score: patch.rating,
       num_watched_episodes: patch.progress,
       num_times_rewatched: patch.rewatchCount,
+      start_date:
+        patch.startDate === null
+          ? null
+          : MyAnimeListProvider.#formatDate(patch.startDate),
+      finish_date:
+        patch.completedDate === null
+          ? null
+          : MyAnimeListProvider.#formatDate(patch.completedDate),
       comments: patch.notes,
     });
+  }
+
+  static #formatDate(date) {
+    if (!date) {
+      return undefined;
+    }
+    return moment(date).format("YYYY-MM-DD");
   }
 
   async #setTokenResponse(response) {

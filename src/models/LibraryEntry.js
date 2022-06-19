@@ -155,8 +155,12 @@ export default class LibraryEntry {
         _status: MAL_STATUES[list.status],
         _progress: list.num_episodes_watched,
         _notes: list.comments,
-        _startDate: list.start_date ? new Date(list.start_date) : null,
-        _completedDate: list.finish_date ? new Date(list.finish_date) : null,
+        _startDate: list.start_date
+          ? new Date(`${list.start_date} 0:00`)
+          : null,
+        _completedDate: list.finish_date
+          ? new Date(`${list.finish_date} 0:00`)
+          : null,
         _rewatchCount: list.num_times_rewatched,
         _lastUpdated: list.updated_at ? new Date(list.updated_at) : null,
         _rating: list.score,

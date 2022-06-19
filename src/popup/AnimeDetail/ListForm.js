@@ -47,8 +47,8 @@ const ListForm = ({ entry, api, close }) => {
     },
   });
   const modalRef = useRef();
-  // Dates are automatic and cannot be changed through patch with MyAnimeList.
-  const shouldDisableDateFields = api.providerType === PROVIDERS.MY_ANIME_LIST;
+
+  const supportsHalfStepRatings = api.providerType !== PROVIDERS.MY_ANIME_LIST;
 
   async function onSubmit(values) {
     if (!isDirty) {
@@ -185,7 +185,7 @@ const ListForm = ({ entry, api, close }) => {
                 value={value}
                 min={0}
                 max={10}
-                step={0.5}
+                step={supportsHalfStepRatings ? 0.5 : 1}
                 onChange={onChange}
                 onBlur={onBlur}
                 valueLabelDisplay="auto"
@@ -206,7 +206,6 @@ const ListForm = ({ entry, api, close }) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 renderInput={(props) => <TextField {...props} />}
-                disabled={shouldDisableDateFields}
               />
             </LocalizationProvider>
           )}
@@ -223,7 +222,6 @@ const ListForm = ({ entry, api, close }) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 renderInput={(props) => <TextField {...props} />}
-                disabled={shouldDisableDateFields}
               />
             </LocalizationProvider>
           )}

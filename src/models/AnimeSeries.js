@@ -245,7 +245,7 @@ export default class AnimeSeries {
         _episodeLength: Math.round(data.average_episode_duration / 60),
         _genres: genres,
         // currently not available through the MAL API - coming soon?
-        _streamingLinks: [],
+        _streamingLinks: {},
         _link: `https://myanimelist.net/anime/${data.id}`,
       },
       DEFAULT_VALUES
