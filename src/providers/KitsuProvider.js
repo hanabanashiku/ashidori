@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { omitBy } from "lodash/fp";
-import levenshtein from "js-levenshtein";
 import axios from "axios";
 import ApiProvider from "./ApiProvider";
 import Settings from "../options/Settings";
@@ -155,74 +154,6 @@ export default class KitsuProvider extends ApiProvider {
       response.data.data[0],
       response.data.included
     );
-  }
-
-  /**
-   * Resolves a library entry from an anime episode object retrieved from a streaming service.
-   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
-   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
-   */
-  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
-    if (!animeEpisode) {
-      return null;
-    }
-
-    const searchBySeason = await this.findAnime(
-      `${animeEpisode.season.name}`,
-      0,
-      5
-    );
-    let result = searchBySeason.data.find((anime) =>
-      KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
-    );
-
-    if (!result) {
-      const searchBySeries = await this.findAnime(
-        animeEpisode.series.title,
-        0,
-        5
-      );
-      result = searchBySeries.data.find((anime) =>
-        KitsuProvider.verifyResolvedAnime(anime, animeEpisode)
-      );
-    }
-
-    if (!result) {
-      return null;
-    }
-
-    return this.getSingleLibraryEntryByAnime(result.id);
-  }
-
-  /**
-
-   * @param {AnimeSeries} series 
-   * @param {AnimeEpisode} episode 
-   */
-  static verifyResolvedAnime(series, episode) {
-    const STRING_THRESHOLD = 7;
-    const extractedTitle = this.normalizeString(episode.series.title);
-    const guessTitle = this.normalizeString(series.englishTitle);
-    return (
-      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
-      levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
-      levenshtein(
-        this.normalizeString(episode.season.name),
-        this.normalizeString(series.title)
-      ) < STRING_THRESHOLD ||
-      levenshtein(
-        this.normalizeString(episode.season.name),
-        this.normalizeString(series.englishTitle)
-      ) < STRING_THRESHOLD
-    );
-  }
-
-  /**
-   * @param {string} str
-   * @returns {string}
-   */
-  static normalizeString(str) {
-    return str.toLowerCase().replace(/^[a-z0-9]/g, "");
   }
 
   async createLibraryItem(animeId, patch) {

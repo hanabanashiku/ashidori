@@ -140,15 +140,6 @@ export default class MyAnimeListProvider extends ApiProvider {
     return this.getSingleLibraryEntry(animeId);
   }
 
-  /**
-   * Resolves a library entry from an anime episode object retrieved from a streaming service.
-   * @param {AnimeEpisode} animeEpisode The anime episode to resolve from
-   * @returns {LibraryEntry} The library entry and series information corresponding to the anime episode.
-   */
-  async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
-    super.resolveLibraryEntryFromAnimeEpisode(animeEpisode);
-  }
-
   async createLibraryItem(animeId, patch) {
     // In the MAL API, PATCH functions as an upsert.
     // Additionally, the key is simply the username + anime id
