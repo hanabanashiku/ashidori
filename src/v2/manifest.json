@@ -20,6 +20,10 @@
     {
       "matches": ["*://beta.crunchyroll.com/watch/**"],
       "js": ["../content_scripts/crunchyroll/video.js"]
+    },
+    {
+      "matches": ["*://netflix.com/watch/*"],
+      "js": ["content_scripts/netflix/video.js"]
     }
   ],
   "background": {
@@ -38,6 +42,7 @@
     "notifications",
     "identity",
     "*://*.crunchyroll.com/*",
+    "*://*.netflix.com/*",
     "*://kitsu.io/api/*",
     "https://myanimelist.net/v1/oauth2/*",
     "https://api.myanimelist.net/v2/*"
