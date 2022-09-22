@@ -27,6 +27,12 @@
       "js": ["content_scripts/netflix/video.js"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "matches": ["*://*.netflix.com/*"],
+      "resources": ["static/scripts/inject_netflix.js"]
+    }
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"

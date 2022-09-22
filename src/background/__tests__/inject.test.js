@@ -24,13 +24,13 @@ describe("Background script injector", () => {
           matches: ["*://beta.crunchyroll.com/watch/**"],
           js: ["video.js"],
         },
+        {
+          matches: ["*://*.netflix.com/watch/*"],
+          js: ["video_netflix.js"],
+        }
       ],
     });
   });
-
-  // afterEach(() => {
-  //   jest.resetAllMocks();
-  // });
 
   it("does not inject by default", () => {
     onHistoryStateUpdated({
@@ -70,5 +70,15 @@ describe("Background script injector", () => {
     });
     await waitFor(() => expect(executeScriptSpy).toHaveBeenCalledTimes(1));
     expect(executeScriptSpy).toHaveBeenLastCalledWith(1, ["video.js"]);
+  });
+
+  it("executes script for Netflix video", async () => {
+    onHistoryStateUpdated({
+      tabId: 1,
+      frameId: 2,
+      url: "https://www.netflix.com/watch/81056831?trackId=14170286",
+    });
+    await waitFor(() => expect(executeScriptSpy).toHaveBeenCalledTimes(1));
+    expect(executeScriptSpy).toHaveBeenLastCalledWith(1, ["video_netflix.js"]);
   });
 });

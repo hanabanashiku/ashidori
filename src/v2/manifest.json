@@ -22,9 +22,12 @@
       "js": ["../content_scripts/crunchyroll/video.js"]
     },
     {
-      "matches": ["*://netflix.com/watch/*"],
+      "matches": ["*://*.netflix.com/watch/*"],
       "js": ["content_scripts/netflix/video.js"]
     }
+  ],
+  "web_accessible_resources": [
+    "../static/scripts/inject_netflix.js"
   ],
   "background": {
     "page": "background.html"
