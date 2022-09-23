@@ -18,7 +18,7 @@ Settings.getEnabledServices().then((enabledServices) => {
 
   init();
 
-  // unload if the user clicks a link in the Crunchyroll SPA
+  // unload if the user clicks a link in the SPA
   browser.runtime.onMessage.addListener((message) => {
     if (message.type !== MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
       return false;
@@ -27,7 +27,7 @@ Settings.getEnabledServices().then((enabledServices) => {
     onUnload();
     resetPage();
 
-    if (message.payload.url.includes("https://netflix.com/watch/")) {
+    if (message.payload.url.includes("https://www.netflix.com/watch/")) {
       init();
     }
     return true;
