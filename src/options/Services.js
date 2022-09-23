@@ -92,6 +92,11 @@ const Services = () => {
             image="../static/images/crunchyroll.png"
             value={SERVICES.CRUNCHYROLL}
           />
+          <ServiceCheckbox
+            name="Netflix"
+            image="../static/images/netflix.png"
+            value={SERVICES.NETFLIX}
+          />
           {/*<ServiceCheckbox
             name="Funimation"
             image="../static/images/funimation.png"
@@ -101,11 +106,6 @@ const Services = () => {
             name="Hulu"
             image="../static/images/hulu.png"
             value={SERVICES.HULU}
-          />
-          <ServiceCheckbox
-            name="Netfix"
-            image="../static/images/netflix.png"
-            value={SERVICES.NETFLIX}
           />
           <ServiceCheckbox
             name="Amazon Prime"
