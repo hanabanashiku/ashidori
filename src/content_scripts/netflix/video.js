@@ -1,6 +1,9 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import browser from 'webextension-polyfill';
 import Settings from "../../options/Settings";
 import NetflixService from "../../services/Netflix";
+import ListDisplay from './ListDisplay';
 import { getApiInstance } from '../../providers/builder';
 import { waitForElm } from '../common';
 import { SERVICES } from "../../enums";
@@ -10,6 +13,7 @@ let episodeData;
 let loadTime;
 let userData;
 let listEntry;
+let footerObserver;
 
 Settings.getEnabledServices().then((enabledServices) => {
   if (!enabledServices.includes(SERVICES.NETFLIX)) {
@@ -78,7 +82,30 @@ function init() {
         episodeData,
       }
     });
+    insertListDisplay(listEntry, api, userData);
   })
+}
+
+function insertListDisplay(libraryEntry, api, userData) {
+  footerObserver = new MutationObserver(() => {
+    const controlSpeedButton = document.querySelector("button[data-uia=control-speed");
+    const ashidoriButton = document.getElementById("ashidori-button");
+    if(!controlSpeedButton || ashidoriButton) {
+      return;
+    }
+    
+    const reference = controlSpeedButton.parentNode;
+    const container = document.createElement('div');
+    container.id = "ashidori-button";
+
+    controlSpeedButton.parentNode.parentNode.insertBefore(container, reference.nextSibling);
+    ReactDOM.render(<ListDisplay libraryEntry={libraryEntry} api={api} userData={userData} />, container);
+  });
+
+  footerObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 }
 
 function onUnload() {
@@ -93,6 +120,10 @@ function onUnload() {
         listEntry,
       },
     });
+  }
+  if(footerObserver) {
+    footerObserver.disconnect();
+    footerObserver = null;
   }
 }
 

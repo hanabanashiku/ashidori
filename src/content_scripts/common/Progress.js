@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
-import LibraryEntry from "../../../models/LibraryEntry";
-import { LIST_STATUS } from "../../../enums";
-import lang from "../../../lang";
+import LibraryEntry from "../../models/LibraryEntry";
+import { LIST_STATUS } from "../../enums";
+import lang from "../../lang";
 
 function Progress({ libraryEntry }) {
   if (

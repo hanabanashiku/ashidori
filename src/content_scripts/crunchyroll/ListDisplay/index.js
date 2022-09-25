@@ -1,29 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import browser from "webextension-polyfill";
 import util from "util";
 import { css } from "@emotion/react";
 import CrunchyrollThemeProvider from "../theme";
 import { Box, Stack, Typography, Button } from "@mui/material";
-import Progress from "./Progress";
-import Rating from "./Rating";
+import Progress from "../../common/Progress";
+import Rating from "../../common/Rating";
+import { onOpenDetail } from "../../common";
 import LibraryEntry from "../../../models/LibraryEntry";
 import ApiProvider from "../../../providers/ApiProvider";
 import UserData from "../../../models/UserData";
-import MESSAGE_TYPES from "../../../messageTypes";
 import { PROVIDER_NAMES } from "../../../enums";
 import lang from "../../../lang";
 
 function ListDisplay({ libraryEntry, api, userData }) {
-  async function onOpenDetail() {
-    return browser.runtime.sendMessage({
-      type: MESSAGE_TYPES.SHOW_ANIME_DETAIL_POPUP,
-      payload: {
-        libraryEntryId: libraryEntry.id,
-      },
-    });
-  }
-
   return (
     <CrunchyrollThemeProvider>
       <Box
@@ -56,7 +46,7 @@ function ListDisplay({ libraryEntry, api, userData }) {
                 PROVIDER_NAMES[userData.apiSource]
               )}
             </Button>
-            <Button onClick={onOpenDetail}>{lang.openInAshidori}</Button>
+            <Button onClick={() => onOpenDetail(libraryEntry)}>{lang.openInAshidori}</Button>
           </Stack>
         </Box>
       </Box>

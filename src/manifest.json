@@ -30,7 +30,7 @@
   "web_accessible_resources": [
     {
       "matches": ["*://*.netflix.com/*"],
-      "resources": ["static/scripts/inject_netflix.js"]
+      "resources": ["static/scripts/inject_netflix.js", "static/icons/icon128_border.png"]
     }
   ],
   "background": {

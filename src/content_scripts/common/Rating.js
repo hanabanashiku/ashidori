@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Rating, Typography } from "@mui/material";
-import LibraryEntry from "../../../models/LibraryEntry";
-import ApiProvider from "../../../providers/ApiProvider";
-import { LIST_STATUS } from "../../../enums";
+import LibraryEntry from "../../models/LibraryEntry";
+import ApiProvider from "../../providers/ApiProvider";
+import { LIST_STATUS } from "../../enums";
 
 function EntryRating({ libraryEntry, api }) {
   const [value, setRating] = useState(libraryEntry.rating);
