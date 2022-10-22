@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { CircularProgress } from '@mui/material'
 import { getApiInstance } from '../providers/builder'
 import AnimeDetail from './AnimeDetail'
 
@@ -21,8 +22,9 @@ function Popup() {
     }
 
     if (!api) {
-        return <div>hello</div>
+        return <CircularProgress />;
     }
+
     return (
         <AnimeDetail
             selectedAnime={id}

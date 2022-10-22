@@ -8,7 +8,7 @@ import lang from '../lang'
 const CurrentAnimeDisplay = ({ showAnime }) => {
     const [currentAnime, setCurrentAnime] = useState(null)
     useEffect(() => {
-        ;(async () => {
+        (async () => {
             const currentAnimeFromStorage = (
                 await browser.storage.local.get({
                     current_anime: null,

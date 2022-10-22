@@ -8,7 +8,6 @@ import MockApiProvider from '../../__mocks__/MockApiProvider'
 import PagedData from '../../models/PagedData'
 import LibraryEntry from '../../models/LibraryEntry'
 import { LIST_STATUS } from '../../enums'
-import MESSAGE_TYPES from '../../messageTypes'
 
 const mockNavigate = jest.fn()
 
@@ -276,55 +275,6 @@ describe('Popup window', () => {
 
         await waitFor(() => expect(mockNavigate).toHaveBeenCalled())
         expect(mockNavigate).toHaveBeenLastCalledWith('detail/12345')
-    })
-
-    it('recieving a show anime message opens the anime detail page', async () => {
-        api.getAnimeListByStatus.mockResolvedValueOnce(
-            new PagedData({
-                data: [
-                    new LibraryEntry({
-                        _id: '12345',
-                        _progress: 5,
-                        _status: LIST_STATUS.CURRENT,
-                        _anime: {
-                            _id: '12',
-                            _title: 'One Piece',
-                        },
-                    }),
-                ],
-                total: 1,
-                limit: 25,
-                page: 0,
-            })
-        )
-        api.getSingleLibraryEntry.mockResolvedValue(
-            new LibraryEntry({
-                _id: '12345',
-                _progress: 5,
-                _status: LIST_STATUS.CURRENT,
-                _anime: {
-                    _id: '12',
-                    _title: 'One Piece',
-                },
-            })
-        )
-
-        const { getByText, queryAllByRole } = render(<Component />)
-
-        await waitFor(() => expect(queryAllByRole('tab')).not.toHaveLength(0))
-
-        browser.runtime.sendMessage({
-            type: MESSAGE_TYPES.SHOW_ANIME_DETAIL,
-            payload: {
-                libraryEntryId: '12345',
-            },
-        })
-        expect(api.getSingleLibraryEntry).toHaveBeenCalled()
-        expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith('12345')
-        await waitFor(() =>
-            expect(queryAllByRole('progressbar')).toHaveLength(0)
-        )
-        expect(getByText('One Piece')).toBeInTheDocument()
     })
 
     it('shows the search page when clicking on the fab button', async () => {

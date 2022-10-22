@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import browser from 'webextension-polyfill'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { css } from '@emotion/react'
 import { Box, CircularProgress } from '@mui/material'
@@ -9,7 +8,6 @@ import LogInNotice from './LogInNotice'
 import AnimeDetail from './AnimeDetail'
 import ListTabs from './ListTabs'
 import AnimeSearch from './AnimeSearch'
-import MESSAGE_TYPES from '../messageTypes'
 
 const Popup = () => {
     const [authState, setAuthState] = useState(null)
@@ -21,14 +19,6 @@ const Popup = () => {
 
     const [api, setApi] = useState(null)
 
-    // Used to show an anime detail by clicking a button on a streaming video page.
-    function onMessage(message) {
-        if (message.type !== MESSAGE_TYPES.SHOW_ANIME_DETAIL) {
-            return
-        }
-        showAnime(message.payload.libraryEntryId)
-    }
-
     function showAnime(id, isListEntry = true) {
         setSelectedAnime({ id, isListEntry })
     }
@@ -38,17 +28,13 @@ const Popup = () => {
     }
 
     useEffect(() => {
-        browser.runtime.onMessage.addListener(onMessage)
-    }, [onMessage])
-
-    useEffect(() => {
         if (params.has('detail')) {
             navigate(`detail/${params.get('detail')}`)
         }
     }, [])
 
     useEffect(() => {
-        ;(async () => {
+        (async () => {
             const apiInstance = await getApiInstance()
             setApi(apiInstance)
             if (!apiInstance) {

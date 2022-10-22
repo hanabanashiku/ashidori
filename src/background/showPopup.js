@@ -8,7 +8,7 @@ async function onMessage(message) {
     }
 
     const id = message.payload.libraryEntryId
-    const url = `${await browser.browserAction.getPopup({})}?detail=${id}`
+    const url = `${await (browser.browserAction ?? browser.action).getPopup({})}?detail=${id}`
 
     await browser.windows.create({
         type: 'popup',

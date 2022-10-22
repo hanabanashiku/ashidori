@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import MESSAGE_TYPES from '../../messageTypes'
 
 export function waitForElm(selector) {
