@@ -20,7 +20,15 @@
     {
       "matches": ["*://beta.crunchyroll.com/watch/**"],
       "js": ["../content_scripts/crunchyroll/video.js"]
+    },
+    {
+      "matches": ["*://*.netflix.com/watch/*"],
+      "js": ["../content_scripts/netflix/video.js"]
     }
+  ],
+  "web_accessible_resources": [
+    "../static/scripts/inject_netflix.js",
+    "../static/icons/icon128_border.png"
   ],
   "background": {
     "page": "background.html"
@@ -38,6 +46,7 @@
     "notifications",
     "identity",
     "*://*.crunchyroll.com/*",
+    "*://*.netflix.com/*",
     "*://kitsu.io/api/*",
     "https://myanimelist.net/v1/oauth2/*",
     "https://api.myanimelist.net/v2/*"

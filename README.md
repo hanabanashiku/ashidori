@@ -1,5 +1,6 @@
 <p align="center">
-    <img src="https://github.com/hanabanashiku/ashidori/blob/main/src/static/images/logo.png" alt="Ashidori logo" title="Ashidori" height="60" />
+    <img src="https://github.com/hanabanashiku/ashidori/blob/main/src/static/images/logo.png#gh-light-mode-only" alt="Ashidori logo" title="Ashidori" height="60" />
+    <img src="https://github.com/hanabanashiku/ashidori/blob/main/src/static/images/logo_dark.png#gh-dark-mode-only" alt="Ashidori logo" title="Ashidori" height="60" />
 </p>
 
 <p align="center">
@@ -21,7 +22,7 @@ Ashidori is a tool that connects to your favorite anime list website which will 
 
 - Track your [MyAnimeList](https://myanimelist.net) or [Kitsu](https://kitsu.io) anime list
 - Automatically update your list when closing an episode page
-- Integrations with Crunchyroll
+- Integrations with Crunchyroll and Netflix
 - View, edit, and add to your anime list on the fly
 
 ## Downloads

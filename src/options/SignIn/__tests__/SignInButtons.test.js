@@ -1,86 +1,87 @@
-import React from "react";
-import { render, screen, within, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
-import SignInButtons from "../SignInButtons";
-import MyAnimeListProvider from "../../../providers/MyAnimeListProvider";
+import React from 'react';
+import { render, screen, within, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import SignInButtons from '../SignInButtons';
+import MyAnimeListProvider from '../../../providers/MyAnimeListProvider';
 
 const mockNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockNavigate,
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate,
 }));
 
-describe("Sign in buttons", () => {
-  const originalWindow = window.location;
-  const malAuthorizeSpy = jest.spyOn(MyAnimeListProvider, "authorize");
+describe('Sign in buttons', () => {
+    const originalWindow = window.location;
+    const malAuthorizeSpy = jest.spyOn(MyAnimeListProvider, 'authorize');
 
-  beforeAll(() => {
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: {
-        ...originalWindow,
-        reload: jest.fn(),
-      },
+    beforeAll(() => {
+        Object.defineProperty(window, 'location', {
+            configurable: true,
+            value: {
+                ...originalWindow,
+                reload: jest.fn(),
+            },
+        });
     });
-  });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: originalWindow,
+    afterEach(() => {
+        jest.clearAllMocks();
     });
-  });
 
-  function Component() {
-    return (
-      <MemoryRouter>
-        <SignInButtons />
-      </MemoryRouter>
-    );
-  }
+    afterAll(() => {
+        Object.defineProperty(window, 'location', {
+            configurable: true,
+            value: originalWindow,
+        });
+    });
 
-  it("renders buttons for services", () => {
-    render(<Component />);
+    function Component() {
+        return (
+            <MemoryRouter>
+                <SignInButtons />
+            </MemoryRouter>
+        );
+    }
 
-    expect(screen.getByRole("img", { name: /kitsu/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: /my anime list/i })
-    ).toBeInTheDocument();
-    // expect(screen.getByRole("img", { name: "AniList" })).toBeInTheDocument();
-  });
+    it('renders buttons for services', () => {
+        render(<Component />);
 
-  it("clicking the Kitsu sign in button navigates to the sign in page", () => {
-    render(<Component />);
+        expect(screen.getByRole('img', { name: /kitsu/i })).toBeInTheDocument();
+        expect(
+            screen.getByRole('img', { name: /my anime list/i })
+        ).toBeInTheDocument();
+        // expect(screen.getByRole("img", { name: "AniList" })).toBeInTheDocument();
+    });
 
-    userEvent.click(
-      within(
-        screen.getByRole("img", { name: /kitsu/i }).parentElement
-      ).getByRole("button", /sign in/i)
-    );
+    it('clicking the Kitsu sign in button navigates to the sign in page', () => {
+        render(<Component />);
 
-    expect(mockNavigate).toHaveBeenCalledTimes(1);
-    expect(mockNavigate).toHaveBeenCalledWith("signin/kitsu");
-  });
+        userEvent.click(
+            within(
+                screen.getByRole('img', { name: /kitsu/i }).parentElement
+            ).getByRole('button', /sign in/i)
+        );
 
-  it("clicking the MyAnimeList sign in button starts the MAL OAuth2 redirect", async () => {
-    malAuthorizeSpy.mockResolvedValue();
+        expect(mockNavigate).toHaveBeenCalledTimes(1);
+        expect(mockNavigate).toHaveBeenCalledWith('signin/kitsu');
+    });
 
-    render(<Component />);
+    it('clicking the MyAnimeList sign in button starts the MAL OAuth2 redirect', async () => {
+        malAuthorizeSpy.mockResolvedValue();
 
-    userEvent.click(
-      within(
-        screen.getByRole("img", { name: /my anime list/i }).parentElement
-      ).getByRole("button", /sign in/i)
-    );
+        render(<Component />);
 
-    expect(malAuthorizeSpy).toHaveBeenCalledTimes(1);
-    await waitFor(() =>
-      expect(window.location.reload).toHaveBeenCalledTimes(1)
-    );
-  });
+        userEvent.click(
+            within(
+                screen.getByRole('img', { name: /my anime list/i })
+                    .parentElement
+            ).getByRole('button', /sign in/i)
+        );
+
+        expect(malAuthorizeSpy).toHaveBeenCalledTimes(1);
+        await waitFor(() =>
+            expect(window.location.reload).toHaveBeenCalledTimes(1)
+        );
+    });
 });

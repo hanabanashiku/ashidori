@@ -1,24 +1,24 @@
-import browser from "webextension-polyfill";
-import _ from "lodash";
-import { LIST_STATUS } from "../enums";
+import browser from 'webextension-polyfill';
+import _ from 'lodash';
+import { LIST_STATUS } from '../enums';
 // languages
-import en from "./en.json";
-import ja from "./ja.json";
+import en from './en.json';
+import ja from './ja.json';
 
 const language = browser.i18n.getUILanguage();
 
 let data;
 
 switch (language) {
-  case "ja":
-    data = _.defaults({}, ja, en);
-    break;
+    case 'ja':
+        data = _.defaults({}, ja, en);
+        break;
 
-  case "en":
-  case "en_US":
-  default:
-    data = en;
-    break;
+    case 'en':
+    case 'en_US':
+    default:
+        data = en;
+        break;
 }
 
 data.listStatuses = {};
