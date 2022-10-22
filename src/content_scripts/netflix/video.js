@@ -91,7 +91,7 @@ function init() {
 function insertListDisplay(libraryEntry, api, userData) {
   footerObserver = new MutationObserver(() => {
     const controlSpeedButton = document.querySelector(
-      "button[data-uia=control-speed"
+      "button[data-uia=control-speed]"
     );
     const ashidoriButton = document.getElementById("ashidori-button");
     if (!controlSpeedButton || ashidoriButton) {

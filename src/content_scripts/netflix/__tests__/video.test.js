@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/react";
+import { waitFor, screen } from "@testing-library/react";
 import Settings from "../../../options/Settings";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import NetflixService from "../../../services/Netflix";
@@ -16,7 +16,7 @@ jest.mock("../../../services/Netflix");
 describe("Netflix video content script", () => {
   const api = new MockApiProvider();
 
-  let mediaInfo = null;
+  let player = null;
   let historyStateUpdatedListener = null;
 
   const mockAnimeEpisode = new AnimeEpisode({
@@ -79,7 +79,7 @@ describe("Netflix video content script", () => {
 
   afterEach(() => {
     document.getElementsByTagName("html")[0].innerHTML = "";
-    mediaInfo = null;
+    player = null;
     jest.clearAllMocks();
   });
 
@@ -88,9 +88,9 @@ describe("Netflix video content script", () => {
   });
 
   function initBody() {
-    mediaInfo = document.createElement("div");
-    mediaInfo.className = "erc-current-media-info";
-    document.body.appendChild(mediaInfo);
+    player = document.createElement("div");
+    player.setAttribute("data-uia", "player");
+    document.body.appendChild(player);
     mockUrl("https://www.netflix.com/watch/18561531?trackid=48434354");
   }
 
@@ -127,6 +127,7 @@ describe("Netflix video content script", () => {
     });
   }
 
+  // This mocks the injected script from static/inject_netflix.js to get the current memberapi version
   function mockInjectScript() {
     const input = document.createElement("input");
     input.type = "hidden";
