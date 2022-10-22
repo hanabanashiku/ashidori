@@ -13,6 +13,7 @@ describe('storage helpers', () => {
         const libraryEntry = new LibraryEntry({
             _id: 12345,
             _anime: {
+                _id: 69420,
                 _title: 'One Piece',
             },
         });
@@ -26,6 +27,7 @@ describe('storage helpers', () => {
         expect(browser.storage.local.set).toHaveBeenCalledWith({
             current_anime: {
                 libraryEntryId: 12345,
+                animeId: 69420,
                 title: 'One Piece',
                 episodeNumber: 1017,
             },

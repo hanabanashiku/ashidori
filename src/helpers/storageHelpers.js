@@ -13,6 +13,7 @@ export async function showCurrentWatchingAlertOnPopup(
     return browser.storage.local.set({
         current_anime: {
             libraryEntryId: libraryEntry.id,
+            animeId: libraryEntry.anime.id,
             title: libraryEntry.anime.title,
             episodeNumber: episodeData.number,
         },

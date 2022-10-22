@@ -46,6 +46,7 @@ describe('Current anime display', () => {
         const libraryEntry = new LibraryEntry({
             _id: 12345,
             _anime: {
+                _id: 69420,
                 _title: 'One Piece',
             },
         });
@@ -67,5 +68,33 @@ describe('Current anime display', () => {
         userEvent.click(screen.getByText(/see details\./i));
         expect(showAnime).toHaveBeenCalledTimes(1);
         expect(showAnime).toHaveBeenLastCalledWith(12345);
+    });
+
+    it('shows anime when clicking see details, when the user has not started watching', async () => {
+        const libraryEntry = new LibraryEntry({
+            _id: 0,
+            _anime: {
+                _id: 69420,
+                _title: 'One Piece',
+            },
+        });
+        const episodeData = new AnimeEpisode({
+            _number: 1,
+        });
+        showCurrentWatchingAlertOnPopup(libraryEntry, episodeData);
+
+        render(<CurrentAnimeDisplay showAnime={showAnime} />);
+
+        await waitFor(() =>
+            expect(
+                screen.getByText(
+                    /you are currently watching episode 1 of one piece\./i
+                )
+            ).toBeInTheDocument()
+        );
+
+        userEvent.click(screen.getByText(/see details\./i));
+        expect(showAnime).toHaveBeenCalledTimes(1);
+        expect(showAnime).toHaveBeenLastCalledWith(69420, false);
     });
 });

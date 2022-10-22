@@ -23,6 +23,19 @@ const CurrentAnimeDisplay = ({ showAnime }) => {
         })();
     }, []);
 
+    function showCurrentAnime() {
+        if(!currentAnime) {
+            return;
+        }
+
+        if(currentAnime.libraryEntryId > 0) {
+            showAnime(currentAnime.libraryEntryId);
+            return;
+        }
+
+        showAnime(currentAnime.animeId, false);
+    }
+
     if (!currentAnime) {
         return null;
     }
@@ -34,7 +47,7 @@ const CurrentAnimeDisplay = ({ showAnime }) => {
                 currentAnime.episodeNumber,
                 currentAnime.title
             )}{' '}
-            <Link onClick={() => showAnime(currentAnime.libraryEntryId)}>
+            <Link onClick={showCurrentAnime}>
                 {lang.seeDetails}
             </Link>
         </Alert>
