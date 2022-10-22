@@ -51,10 +51,5 @@
     "*://*.netflix.com/*",
     "https://myanimelist.net/v1/oauth2/*",
     "https://api.myanimelist.net/v2/*"
-  ],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{de146335-43f9-46bc-8c2d-51aa82bab4f5}"
-    }
-  }
+  ]
 }

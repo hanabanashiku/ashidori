@@ -23,11 +23,12 @@
     },
     {
       "matches": ["*://*.netflix.com/watch/*"],
-      "js": ["content_scripts/netflix/video.js"]
+      "js": ["../content_scripts/netflix/video.js"]
     }
   ],
   "web_accessible_resources": [
-    "../static/scripts/inject_netflix.js"
+    "../static/scripts/inject_netflix.js",
+    "../static/icons/icon128_border.png"
   ],
   "background": {
     "page": "background.html"
