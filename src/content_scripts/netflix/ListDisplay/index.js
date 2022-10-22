@@ -111,7 +111,7 @@ function ListDisplayIcon({ libraryEntry, api, userData }) {
         padding-left: 16px;
       `}
     >
-      <Button>
+      <Button aria-label="Ashidori data">
         <img
           src={browser.runtime.getURL("static/icons/icon128_border.png")}
           height={40}

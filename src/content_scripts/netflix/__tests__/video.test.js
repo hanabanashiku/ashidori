@@ -70,7 +70,9 @@ describe("Netflix video content script", () => {
     browser.runtime.onMessage.addListener.mockImplementationOnce((fn) => {
       historyStateUpdatedListener = fn;
     });
-    browser.runtime.getURL.mockReturnValue('chrome-extension://static/scripts/inject_netflix.js');
+    browser.runtime.getURL.mockReturnValue(
+      "chrome-extension://static/scripts/inject_netflix.js"
+    );
 
     initBody();
   });
@@ -89,9 +91,7 @@ describe("Netflix video content script", () => {
     mediaInfo = document.createElement("div");
     mediaInfo.className = "erc-current-media-info";
     document.body.appendChild(mediaInfo);
-    mockUrl(
-      "https://www.netflix.com/watch/18561531?trackid=48434354"
-    );
+    mockUrl("https://www.netflix.com/watch/18561531?trackid=48434354");
   }
 
   function mockUrl(url) {
@@ -128,9 +128,9 @@ describe("Netflix video content script", () => {
   }
 
   function mockInjectScript() {
-    const input = document.createElement('input');
+    const input = document.createElement("input");
     input.type = "hidden";
-    input.name= "ashidori-observer";
+    input.name = "ashidori-observer";
     input.value = "https://www.netflix.com/memberapi/sdfddgdgad";
     document.body.appendChild(input);
   }
@@ -149,15 +149,17 @@ describe("Netflix video content script", () => {
     requireScript();
     expect(Settings.getEnabledServices).toBeCalled();
     expect(historyStateUpdatedListener).toBeDefined();
-    await waitFor(() => expect(browser.runtime.sendMessage).toHaveBeenNthCalledWith(1, {
-      type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
-      payload: {
-        loadTime: expect.any(Date),
-        userData: mockUserData,
-        listEntry: mockLibraryEntry,
-        episodeData: mockAnimeEpisode,
-      },
-    }));
+    await waitFor(() =>
+      expect(browser.runtime.sendMessage).toHaveBeenNthCalledWith(1, {
+        type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+        payload: {
+          loadTime: expect.any(Date),
+          userData: mockUserData,
+          listEntry: mockLibraryEntry,
+          episodeData: mockAnimeEpisode,
+        },
+      })
+    );
   });
 
   it("sends update episode message on unload", async () => {
