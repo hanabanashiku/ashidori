@@ -25,9 +25,9 @@ describe("Services enabler", () => {
     //   expect(
     //     screen.getByRole("checkbox", { name: /hulu/i })
     //   ).toBeInTheDocument();
-      expect(
-        screen.getByRole("checkbox", { name: /netflix/i })
-      ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: /netflix/i })
+    ).toBeInTheDocument();
     //   expect(
     //     screen.getByRole("checkbox", { name: /amazon prime/i })
     //   ).toBeInTheDocument();
@@ -36,7 +36,10 @@ describe("Services enabler", () => {
     //   ).toBeInTheDocument();
   });
 
-  test.each([["Crunchyroll", SERVICES.CRUNCHYROLL], ["Netflix", SERVICES.NETFLIX]])(
+  test.each([
+    ["Crunchyroll", SERVICES.CRUNCHYROLL],
+    ["Netflix", SERVICES.NETFLIX],
+  ])(
     "clicking the %p checkbox toggles the service",
     async function (name, value) {
       await Settings.setEnabledServices([]);

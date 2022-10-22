@@ -1,4 +1,4 @@
-import { waitFor, screen } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import Settings from "../../../options/Settings";
 import MockApiProvider from "../../../__mocks__/MockApiProvider";
 import NetflixService from "../../../services/Netflix";

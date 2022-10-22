@@ -27,7 +27,7 @@ describe("Background script injector", () => {
         {
           matches: ["*://*.netflix.com/watch/*"],
           js: ["video_netflix.js"],
-        }
+        },
       ],
     });
   });

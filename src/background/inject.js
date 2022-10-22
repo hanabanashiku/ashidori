@@ -25,8 +25,7 @@ async function injectScript(details) {
   if (/^https?:\/\/beta\.crunchyroll\.com\/watch\/.*/.test(details.url)) {
     executeScript(details.tabId, await getVideoScript(SERVICES.CRUNCHYROLL));
     return;
-  }
-  else if(/https?:\/\/www\.netflix.com\/watch\/.*/i.test(details.url)) {
+  } else if (/https?:\/\/www\.netflix.com\/watch\/.*/i.test(details.url)) {
     executeScript(details.tabId, await getVideoScript(SERVICES.NETFLIX));
   }
 }
@@ -40,7 +39,9 @@ async function getVideoScript(service) {
         cs.matches.includes("*://beta.crunchyroll.com/watch/**")
       ).js;
     case SERVICES.NETFLIX:
-      return manifest.content_scripts.find((cs) => cs.matches.includes("*://*.netflix.com/watch/*")).js;
+      return manifest.content_scripts.find((cs) =>
+        cs.matches.includes("*://*.netflix.com/watch/*")
+      ).js;
     default:
       return "";
   }

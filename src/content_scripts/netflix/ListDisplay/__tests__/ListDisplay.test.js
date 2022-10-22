@@ -1,5 +1,11 @@
 import React from "react";
-import { render, act, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  act,
+  screen,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ListDisplay from "..";
 import MockApiProvider from "../../../../__mocks__/MockApiProvider";
@@ -29,82 +35,80 @@ describe("List display component", () => {
   let controls;
 
   function showListDisplay() {
-    const button = screen.getByRole('button', { name: /ashidori data/i});
+    const button = screen.getByRole("button", { name: /ashidori data/i });
     fireEvent.mouseEnter(button);
   }
 
   // Setup DOM
   beforeEach(() => {
-    document.body.innerHTML = '';
-    playerWindow = document.createElement('div');
-    playerWindow.setAttribute('data-uia', 'player');
-    controls = document.createElement('div');
-    controls.setAttribute('data-uia', 'controls-standard');
+    document.body.innerHTML = "";
+    playerWindow = document.createElement("div");
+    playerWindow.setAttribute("data-uia", "player");
+    controls = document.createElement("div");
+    controls.setAttribute("data-uia", "controls-standard");
 
     playerWindow.appendChild(controls);
     document.body.appendChild(playerWindow);
   });
 
-  it('renders the ashidori button', () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+  it("renders the ashidori button", () => {
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
-    expect(screen.getByRole('button', { name: /ashidori data/i})).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /ashidori data/i })
+    ).toBeInTheDocument();
   });
 
-  it('renders the list display on hover', () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+  it("renders the list display on hover", () => {
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
-    expect(document.querySelector("div[data-uia=ashidori-display]")).toBeInTheDocument();
+    expect(
+      document.querySelector("div[data-uia=ashidori-display]")
+    ).toBeInTheDocument();
   });
 
-  it('hides the list display on mouse exit', () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+  it("hides the list display on mouse exit", () => {
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
-    fireEvent.mouseLeave(document.querySelector("div[data-uia=ashidori-display]"));
-    expect(document.querySelector("div[data-uia=ashidori-display]")).not.toBeTruthy();
+    fireEvent.mouseLeave(
+      document.querySelector("div[data-uia=ashidori-display]")
+    );
+    expect(
+      document.querySelector("div[data-uia=ashidori-display]")
+    ).not.toBeTruthy();
   });
 
-  it('hides the list display when the control footer closes', async () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+  it("hides the list display when the control footer closes", async () => {
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
 
     playerWindow.removeChild(controls);
-    await waitFor(() => expect(document.querySelector("div[data-uia=ashidori-display]")).not.toBeTruthy());
+    await waitFor(() =>
+      expect(
+        document.querySelector("div[data-uia=ashidori-display]")
+      ).not.toBeTruthy()
+    );
   });
 
   it("renders the anime title", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
-    showListDisplay()
+    showListDisplay();
     expect(screen.getByText("One Piece")).toBeInTheDocument();
   });
 
   it("renders the anime status", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     expect(screen.getByText("Currently watching")).toBeInTheDocument();
   });
 
   it("renders the current progress", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     expect(screen.getByText("1010")).toBeInTheDocument();
@@ -155,9 +159,7 @@ describe("List display component", () => {
   );
 
   it("renders the rating widget", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     const rating = screen.getByTestId("ashidori-anime-rating");
@@ -166,9 +168,7 @@ describe("List display component", () => {
   });
 
   it("calls api on rating change", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     act(() => userEvent.click(screen.getByLabelText("9 Stars")));
@@ -184,9 +184,7 @@ describe("List display component", () => {
         status: 400,
       },
     });
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     act(() => userEvent.click(screen.getByLabelText("9 Stars")));
@@ -212,9 +210,7 @@ describe("List display component", () => {
   });
 
   it("Clicking the view on provider button opens the external link", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     const button = screen.getByRole("link", { name: /View on Kitsu/i });
@@ -223,9 +219,7 @@ describe("List display component", () => {
   });
 
   it("Clicking the open in ashidori button opens the anime detail in a popup window on chrome", () => {
-    render(
-      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
-    );
+    render(<ListDisplay libraryEntry={entry} api={api} userData={userData} />);
 
     showListDisplay();
     const button = screen.getByRole("button", { name: /Open in Ashidori/i });

@@ -46,7 +46,9 @@ function ListDisplay({ libraryEntry, api, userData }) {
                 PROVIDER_NAMES[userData.apiSource]
               )}
             </Button>
-            <Button onClick={() => onOpenDetail(libraryEntry)}>{lang.openInAshidori}</Button>
+            <Button onClick={() => onOpenDetail(libraryEntry)}>
+              {lang.openInAshidori}
+            </Button>
           </Stack>
         </Box>
       </Box>

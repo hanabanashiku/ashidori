@@ -102,20 +102,23 @@ function ListDisplayIcon({ libraryEntry, api, userData }) {
   function onOpen(e) {
     setAnchorEl(e.currentTarget);
 
-    if(controlsObserver.current) {
+    if (controlsObserver.current) {
       return;
     }
 
     // Setup observer to close the tooltip when the video footer closes (e.g. timeout with no mouse movement)
     const observer = new MutationObserver(() => {
-      if(document.querySelector("div[data-uia=controls-standard")) {
-          return;
+      if (document.querySelector("div[data-uia=controls-standard")) {
+        return;
       }
 
       onClose();
     });
     controlsObserver.current = observer;
-    observer.observe(document.querySelector("div[data-uia=player]"), { childList: true, subtree: true });
+    observer.observe(document.querySelector("div[data-uia=player]"), {
+      childList: true,
+      subtree: true,
+    });
   }
 
   function onClose() {
