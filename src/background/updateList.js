@@ -1,26 +1,26 @@
-import browser from 'webextension-polyfill'
-import util from 'util'
-import Settings from '../options/Settings'
-import MESSAGE_TYPES from '../messageTypes'
-import { getApiInstance } from '../providers/builder'
+import browser from 'webextension-polyfill';
+import util from 'util';
+import Settings from '../options/Settings';
+import MESSAGE_TYPES from '../messageTypes';
+import { getApiInstance } from '../providers/builder';
 import {
     sendNotification,
     getBrowserType,
     sendNotificationWithClick,
     openLink,
-} from '../helpers/extensionHelpers'
+} from '../helpers/extensionHelpers';
 import {
     showCurrentWatchingAlertOnPopup,
     resetCurrentWatchingAlert,
-} from '../helpers/storageHelpers'
-import UserData from '../models/UserData'
-import AnimeEpisode from '../models/AnimeEpisode'
-import LibraryEntry from '../models/LibraryEntry'
-import lang from '../lang'
-import { LIST_STATUS, PROVIDER_NAMES, BROWSER } from '../enums'
+} from '../helpers/storageHelpers';
+import UserData from '../models/UserData';
+import AnimeEpisode from '../models/AnimeEpisode';
+import LibraryEntry from '../models/LibraryEntry';
+import lang from '../lang';
+import { LIST_STATUS, PROVIDER_NAMES, BROWSER } from '../enums';
 
-browser.runtime.onMessage.addListener(onEpisodeStarted)
-browser.runtime.onMessage.addListener(onUpdateRequest)
+browser.runtime.onMessage.addListener(onEpisodeStarted);
+browser.runtime.onMessage.addListener(onUpdateRequest);
 
 /**
  * Event handler when the user first opens an anime episode.
@@ -29,35 +29,35 @@ browser.runtime.onMessage.addListener(onUpdateRequest)
  */
 async function onEpisodeStarted(message, sender) {
     if (message.type !== MESSAGE_TYPES.ANIME_EPISODE_STARTED) {
-        return
+        return;
     }
 
-    const episodeTab = sender.tab.id
-    const loadTime = message.payload.loadTime
-    const userData = new UserData(message.payload.userData)
-    const episodeData = new AnimeEpisode(message.payload.episodeData)
-    const listEntry = new LibraryEntry(message.payload.listEntry)
+    const episodeTab = sender.tab.id;
+    const loadTime = message.payload.loadTime;
+    const userData = new UserData(message.payload.userData);
+    const episodeData = new AnimeEpisode(message.payload.episodeData);
+    const listEntry = new LibraryEntry(message.payload.listEntry);
 
-    showCurrentWatchingAlertOnPopup(listEntry, episodeData)
+    showCurrentWatchingAlertOnPopup(listEntry, episodeData);
 
     // register event to update the list when the close the tab
     function onTabClose(tabId) {
         if (tabId !== episodeTab) {
-            return
+            return;
         }
 
-        browser.tabs.onRemoved.removeListener(onTabClose)
-        startUpdate(loadTime, userData, episodeData, listEntry)
+        browser.tabs.onRemoved.removeListener(onTabClose);
+        startUpdate(loadTime, userData, episodeData, listEntry);
     }
-    browser.tabs.onRemoved.addListener(onTabClose)
+    browser.tabs.onRemoved.addListener(onTabClose);
 
     const currentTabs =
-        (await browser.storage.local.get('CURRENT_TABS').CURRENT_TABS) ?? {}
+        (await browser.storage.local.get('CURRENT_TABS').CURRENT_TABS) ?? {};
     currentTabs[sender.tab.id] = {
         episodeData,
         listener: onTabClose,
-    }
-    await browser.storage.local.set({ CURRENT_TABS: currentTabs })
+    };
+    await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }
 
 /**
@@ -67,16 +67,16 @@ async function onEpisodeStarted(message, sender) {
  */
 function onUpdateRequest(message, sender) {
     if (message.type !== MESSAGE_TYPES.UPDATE_EPISODE) {
-        return false
+        return false;
     }
 
-    const loadTime = message.payload.loadTime
-    const userData = new UserData(message.payload.userData)
-    const episodeData = new AnimeEpisode(message.payload.episodeData)
-    const listEntry = new LibraryEntry(message.payload.listEntry)
+    const loadTime = message.payload.loadTime;
+    const userData = new UserData(message.payload.userData);
+    const episodeData = new AnimeEpisode(message.payload.episodeData);
+    const listEntry = new LibraryEntry(message.payload.listEntry);
 
-    removeTabOnRemovedHook(sender.tab.id)
-    startUpdate(loadTime, userData, episodeData, listEntry)
+    removeTabOnRemovedHook(sender.tab.id);
+    startUpdate(loadTime, userData, episodeData, listEntry);
 }
 
 /**
@@ -88,21 +88,21 @@ function onUpdateRequest(message, sender) {
  * @returns {Promise<void>}
  */
 async function startUpdate(loadTime, userData, episodeData, listEntry) {
-    resetCurrentWatchingAlert()
-    const shouldUpdate = await canUpdateAsync(loadTime, listEntry, episodeData)
+    resetCurrentWatchingAlert();
+    const shouldUpdate = await canUpdateAsync(loadTime, listEntry, episodeData);
     if (!shouldUpdate) {
-        return
+        return;
     }
 
     const shouldShowUpdatePopup =
         listEntry.status === LIST_STATUS.NOT_WATCHING
             ? await Settings.shouldShowAddPopup()
-            : await Settings.shouldShowUpdatePopup()
+            : await Settings.shouldShowUpdatePopup();
 
     if (shouldShowUpdatePopup) {
-        await showUpdatePopupAsync(episodeData, listEntry, userData)
+        await showUpdatePopupAsync(episodeData, listEntry, userData);
     } else {
-        await updateAnimeAsync(episodeData, listEntry, userData)
+        await updateAnimeAsync(episodeData, listEntry, userData);
     }
 }
 
@@ -115,22 +115,22 @@ async function startUpdate(loadTime, userData, episodeData, listEntry) {
  */
 async function canUpdateAsync(loadTime, listEntry, episodeData) {
     if (!(await Settings.listUpdatingEnabled())) {
-        return false
+        return false;
     }
 
-    const delayInMinutes = await Settings.shouldUpdateAfterMinutes()
+    const delayInMinutes = await Settings.shouldUpdateAfterMinutes();
     const meetsDelay =
-        new Date() - new Date(loadTime) > delayInMinutes * 60 * 1000
+        new Date() - new Date(loadTime) > delayInMinutes * 60 * 1000;
 
     const isValidStatus = [
         LIST_STATUS.NOT_WATCHING,
         LIST_STATUS.CURRENT,
         LIST_STATUS.ON_HOLD,
         LIST_STATUS.PLANNED,
-    ].includes(listEntry.status)
-    const isValidEpisodeNumber = episodeData.number > listEntry.progress
+    ].includes(listEntry.status);
+    const isValidEpisodeNumber = episodeData.number > listEntry.progress;
 
-    return meetsDelay && isValidStatus && isValidEpisodeNumber
+    return meetsDelay && isValidStatus && isValidEpisodeNumber;
 }
 
 /**
@@ -143,9 +143,13 @@ async function canUpdateAsync(loadTime, listEntry, episodeData) {
 async function showUpdatePopupAsync(episodeData, listEntry, userData) {
     switch (getBrowserType()) {
         case BROWSER.FIREFOX:
-            return showUpdatePopupAsyncFirefox(episodeData, listEntry, userData)
+            return showUpdatePopupAsyncFirefox(
+                episodeData,
+                listEntry,
+                userData
+            );
         case BROWSER.CHROMIUM:
-            return showUpdatePopupAsyncChrome(episodeData, listEntry, userData)
+            return showUpdatePopupAsyncChrome(episodeData, listEntry, userData);
     }
 }
 
@@ -153,16 +157,16 @@ async function showUpdatePopupAsyncChrome(episodeData, listEntry, userData) {
     function listener(buttonIndex) {
         if (buttonIndex !== 0) {
             // Clicked no
-            return
+            return;
         }
 
-        updateAnimeAsync(episodeData, listEntry, userData)
+        updateAnimeAsync(episodeData, listEntry, userData);
     }
 
     const body =
         listEntry.status === LIST_STATUS.NOT_WATCHING
             ? lang.newAnimeEpisodeCompletedPopupBody
-            : lang.episodeCompletedPopupBody
+            : lang.episodeCompletedPopupBody;
 
     await sendNotification(
         lang.episodeCompletedPopupTitle,
@@ -181,18 +185,18 @@ async function showUpdatePopupAsyncChrome(episodeData, listEntry, userData) {
             },
         ],
         listener
-    )
+    );
 }
 
 async function showUpdatePopupAsyncFirefox(episodeData, listEntry, userData) {
     function listener() {
-        updateAnimeAsync(episodeData, listEntry, userData)
+        updateAnimeAsync(episodeData, listEntry, userData);
     }
 
     const body =
         listEntry.status === LIST_STATUS.NOT_WATCHING
             ? lang.newAnimeEpisodeCompletedPopupClickBody
-            : lang.episodeCompletedPopupClickBody
+            : lang.episodeCompletedPopupClickBody;
 
     await sendNotificationWithClick(
         lang.episodeCompletedPopupTitle,
@@ -203,7 +207,7 @@ async function showUpdatePopupAsyncFirefox(episodeData, listEntry, userData) {
             userData.username
         ),
         listener
-    )
+    );
 }
 
 /**
@@ -220,15 +224,18 @@ async function showUpdatedPopupAsync(
     userData,
     isComplete
 ) {
-    let message
+    let message;
 
     if (isComplete) {
         message = util.format(
             lang.episodeUpdatedCompleteBody,
             listEntry.anime.title
-        )
+        );
     } else if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-        message = util.format(lang.episodeUpdatedNewBody, listEntry.anime.title)
+        message = util.format(
+            lang.episodeUpdatedNewBody,
+            listEntry.anime.title
+        );
     } else if (
         listEntry.status === LIST_STATUS.ON_HOLD ||
         listEntry.status === LIST_STATUS.PLANNED ||
@@ -237,13 +244,13 @@ async function showUpdatedPopupAsync(
         message = util.format(
             lang.episodeUpdatedCurrentBody,
             listEntry.anime.title
-        )
+        );
     } else {
         message = util.format(
             lang.episodeUpdatedPopupBody,
             listEntry.anime.title,
             episodeData.number
-        )
+        );
     }
 
     switch (getBrowserType()) {
@@ -265,23 +272,23 @@ async function showUpdatedPopupAsync(
                 (buttonIndex) => {
                     switch (buttonIndex) {
                         case 0:
-                            return openAnimePage(listEntry)
+                            return openAnimePage(listEntry);
 
                         case 1:
-                            return revertAnimeAsync(listEntry, userData)
+                            return revertAnimeAsync(listEntry, userData);
 
                         default:
-                            return Promise.reject('Invalid button')
+                            return Promise.reject('Invalid button');
                     }
                 }
-            )
+            );
 
         case BROWSER.FIREFOX:
             return sendNotificationWithClick(
                 lang.episodeUpdatedPopupTitle,
                 message,
                 () => openAnimePage(listEntry)
-            )
+            );
     }
 }
 
@@ -293,7 +300,7 @@ async function showUpdatedPopupAsync(
  */
 async function showErrorPopupAsync(listEntry, userData) {
     function listener() {
-        return openAnimePage(listEntry)
+        return openAnimePage(listEntry);
     }
 
     switch (getBrowserType()) {
@@ -310,14 +317,14 @@ async function showErrorPopupAsync(listEntry, userData) {
                     },
                 ],
                 listener
-            )
+            );
 
         case BROWSER.FIREFOX:
             return sendNotificationWithClick(
                 lang.errorOccurredTitle,
                 lang.errorOccurredOnUpdateBody,
                 listener
-            )
+            );
     }
 }
 
@@ -330,7 +337,7 @@ async function showRevertedPopupAsync(listEntry) {
     return sendNotification(
         lang.episodeUpdatedPopupTitle,
         util.format(lang.episodeRevertedPopupBody, listEntry.anime.title)
-    )
+    );
 }
 
 /**
@@ -341,18 +348,18 @@ async function showRevertedPopupAsync(listEntry) {
  * @returns {Promise<void>}
  */
 async function updateAnimeAsync(episodeData, listEntry, userData) {
-    const api = await getApiInstance()
+    const api = await getApiInstance();
     if (!api) {
-        return
+        return;
     }
 
-    let episode = episodeData.number
-    let lastEpisode = listEntry.anime.episodeCount
-    let isComplete = lastEpisode && episode === lastEpisode
+    let episode = episodeData.number;
+    let lastEpisode = listEntry.anime.episodeCount;
+    let isComplete = lastEpisode && episode === lastEpisode;
 
     let patch = {
         progress: episode,
-    }
+    };
 
     if (
         [LIST_STATUS.NOT_WATCHING, LIST_STATUS.PLANNED].includes(
@@ -363,41 +370,41 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
             ...patch,
             status: LIST_STATUS.CURRENT,
             startedAt: new Date(),
-        }
+        };
     } else if (listEntry.status === LIST_STATUS.ON_HOLD) {
         patch = {
             ...patch,
             status: LIST_STATUS.CURRENT,
-        }
+        };
     }
 
     if (isComplete) {
         patch = {
             ...patch,
             status: LIST_STATUS.COMPLETED,
-        }
+        };
 
         if (listEntry.rewatchCount > 0 || listEntry.completedDate) {
-            patch.rewatchCount = listEntry.rewatchCount + 1
+            patch.rewatchCount = listEntry.rewatchCount + 1;
         } else {
-            patch.finishedAt = new Date()
+            patch.finishedAt = new Date();
         }
     }
 
     try {
         if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-            await api.createLibraryItem(listEntry.anime.id, patch)
+            await api.createLibraryItem(listEntry.anime.id, patch);
         } else {
-            await api.updateLibraryItem(listEntry.id, patch)
+            await api.updateLibraryItem(listEntry.id, patch);
         }
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.error(e)
-        await showErrorPopupAsync(listEntry, userData)
-        return
+        console.error(e);
+        await showErrorPopupAsync(listEntry, userData);
+        return;
     }
 
-    showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete)
+    showUpdatedPopupAsync(listEntry, episodeData, userData, isComplete);
 }
 
 /**
@@ -407,33 +414,33 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
  * @returns {Promise<void>}
  */
 async function revertAnimeAsync(listEntry, userData) {
-    const api = await getApiInstance()
+    const api = await getApiInstance();
 
     if (!api) {
-        return
+        return;
     }
 
     try {
         if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-            await api.removeLibraryItem(listEntry.id)
+            await api.removeLibraryItem(listEntry.id);
         } else {
             const patch = {
                 progress: listEntry.progress,
                 status: listEntry.status,
                 finishedAt: listEntry.completedDate,
                 rewatchCount: listEntry.rewatchCount,
-            }
-            await api.updateLibraryItem(listEntry.id, patch)
+            };
+            await api.updateLibraryItem(listEntry.id, patch);
         }
     } catch {
-        return showErrorPopupAsync(listEntry, userData)
+        return showErrorPopupAsync(listEntry, userData);
     }
 
-    return showRevertedPopupAsync(listEntry)
+    return showRevertedPopupAsync(listEntry);
 }
 
 async function openAnimePage(listEntry) {
-    return openLink(listEntry.anime.externalLink)
+    return openLink(listEntry.anime.externalLink);
 }
 
 /**
@@ -442,13 +449,13 @@ async function openAnimePage(listEntry) {
  */
 async function removeTabOnRemovedHook(tabId) {
     const currentTabs = (await browser.storage.local.get('CURRENT_TABS'))
-        .CURRENT_TABS
-    const data = currentTabs?.[tabId]
+        .CURRENT_TABS;
+    const data = currentTabs?.[tabId];
     if (!data) {
-        return
+        return;
     }
 
-    browser.tabs.onRemoved.removeListener(data.listener)
-    delete currentTabs[tabId]
-    await browser.storage.local.set({ CURRENT_TABS: currentTabs })
+    browser.tabs.onRemoved.removeListener(data.listener);
+    delete currentTabs[tabId];
+    await browser.storage.local.set({ CURRENT_TABS: currentTabs });
 }

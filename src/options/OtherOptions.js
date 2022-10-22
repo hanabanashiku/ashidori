@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect } from 'react'
-import { css } from '@emotion/react'
+import React, { useReducer, useEffect } from 'react';
+import { css } from '@emotion/react';
 import {
     Box,
     Typography,
@@ -9,80 +9,80 @@ import {
     Checkbox,
     RadioGroup,
     Radio,
-} from '@mui/material'
-import Settings from './Settings'
-import { NOTIFY_EPSIODE_ANSWERS, TITLE_LANGUAGE_PREFERENCES } from '../enums'
-import lang from 'lang'
+} from '@mui/material';
+import Settings from './Settings';
+import { NOTIFY_EPSIODE_ANSWERS, TITLE_LANGUAGE_PREFERENCES } from '../enums';
+import lang from 'lang';
 
 const reducer = (state, action) => {
     switch (action.type) {
         case 'init':
             return {
                 ...action.payload,
-            }
+            };
 
         case 'enableUpdating':
-            Settings.setListUpdatingEnabled(action.payload)
+            Settings.setListUpdatingEnabled(action.payload);
             return {
                 ...state,
                 listUpdatingEnabled: action.payload,
-            }
+            };
 
         case 'setUpdatePopup':
-            Settings.setShouldShowUpdatePopup(action.payload)
+            Settings.setShouldShowUpdatePopup(action.payload);
             return {
                 ...state,
                 shouldShowUpdatePopup: action.payload,
-            }
+            };
 
         case 'setAddPopup':
-            Settings.setShouldShowAddPopup(action.payload)
+            Settings.setShouldShowAddPopup(action.payload);
             return {
                 ...state,
                 shouldShowAddPopup: action.payload,
-            }
+            };
 
         case 'setEpisodeNotifications':
-            Settings.setNotifiyForNewEpisodes(action.payload)
+            Settings.setNotifiyForNewEpisodes(action.payload);
             return {
                 ...state,
                 shouldNotifiyForNewEpisodes: action.payload,
-            }
+            };
 
         case 'setUpdateDelay':
-            Settings.setShouldUpdateAfterMinutes(action.payload)
+            Settings.setShouldUpdateAfterMinutes(action.payload);
             return {
                 ...state,
                 updateDelay: action.payload,
-            }
+            };
 
         case 'setTitleLanguagePreference':
-            Settings.setTitleLanguagePreference(action.payload)
+            Settings.setTitleLanguagePreference(action.payload);
             return {
                 ...state,
                 titleLanguagePreference: action.payload,
-            }
+            };
 
         default:
-            return state
+            return state;
     }
-}
+};
 
 const OtherOptions = () => {
-    const [state, dispatch] = useReducer(reducer, null)
+    const [state, dispatch] = useReducer(reducer, null);
 
     // init state
     useEffect(() => {
-        ;(async () => {
+        (async () => {
             // Get settings
-            const listUpdatingEnabled = Settings.listUpdatingEnabled()
-            const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup()
-            const shouldShowAddPopup = Settings.shouldShowAddPopup()
+            const listUpdatingEnabled = Settings.listUpdatingEnabled();
+            const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
+            const shouldShowAddPopup = Settings.shouldShowAddPopup();
             const shouldNotifiyForNewEpisodes =
-                Settings.shouldNotifiyForNewEpisodes()
-            const updateDelay = Settings.shouldUpdateAfterMinutes()
+                Settings.shouldNotifiyForNewEpisodes();
+            const updateDelay = Settings.shouldUpdateAfterMinutes();
             const titleLanguagePreference =
-                Settings.getTitleLanguagePreference()
+                Settings.getTitleLanguagePreference();
 
             dispatch({
                 type: 'init',
@@ -95,54 +95,54 @@ const OtherOptions = () => {
                     updateDelay: await updateDelay,
                     titleLanguagePreference: await titleLanguagePreference,
                 },
-            })
-        })()
-    }, [dispatch])
+            });
+        })();
+    }, [dispatch]);
 
     const toggleListUpdateEnabled = (value) => {
         dispatch({
             type: 'enableUpdating',
             payload: value,
-        })
-    }
+        });
+    };
 
     const toggleUpdatePopup = (value) => {
         dispatch({
             type: 'setUpdatePopup',
             payload: value,
-        })
-    }
+        });
+    };
 
     const toggleAddPopup = (value) => {
         dispatch({
             type: 'setAddPopup',
             payload: value,
-        })
-    }
+        });
+    };
 
     const setEpisodeNotifications = (value) => {
         dispatch({
             type: 'setEpisodeNotifications',
             payload: value,
-        })
-    }
+        });
+    };
 
     const setUpdateMinutes = (value) => {
         dispatch({
             type: 'setUpdateDelay',
             payload: value,
-        })
-    }
+        });
+    };
 
     const setTitleLanguagePreference = (value) => {
         dispatch({
             type: 'setTitleLanguagePreference',
             payload: value,
-        })
-    }
+        });
+    };
 
     if (state === null) {
-        return null
+        return null;
     }
 
     return (
@@ -331,7 +331,7 @@ const OtherOptions = () => {
                 </RadioGroup>
             </FormGroup>
         </Box>
-    )
-}
+    );
+};
 
-export default OtherOptions
+export default OtherOptions;

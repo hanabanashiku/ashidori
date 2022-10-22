@@ -1,27 +1,27 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Paper, Box, Typography, Chip, Stack, Link } from '@mui/material'
-import { Link as LinkIcon } from '@mui/icons-material'
-import Description from './Description'
-import StreamingLinks from './StreamingLinks'
-import { ANIME_STATUS } from '../../enums'
-import AnimeSeries from '../../models/AnimeSeries'
-import lang from 'lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Paper, Box, Typography, Chip, Stack, Link } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
+import Description from './Description';
+import StreamingLinks from './StreamingLinks';
+import { ANIME_STATUS } from '../../enums';
+import AnimeSeries from '../../models/AnimeSeries';
+import lang from 'lang';
 
 const AnimeData = ({ anime }) => {
     function animeStatusString(status) {
         switch (status) {
             case ANIME_STATUS.AIRING:
-                return lang.airing
+                return lang.airing;
             case ANIME_STATUS.ANNOUNCED:
-                return lang.announced
+                return lang.announced;
             case ANIME_STATUS.FINISHED:
-                return lang.finished
+                return lang.finished;
             case ANIME_STATUS.UNRELEASED:
-                return lang.unreleased
+                return lang.unreleased;
             case ANIME_STATUS.UPCOMING:
-                return lang.upcoming
+                return lang.upcoming;
         }
     }
 
@@ -139,10 +139,10 @@ const AnimeData = ({ anime }) => {
             </Box>
             <StreamingLinks links={anime.streamingLinks} />
         </Paper>
-    )
-}
+    );
+};
 AnimeData.propTypes = {
     anime: PropTypes.instanceOf(AnimeSeries).isRequired,
-}
+};
 
-export default AnimeData
+export default AnimeData;

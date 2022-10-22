@@ -1,7 +1,7 @@
-import browser from 'webextension-polyfill'
-import levenshtein from 'js-levenshtein'
-import UserData from '../models/UserData'
-import { PROVIDERS } from '../enums'
+import browser from 'webextension-polyfill';
+import levenshtein from 'js-levenshtein';
+import UserData from '../models/UserData';
+import { PROVIDERS } from '../enums';
 
 /* istanbul ignore next */
 export default class ApiProvider {
@@ -12,15 +12,15 @@ export default class ApiProvider {
     static async getSelectedProvider() {
         const result = await browser.storage.local.get({
             selected_provider: PROVIDERS.UNSELECTED,
-        })
-        return result['selected_provider']
+        });
+        return result['selected_provider'];
     }
 
     /**
      * @returns The provider type for this api client.
      */
     get providerType() {
-        return PROVIDERS.UNSELECTED
+        return PROVIDERS.UNSELECTED;
     }
 
     /**
@@ -28,7 +28,7 @@ export default class ApiProvider {
      * @returns {Promise<Library>} The user's library.
      */
     async getAnimeList() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -40,7 +40,7 @@ export default class ApiProvider {
      * @returns {Promise<[LibraryEntry]>} The list of library entries.
      */
     async getAnimeListByStatus() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -49,7 +49,7 @@ export default class ApiProvider {
      * @returns {Promise<LibraryEntry>} A library entry containing the user's current watch status.
      */
     async getSingleLibraryEntry() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -60,7 +60,7 @@ export default class ApiProvider {
      * @see LibraryEntry for valid parameters.
      */
     async createLibraryItem() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -71,7 +71,7 @@ export default class ApiProvider {
      * @see LibraryEntry for valid parameters.
      */
     async updateLibraryItem() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -80,7 +80,7 @@ export default class ApiProvider {
      * @returns {Promise<*>} The delete promise.
      */
     async removeLibraryItem() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -91,7 +91,7 @@ export default class ApiProvider {
      * @returns {PagedData<AnimeSeries>} The list of found series.
      */
     async findAnime() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -101,34 +101,34 @@ export default class ApiProvider {
      */
     async resolveLibraryEntryFromAnimeEpisode(animeEpisode) {
         if (!animeEpisode) {
-            return null
+            return null;
         }
 
         const searchBySeason = await this.findAnime(
             `${animeEpisode.season.name}`,
             0,
             5
-        )
+        );
         let result = searchBySeason.data.find((anime) =>
             ApiProvider.verifyResolvedAnime(anime, animeEpisode)
-        )
+        );
 
         if (!result) {
             const searchBySeries = await this.findAnime(
                 animeEpisode.series.title,
                 0,
                 5
-            )
+            );
             result = searchBySeries.data.find((anime) =>
                 ApiProvider.verifyResolvedAnime(anime, animeEpisode)
-            )
+            );
         }
 
         if (!result) {
-            return null
+            return null;
         }
 
-        return this.getSingleLibraryEntryByAnime(result.id)
+        return this.getSingleLibraryEntryByAnime(result.id);
     }
 
     /**
@@ -137,9 +137,9 @@ export default class ApiProvider {
    * @param {AnimeEpisode} episode 
    */
     static verifyResolvedAnime(series, episode) {
-        const STRING_THRESHOLD = 7
-        const extractedTitle = this.normalizeString(episode.series.title)
-        const guessTitle = this.normalizeString(series.englishTitle)
+        const STRING_THRESHOLD = 7;
+        const extractedTitle = this.normalizeString(episode.series.title);
+        const guessTitle = this.normalizeString(series.englishTitle);
         return (
             levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
             levenshtein(extractedTitle, guessTitle) < STRING_THRESHOLD ||
@@ -151,7 +151,7 @@ export default class ApiProvider {
                 this.normalizeString(episode.season.name),
                 this.normalizeString(series.englishTitle)
             ) < STRING_THRESHOLD
-        )
+        );
     }
 
     /**
@@ -159,24 +159,24 @@ export default class ApiProvider {
      * @returns {string}
      */
     static normalizeString(str) {
-        return str.toLowerCase().replace(/^[a-z0-9]/g, '')
+        return str.toLowerCase().replace(/^[a-z0-9]/g, '');
     }
     /**
      * Gets data about the currently authenticated user.
      * @returns {Promise<UserData>} A promise containing data about the current user.
      */
     async getUserData() {
-        const data = await browser.storage.local.get({ userData: null })
+        const data = await browser.storage.local.get({ userData: null });
         if (!data.userData) {
-            return null
+            return null;
         }
-        return new UserData(data.userData)
+        return new UserData(data.userData);
     }
 
     async fetchUserData(info) {
         return browser.storage.local.set({
             userData: info,
-        })
+        });
     }
 
     /**
@@ -186,7 +186,7 @@ export default class ApiProvider {
      * @returns {Promise<boolean>} True on success.
      */
     authorize() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -195,7 +195,7 @@ export default class ApiProvider {
      * @throws
      */
     refresh() {
-        return ApiProvider.#defaultImplAsync()
+        return ApiProvider.#defaultImplAsync();
     }
 
     /**
@@ -205,12 +205,12 @@ export default class ApiProvider {
     async shouldRefresh() {
         const data = await browser.storage.local.get({
             access_token_expires_on: null,
-        })
-        const expirationDate = data['access_token_expires_on']
+        });
+        const expirationDate = data['access_token_expires_on'];
         return (
             expirationDate != null &&
             new Date().getTime() / 1000 > data['access_token_expires_on'] - 600
-        )
+        );
     }
 
     /**
@@ -218,7 +218,7 @@ export default class ApiProvider {
      * @returns {Promise<boolean>} True if the user is signed in.
      */
     async isAuthenticated() {
-        return !!(await this.getAuthToken())
+        return !!(await this.getAuthToken());
     }
 
     /**
@@ -232,23 +232,23 @@ export default class ApiProvider {
             'refresh_token',
             'access_token_expires_on',
             'userData',
-        ])
+        ]);
     }
 
     /**
      * @returns {Promise<string>} The bearer token used to authenticate.
      */
     async getAuthToken() {
-        const result = await browser.storage.local.get({ access_token: null })
-        return result['access_token']
+        const result = await browser.storage.local.get({ access_token: null });
+        return result['access_token'];
     }
 
     /**
      * @returns {Promise<string>} The current refresh token.
      */
     async getRefreshToken() {
-        const result = await browser.storage.local.get({ refresh_token: null })
-        return result['refresh_token']
+        const result = await browser.storage.local.get({ refresh_token: null });
+        return result['refresh_token'];
     }
 
     /**
@@ -257,7 +257,7 @@ export default class ApiProvider {
      * @see providers enum.
      */
     async _setProvider(provider) {
-        await browser.storage.local.set({ selected_provider: provider })
+        await browser.storage.local.set({ selected_provider: provider });
     }
 
     /**
@@ -269,7 +269,7 @@ export default class ApiProvider {
         await browser.storage.local.set({
             access_token: token,
             access_token_expires_on: expirationTick,
-        })
+        });
     }
 
     /**
@@ -277,7 +277,7 @@ export default class ApiProvider {
      * @param {string} token The refresh token to set.
      */
     async _setRefreshToken(token) {
-        await browser.storage.local.set({ refresh_token: token })
+        await browser.storage.local.set({ refresh_token: token });
     }
 
     /**
@@ -287,18 +287,18 @@ export default class ApiProvider {
      */
     async _requestInterceptor(config) {
         if (await this.shouldRefresh()) {
-            await this.refresh()
+            await this.refresh();
         }
 
-        const token = await this.getAuthToken()
+        const token = await this.getAuthToken();
         if (!token) {
-            throw Error('Call authorize before making a request.')
+            throw Error('Call authorize before making a request.');
         }
-        config.headers.Authorization = `Bearer ${token}`
-        return config
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
     }
 
     static #defaultImplAsync() {
-        return Promise.reject('Not implemented')
+        return Promise.reject('Not implemented');
     }
 }

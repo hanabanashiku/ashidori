@@ -3,18 +3,18 @@ export const PROVIDERS = {
     MY_ANIME_LIST: 0,
     KITSU: 1,
     ANILIST: 2,
-}
+};
 
 export const BROWSER = {
     CHROMIUM: 0,
     FIREFOX: 1,
-}
+};
 
 export const PROVIDER_NAMES = {
     0: 'My Anime List',
     1: 'Kitsu',
     2: 'AniList',
-}
+};
 
 export const SERVICES = {
     CRUNCHYROLL: 0,
@@ -26,7 +26,7 @@ export const SERVICES = {
     TUBITV: 6,
     VRV: 7,
     DISNEY_PLUS: 8,
-}
+};
 
 export const SERVICE_NAMES = {
     0: 'Crunchyroll',
@@ -38,13 +38,13 @@ export const SERVICE_NAMES = {
     6: 'TubiTV',
     7: 'VRV',
     8: 'Disney+',
-}
+};
 
 export const NOTIFY_EPSIODE_ANSWERS = {
     NEVER: 'never',
     ALWAYS: 'always',
     LATEST: 'latest',
-}
+};
 
 export const LIST_STATUS = {
     NOT_WATCHING: 0,
@@ -53,7 +53,7 @@ export const LIST_STATUS = {
     DROPPED: 3,
     ON_HOLD: 4,
     COMPLETED: 5,
-}
+};
 
 export const ANIME_STATUS = {
     AIRING: 0,
@@ -61,9 +61,9 @@ export const ANIME_STATUS = {
     ANNOUNCED: 2,
     UNRELEASED: 3,
     UPCOMING: 4,
-}
+};
 
 export const TITLE_LANGUAGE_PREFERENCES = {
     ROMAJI: 0,
     UI_LANGUAGE: 1,
-}
+};

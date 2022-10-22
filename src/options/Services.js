@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import {
     Box,
     Typography,
@@ -8,34 +8,34 @@ import {
     Switch,
     Button,
     ButtonGroup,
-} from '@mui/material'
-import _ from 'lodash'
-import Settings from './Settings'
-import { SERVICES } from '../enums'
-import lang from 'lang'
+} from '@mui/material';
+import _ from 'lodash';
+import Settings from './Settings';
+import { SERVICES } from '../enums';
+import lang from 'lang';
 
 const Services = () => {
-    const [selection, setSelection] = useState(null)
+    const [selection, setSelection] = useState(null);
 
     useEffect(() => {
         Settings.getEnabledServices().then((providers) =>
             setSelection(providers)
-        )
-    }, [])
+        );
+    }, []);
 
     const onChange = async (value, checked) => {
         const newArray = checked
             ? _.concat(selection, value)
-            : _.without(selection, value)
-        setSelection(newArray)
-        return Settings.setEnabledServices(newArray)
-    }
+            : _.without(selection, value);
+        setSelection(newArray);
+        return Settings.setEnabledServices(newArray);
+    };
 
     const setAll = async (enabled) => {
-        const newArray = enabled ? Object.values(SERVICES) : []
-        setSelection(newArray)
-        return Settings.setEnabledServices(newArray)
-    }
+        const newArray = enabled ? Object.values(SERVICES) : [];
+        setSelection(newArray);
+        return Settings.setEnabledServices(newArray);
+    };
 
     const ServiceCheckbox = ({ name, image, value }) => (
         <InputLabel
@@ -62,15 +62,15 @@ const Services = () => {
             />
             <img src={image} alt={name} title={name} height="48px" />
         </InputLabel>
-    )
+    );
     ServiceCheckbox.propTypes = {
         name: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
-    }
+    };
 
     if (selection === null) {
-        return null
+        return null;
     }
 
     return (
@@ -139,7 +139,7 @@ const Services = () => {
                 <Button onClick={() => setAll(false)}>{lang.disableAll}</Button>
             </ButtonGroup>
         </Box>
-    )
-}
+    );
+};
 
-export default Services
+export default Services;

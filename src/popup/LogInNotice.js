@@ -1,8 +1,8 @@
-import React from 'react'
-import { css } from '@emotion/react'
-import { openOptions } from '../helpers/extensionHelpers'
-import { Box, Typography, Button } from '@mui/material'
-import lang from 'lang'
+import React from 'react';
+import { css } from '@emotion/react';
+import { openOptions } from '../helpers/extensionHelpers';
+import { Box, Typography, Button } from '@mui/material';
+import lang from 'lang';
 
 const LogInNotice = () => {
     return (
@@ -31,7 +31,7 @@ const LogInNotice = () => {
                 {lang.logInButton}
             </Button>
         </Box>
-    )
-}
+    );
+};
 
-export default LogInNotice
+export default LogInNotice;

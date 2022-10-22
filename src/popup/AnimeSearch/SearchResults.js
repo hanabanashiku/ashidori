@@ -1,26 +1,26 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Alert, Typography } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
-import Title from '../AnimeList/Title'
-import LoadingOverlay from '../AnimeList/LoadingOverlay'
-import PagedData from '../../models/PagedData'
-import lang from '../../lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Alert, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import Title from '../AnimeList/Title';
+import LoadingOverlay from '../AnimeList/LoadingOverlay';
+import PagedData from '../../models/PagedData';
+import lang from '../../lang';
 
 const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
-    const isError = results === 'error'
+    const isError = results === 'error';
 
     if (!results) {
         return (
             <Typography height="450px" my="32px" mx="8px" textAlign="center">
                 {lang.enterSearchTerm}
             </Typography>
-        )
+        );
     }
 
     if (isError) {
-        return <Alert severity="error">{lang.errorOccurredOnSearch}</Alert>
+        return <Alert severity="error">{lang.errorOccurredOnSearch}</Alert>;
     }
 
     const columns = [
@@ -43,14 +43,14 @@ const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
             width: 100,
             sortable: false,
         },
-    ]
+    ];
 
     const rows = results.data.map((anime) => ({
         id: anime.id,
         title: anime.title,
         episodeCount: anime.episodeCount ?? lang.ongoing,
         startSeason: anime.startSeason,
-    }))
+    }));
 
     return (
         <DataGrid
@@ -74,8 +74,8 @@ const SearchResults = ({ results, showAnime, page, setPage, loading }) => {
                 LoadingOverlay: LoadingOverlay,
             }}
         />
-    )
-}
+    );
+};
 SearchResults.propTypes = {
     results: PropTypes.oneOfType([
         PropTypes.string,
@@ -85,10 +85,10 @@ SearchResults.propTypes = {
     page: PropTypes.number,
     setPage: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
-}
+};
 SearchResults.defaultProps = {
     results: null,
     page: 0,
-}
+};
 
-export default SearchResults
+export default SearchResults;

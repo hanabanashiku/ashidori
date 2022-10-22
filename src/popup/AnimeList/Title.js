@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Popover, Typography } from '@mui/material'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Popover, Typography } from '@mui/material';
 
 const Title = ({ value }) => {
-    const [anchorEl, setAnchorEl] = useState(null)
+    const [anchorEl, setAnchorEl] = useState(null);
 
     function handlePopoverOpen(e) {
-        setAnchorEl(e.currentTarget)
+        setAnchorEl(e.currentTarget);
     }
 
     function handlePopoverClose() {
-        setAnchorEl(null)
+        setAnchorEl(null);
     }
 
     return (
@@ -43,10 +43,10 @@ const Title = ({ value }) => {
                 </Typography>
             </Popover>
         </>
-    )
-}
+    );
+};
 Title.propTypes = {
     value: PropTypes.string.isRequired,
-}
+};
 
-export default Title
+export default Title;

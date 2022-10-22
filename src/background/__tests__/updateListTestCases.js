@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { LIST_STATUS, BROWSER } from '../../enums'
+import { LIST_STATUS, BROWSER } from '../../enums';
 
 export const updatePopupTestCases = [
     [
@@ -26,7 +26,7 @@ export const updatePopupTestCases = [
         BROWSER.FIREFOX,
         "Looks like you've finished watching episode 1 of My Hero Academia. Click on this notification to add the show to john.doe's anime list.",
     ],
-]
+];
 
 export const updatedPopupTestCases = ['chrome', 'firefox']
     .map((browser) => [
@@ -99,4 +99,4 @@ export const updatedPopupTestCases = ['chrome', 'firefox']
             'My Hero Academia has been updated to episode 115.',
         ],
     ])
-    .flat(1)
+    .flat(1);

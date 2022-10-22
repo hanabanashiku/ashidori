@@ -1,12 +1,12 @@
-import browser from 'webextension-polyfill'
-import _ from 'lodash'
+import browser from 'webextension-polyfill';
+import _ from 'lodash';
 import {
     PROVIDERS,
     ANIME_STATUS,
     SERVICES,
     TITLE_LANGUAGE_PREFERENCES,
-} from '../enums'
-import lang from 'lang'
+} from '../enums';
+import lang from 'lang';
 
 /**
  * An anime series.
@@ -15,22 +15,22 @@ export default class AnimeSeries {
     constructor(data = {}) {
         switch (data.service) {
             case SERVICES.CRUNCHYROLL:
-                this.#mapFromCrunchyroll(data)
-                return
+                this.#mapFromCrunchyroll(data);
+                return;
         }
 
         switch (data.provider) {
             case PROVIDERS.KITSU:
-                this.#mapFromKitsu(data)
-                return
+                this.#mapFromKitsu(data);
+                return;
 
             case PROVIDERS.MY_ANIME_LIST:
-                this.#mapFromMal(data)
-                return
+                this.#mapFromMal(data);
+                return;
 
             default:
-                _.defaultsDeep(this, data, DEFAULT_VALUES)
-                return this
+                _.defaultsDeep(this, data, DEFAULT_VALUES);
+                return this;
         }
     }
 
@@ -38,49 +38,49 @@ export default class AnimeSeries {
      * @returns {number|string} The series id.
      */
     get id() {
-        return this._id
+        return this._id;
     }
 
     /**
      * @returns {string} The title of the series.
      */
     get title() {
-        return this._title
+        return this._title;
     }
 
     /**
      * @returns {string} The translated title of the series.
      */
     get englishTitle() {
-        return this._englishTitle
+        return this._englishTitle;
     }
 
     /**
      * @returns {string} The synopsis of the series.
      */
     get description() {
-        return this._description
+        return this._description;
     }
 
     /**
      * @returns {string} The cover image of the series.
      */
     get coverImageUrl() {
-        return this._coverImage
+        return this._coverImage;
     }
 
     /**
      * @returns {Date} The date the series started airing.
      */
     get startDate() {
-        return this._startDate
+        return this._startDate;
     }
 
     /**
      * @returns {Date?} The date the series finished airing.
      */
     get endDate() {
-        return this._endDate
+        return this._endDate;
     }
 
     /**
@@ -88,24 +88,24 @@ export default class AnimeSeries {
      */
     get startSeason() {
         if (!this.startDate) {
-            return ''
+            return '';
         }
 
-        let year = this.startDate.getFullYear()
-        const month = this.startDate.getMonth() + 1
-        let season
+        let year = this.startDate.getFullYear();
+        const month = this.startDate.getMonth() + 1;
+        let season;
 
         if (month >= 1 && month < 4) {
-            season = lang.winter
+            season = lang.winter;
         } else if (month >= 4 && month < 7) {
-            season = lang.spring
+            season = lang.spring;
         } else if (month >= 7 && month < 10) {
-            season = lang.summer
+            season = lang.summer;
         } else {
-            season = lang.fall
+            season = lang.fall;
         }
 
-        return `${season} ${year}`
+        return `${season} ${year}`;
     }
 
     /**
@@ -113,56 +113,56 @@ export default class AnimeSeries {
      * @see ANIME_STATUS
      */
     get status() {
-        return this._status
+        return this._status;
     }
 
     /**
      * @returns {true} if the series is airing.
      */
     get isAiring() {
-        return this._status === ANIME_STATUS.AIRING
+        return this._status === ANIME_STATUS.AIRING;
     }
 
     /**
      * @returns {number} The number of episodes.
      */
     get episodeCount() {
-        return this._episodeCount
+        return this._episodeCount;
     }
 
     /**
      * @returns {number} The number of minutes per episode.
      */
     get episodeLength() {
-        return this._episodeLength
+        return this._episodeLength;
     }
 
     /**
      * @returns {number} The number of seasons.
      */
     get seasonCount() {
-        return this._seasonCount
+        return this._seasonCount;
     }
 
     /**
      * @returns {[string]} A list of genres for the anime.
      */
     get genres() {
-        return this._genres
+        return this._genres;
     }
 
     /**
      * @returns {string} A link to open the series on the list website.
      */
     get externalLink() {
-        return this._link
+        return this._link;
     }
 
     /**
      * @returns {object} A dictionary of Providers to links.
      */
     get streamingLinks() {
-        return this._streamingLinks
+        return this._streamingLinks;
     }
 
     #mapFromKitsu(data) {
@@ -172,7 +172,7 @@ export default class AnimeSeries {
                 canonicalTitle: data.attributes.canonicalTitle,
             },
             data.__langPref
-        )
+        );
 
         const streamingLinks =
             data.relationships.streamingLinks.data
@@ -183,7 +183,7 @@ export default class AnimeSeries {
                     )
                 )
                 ?.filter((item) => !!item)
-                ?.map((link) => link.attributes.url) ?? []
+                ?.map((link) => link.attributes.url) ?? [];
 
         const genres =
             data.relationships.genres.data
@@ -194,7 +194,7 @@ export default class AnimeSeries {
                                 inc.type === 'genres' && inc.id === genre.id
                         )?.attributes?.name
                 )
-                .filter((genre) => !!genre) ?? []
+                .filter((genre) => !!genre) ?? [];
 
         _.defaultsDeep(
             this,
@@ -220,7 +220,7 @@ export default class AnimeSeries {
                 _link: `https://kitsu.io/anime/${data.id}`,
             },
             DEFAULT_VALUES
-        )
+        );
     }
 
     #mapFromMal(data) {
@@ -230,9 +230,9 @@ export default class AnimeSeries {
                 canonicalTitle: data.title,
             },
             data.__langPref
-        )
+        );
 
-        const genres = data.genres.map((genre) => genre.name)
+        const genres = data.genres.map((genre) => genre.name);
 
         _.defaultsDeep(
             this,
@@ -257,7 +257,7 @@ export default class AnimeSeries {
                 _link: `https://myanimelist.net/anime/${data.id}`,
             },
             DEFAULT_VALUES
-        )
+        );
     }
 
     #mapFromCrunchyroll(data) {
@@ -278,32 +278,32 @@ export default class AnimeSeries {
                 _link: `https://beta-api.crunchyroll.com${data.__href__}`,
             },
             DEFAULT_VALUES
-        )
+        );
     }
 
     #mapTitle(titles, preference) {
-        const language = browser.i18n.getUILanguage().replace('-', '_')
+        const language = browser.i18n.getUILanguage().replace('-', '_');
 
         if (preference === TITLE_LANGUAGE_PREFERENCES.ROMAJI) {
-            return titles.canonicalTitle
+            return titles.canonicalTitle;
         }
 
         const exactMatch = Object.keys(titles).find(
             (key) => key.toLowerCase == language.toLowerCase()
-        )
+        );
         if (exactMatch) {
-            return titles[exactMatch]
+            return titles[exactMatch];
         }
 
         function normalize(lang) {
-            return lang.split(/[-_]/)[0].toLowerCase()
+            return lang.split(/[-_]/)[0].toLowerCase();
         }
 
-        const normalizedLanguage = normalize(language)
+        const normalizedLanguage = normalize(language);
         const resultKey = Object.keys(titles)
             .filter((key) => key !== 'en_jp')
-            .find((key) => normalize(key) === normalizedLanguage)
-        return (resultKey && titles[resultKey]) || titles.canonicalTitle
+            .find((key) => normalize(key) === normalizedLanguage);
+        return (resultKey && titles[resultKey]) || titles.canonicalTitle;
     }
 
     /**
@@ -312,25 +312,25 @@ export default class AnimeSeries {
      * @see PROVIDERS
      */
     #mapStreamingLinks(links = []) {
-        const result = {}
-        const regex = /(?:www\.)?([a-zA-Z-]+\.(?:com|net|org|io|tv|co))/g
+        const result = {};
+        const regex = /(?:www\.)?([a-zA-Z-]+\.(?:com|net|org|io|tv|co))/g;
 
         for (const link of links) {
-            const domain = regex.exec(link)?.[1]
-            regex.lastIndex = 0
+            const domain = regex.exec(link)?.[1];
+            regex.lastIndex = 0;
 
             /* istanbul ignore if */
             if (
                 !domain ||
                 !Object.prototype.hasOwnProperty.call(SERVICE_DOMAINS, domain)
             ) {
-                continue
+                continue;
             }
 
-            result[SERVICE_DOMAINS[domain]] = link
+            result[SERVICE_DOMAINS[domain]] = link;
         }
 
-        return result
+        return result;
     }
 }
 
@@ -349,7 +349,7 @@ const DEFAULT_VALUES = {
     _genres: [],
     _streamingLinks: {},
     _link: 'about:blank',
-}
+};
 
 const KITSU_ANIME_STATUS = {
     current: ANIME_STATUS.AIRING,
@@ -357,13 +357,13 @@ const KITSU_ANIME_STATUS = {
     tba: ANIME_STATUS.ANNOUNCED,
     unreleased: ANIME_STATUS.UNRELEASED,
     upcoming: ANIME_STATUS.UPCOMING,
-}
+};
 
 const MAL_ANIME_STATUS = {
     finished_airing: ANIME_STATUS.FINISHED,
     currently_airing: ANIME_STATUS.AIRING,
     not_yet_aired: ANIME_STATUS.UPCOMING,
-}
+};
 
 const SERVICE_DOMAINS = {
     'crunchyroll.com': SERVICES.CRUNCHYROLL,
@@ -375,4 +375,4 @@ const SERVICE_DOMAINS = {
     'amazon.com': SERVICES.AMAZON_PRIME,
     'vrv.co': SERVICES.VRV,
     'disneyplus.com': SERVICES.DISNEY_PLUS,
-}
+};

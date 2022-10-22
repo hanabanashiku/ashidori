@@ -1,15 +1,15 @@
 /* istanbul ignore file */
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Theme from '../Theme'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Theme from '../Theme';
 
 // Pages
-import Options from './Options'
-import KitsuLogin from './SignIn/Kitsu'
+import Options from './Options';
+import KitsuLogin from './SignIn/Kitsu';
 
-const root = document.getElementById('root')
-const name = window.location.pathname.split('/').pop()
+const root = document.getElementById('root');
+const name = window.location.pathname.split('/').pop();
 
 ReactDOM.render(
     <Theme>
@@ -24,4 +24,4 @@ ReactDOM.render(
         </BrowserRouter>
     </Theme>,
     root
-)
+);

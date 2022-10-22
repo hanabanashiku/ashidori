@@ -1,30 +1,30 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { DataGrid } from '@mui/x-data-grid'
-import ApiProvider from '../../providers/ApiProvider'
-import LoadingOverlay from './LoadingOverlay'
-import { buildColumns, editableColumns } from './columns'
-import { LIST_STATUS } from '../../enums'
+import React, { useEffect, useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { DataGrid } from '@mui/x-data-grid';
+import ApiProvider from '../../providers/ApiProvider';
+import LoadingOverlay from './LoadingOverlay';
+import { buildColumns, editableColumns } from './columns';
+import { LIST_STATUS } from '../../enums';
 
-const DEFAULT_PAGE_SIZE = 25
+const DEFAULT_PAGE_SIZE = 25;
 
 const AnimeList = ({ status, hide, showAnime, showError, api }) => {
-    const [page, setPage] = useState(0)
-    const [listRefresher, refreshList] = useState(0)
-    const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
-    const [apiState, setApiState] = useState('loading')
-    const [items, setItems] = useState([])
-    const [itemCount, setItemCount] = useState(0)
+    const [page, setPage] = useState(0);
+    const [listRefresher, refreshList] = useState(0);
+    const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+    const [apiState, setApiState] = useState('loading');
+    const [items, setItems] = useState([]);
+    const [itemCount, setItemCount] = useState(0);
 
     useEffect(() => {
         if (hide) {
-            return
+            return;
         }
-        setApiState('loading')
-        ;(async () => {
+        setApiState('loading');
+        (async () => {
             if (!api) {
-                return
+                return;
             }
 
             try {
@@ -37,15 +37,19 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
                               'lastUpdated',
                               'desc'
                           )
-                        : await api.getAnimeListByStatus(status, page, pageSize)
-                setApiState('done')
-                setItems(data.data)
-                setItemCount(data.total)
+                        : await api.getAnimeListByStatus(
+                              status,
+                              page,
+                              pageSize
+                          );
+                setApiState('done');
+                setItems(data.data);
+                setItemCount(data.total);
             } catch {
-                setApiState('error')
-                showError()
+                setApiState('error');
+                showError();
             }
-        })()
+        })();
     }, [
         api,
         hide,
@@ -56,21 +60,21 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
         setItems,
         setPage,
         setApiState,
-    ])
+    ]);
 
     function refresh() {
-        refreshList((v) => v + 1)
+        refreshList((v) => v + 1);
     }
 
     function onCellClick(params, e) {
-        e.defaultMuiPrevented = true
+        e.defaultMuiPrevented = true;
         if (editableColumns.includes(params.field)) {
-            return
+            return;
         }
-        showAnime(params.id)
+        showAnime(params.id);
     }
 
-    const columns = useMemo(() => buildColumns(status), [status])
+    const columns = useMemo(() => buildColumns(status), [status]);
 
     /**
      *
@@ -82,7 +86,7 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
             id: item.id,
             api,
             refresh,
-        }
+        };
 
         return {
             id: item.id,
@@ -98,12 +102,12 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
                 ...common,
                 rating: item.rating,
             },
-        }
-    }
-    const rows = items.map((item) => buildRow(item))
+        };
+    };
+    const rows = items.map((item) => buildRow(item));
 
     if (hide) {
-        return null
+        return null;
     }
 
     return (
@@ -131,14 +135,14 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
                 LoadingOverlay: LoadingOverlay,
             }}
         />
-    )
-}
+    );
+};
 AnimeList.propTypes = {
     status: PropTypes.oneOf(Object.values(LIST_STATUS)).isRequired,
     hide: PropTypes.bool.isRequired,
     showAnime: PropTypes.func.isRequired,
     showError: PropTypes.func.isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
-}
+};
 
-export default AnimeList
+export default AnimeList;

@@ -1,13 +1,13 @@
 /* istanbul ignore file */
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Theme from '../Theme'
-import Popup from './Popup'
-import DetailWrapper from './DetailWrapper'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Theme from '../Theme';
+import Popup from './Popup';
+import DetailWrapper from './DetailWrapper';
 
-const root = document.getElementById('root')
-const name = window.location.pathname.split('/').pop()
+const root = document.getElementById('root');
+const name = window.location.pathname.split('/').pop();
 
 ReactDOM.render(
     <Theme>
@@ -22,4 +22,4 @@ ReactDOM.render(
         </BrowserRouter>
     </Theme>,
     root
-)
+);

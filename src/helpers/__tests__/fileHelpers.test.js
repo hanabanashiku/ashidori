@@ -1,5 +1,5 @@
-import { getVideoScript } from '../fileHelpers'
-import { SERVICES } from '../../enums'
+import { getVideoScript } from '../fileHelpers';
+import { SERVICES } from '../../enums';
 
 describe('File helpers', () => {
     describe('getVideoScript', () => {
@@ -11,23 +11,23 @@ describe('File helpers', () => {
                         js: 'crunchyroll.js',
                     },
                 ],
-            })
-        })
+            });
+        });
 
         afterEach(() => {
-            jest.clearAllMocks()
-        })
+            jest.clearAllMocks();
+        });
 
         it('returns empty by default', () => {
-            const actual = getVideoScript(null)
+            const actual = getVideoScript(null);
 
-            expect(actual).toBe('')
-        })
+            expect(actual).toBe('');
+        });
 
         it('returns for crunchyroll services', () => {
-            const actual = getVideoScript(SERVICES.CRUNCHYROLL)
+            const actual = getVideoScript(SERVICES.CRUNCHYROLL);
 
-            expect(actual).toBe('crunchyroll.js')
-        })
-    })
-})
+            expect(actual).toBe('crunchyroll.js');
+        });
+    });
+});

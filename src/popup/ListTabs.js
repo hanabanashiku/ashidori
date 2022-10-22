@@ -1,32 +1,32 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Tabs, Tab, Fab } from '@mui/material'
-import { Search as SearchIcon } from '@mui/icons-material'
-import ApiProvider from '../providers/ApiProvider'
-import AnimeList from './AnimeList'
-import CurrentAnimeDisplay from './CurrentAnimeDisplay'
-import { LIST_STATUS } from '../enums'
-import lang from 'lang'
-import ErrorDisplay from './ErrorDisplay'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Tabs, Tab, Fab } from '@mui/material';
+import { Search as SearchIcon } from '@mui/icons-material';
+import ApiProvider from '../providers/ApiProvider';
+import AnimeList from './AnimeList';
+import CurrentAnimeDisplay from './CurrentAnimeDisplay';
+import { LIST_STATUS } from '../enums';
+import lang from 'lang';
+import ErrorDisplay from './ErrorDisplay';
 
 export const TABS = {
     ...LIST_STATUS,
-}
+};
 
 const ListTabs = ({ showAnime, api, toggleSearch }) => {
-    const [value, setValue] = useState(TABS.CURRENT)
-    const [showError, setError] = useState(false)
+    const [value, setValue] = useState(TABS.CURRENT);
+    const [showError, setError] = useState(false);
 
     const tabProps = (tab) => ({
         hide: tab !== value,
         showAnime,
         api,
         showError: () => setError(true),
-    })
+    });
 
     if (showError) {
-        return <ErrorDisplay />
+        return <ErrorDisplay />;
     }
 
     return (
@@ -77,12 +77,12 @@ const ListTabs = ({ showAnime, api, toggleSearch }) => {
                 <SearchIcon />
             </Fab>
         </>
-    )
-}
+    );
+};
 ListTabs.propTypes = {
     showAnime: PropTypes.func.isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     toggleSearch: PropTypes.func.isRequired,
-}
+};
 
-export default ListTabs
+export default ListTabs;

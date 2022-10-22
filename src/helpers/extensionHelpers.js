@@ -1,28 +1,28 @@
-import browser from 'webextension-polyfill'
-import { v4 as uuid } from 'uuid'
-import { BROWSER } from '../enums'
+import browser from 'webextension-polyfill';
+import { v4 as uuid } from 'uuid';
+import { BROWSER } from '../enums';
 
 export function getRootPath() {
-    return browser.runtime.getURL('')
+    return browser.runtime.getURL('');
 }
 
 /* istanbul ignore next */
 export function getBrowserType() {
-    const baseUrl = getRootPath()
+    const baseUrl = getRootPath();
 
     if (process.env.NODE_ENV === 'test') {
-        return BROWSER.CHROMIUM
+        return BROWSER.CHROMIUM;
     }
 
     if (baseUrl.startsWith('moz-extension')) {
-        return BROWSER.FIREFOX
+        return BROWSER.FIREFOX;
     }
 
     if (baseUrl.startsWith('chrome-extension')) {
-        return BROWSER.CHROMIUM
+        return BROWSER.CHROMIUM;
     }
 
-    return null
+    return null;
 }
 
 /**
@@ -39,27 +39,27 @@ export async function sendNotification(
     buttons = null,
     callback = null
 ) {
-    const notificationId = uuid()
+    const notificationId = uuid();
 
-    const body = buildNotificationBody(title, message)
+    const body = buildNotificationBody(title, message);
 
     if ((!buttons && !callback) || getBrowserType() === BROWSER.FIREFOX) {
-        return browser.notifications.create(notificationId, body)
+        return browser.notifications.create(notificationId, body);
     }
 
     function listener(id, buttonIndex) {
         if (id !== notificationId) {
-            return
+            return;
         }
-        browser.notifications.onButtonClicked.removeListener(listener)
-        callback(buttonIndex)
+        browser.notifications.onButtonClicked.removeListener(listener);
+        callback(buttonIndex);
     }
-    browser.notifications.onButtonClicked.addListener(listener)
+    browser.notifications.onButtonClicked.addListener(listener);
 
     return browser.notifications.create(notificationId, {
         ...body,
         buttons,
-    })
+    });
 }
 
 /**
@@ -75,27 +75,27 @@ export async function sendNotification(
  * @param {notificationClickedCallback} callback
  */
 export async function sendNotificationWithClick(title, message, callback) {
-    const id = uuid()
+    const id = uuid();
     await browser.notifications.create(
         id,
         buildNotificationBody(title, message)
-    )
+    );
 
     function listener(notificationId) {
         if (notificationId !== id) {
-            return
+            return;
         }
-        browser.notifications.onClicked.removeListener(listener)
-        callback()
+        browser.notifications.onClicked.removeListener(listener);
+        callback();
     }
-    browser.notifications.onClicked.addListener(listener)
+    browser.notifications.onClicked.addListener(listener);
 }
 
 export async function openLink(url) {
     return browser.tabs.create({
         url,
         active: true,
-    })
+    });
 }
 
 /**
@@ -109,11 +109,11 @@ export async function openLink(url) {
  * @returns {Promise<browser.tabs.Tab>} The opened tab.
  */
 export async function openOptions(popupWindow = null) {
-    const manifest = browser.runtime.getManifest()
-    const file = manifest.options_ui.page
-    const result = await openLink(browser.runtime.getURL(file))
-    popupWindow?.close()
-    return result
+    const manifest = browser.runtime.getManifest();
+    const file = manifest.options_ui.page;
+    const result = await openLink(browser.runtime.getURL(file));
+    popupWindow?.close();
+    return result;
 }
 
 /**
@@ -129,8 +129,8 @@ export async function executeScript(tabId, files) {
                 tabId,
             },
             files,
-        })
-        return Promise.resolve()
+        });
+        return Promise.resolve();
     }
 
     return Promise.all(
@@ -139,7 +139,7 @@ export async function executeScript(tabId, files) {
                 file,
             })
         )
-    )
+    );
 }
 
 function buildNotificationBody(title, message) {
@@ -148,5 +148,5 @@ function buildNotificationBody(title, message) {
         iconUrl: browser.runtime.getURL('/static/icons/icon16.png'),
         title,
         message,
-    }
+    };
 }

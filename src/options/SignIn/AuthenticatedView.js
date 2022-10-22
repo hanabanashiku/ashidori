@@ -1,19 +1,19 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Card, Typography, Avatar, Link, Button } from '@mui/material'
-import util from 'util'
-import UserData from '../../models/UserData'
-import { getApiInstance } from '../../providers/builder'
-import { PROVIDER_NAMES } from '../../enums'
-import lang from 'lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Card, Typography, Avatar, Link, Button } from '@mui/material';
+import util from 'util';
+import UserData from '../../models/UserData';
+import { getApiInstance } from '../../providers/builder';
+import { PROVIDER_NAMES } from '../../enums';
+import lang from 'lang';
 
 const AuthenticatedView = ({ userData, reset }) => {
     const signOut = async () => {
-        const api = await getApiInstance()
-        await api.signOut()
-        reset()
-    }
+        const api = await getApiInstance();
+        await api.signOut();
+        reset();
+    };
 
     return (
         <Card
@@ -74,11 +74,11 @@ const AuthenticatedView = ({ userData, reset }) => {
                 {lang.signOut}
             </Button>
         </Card>
-    )
-}
+    );
+};
 AuthenticatedView.propTypes = {
     userData: PropTypes.instanceOf(UserData).isRequired,
     reset: PropTypes.func.isRequired,
-}
+};
 
-export default AuthenticatedView
+export default AuthenticatedView;

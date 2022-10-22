@@ -1,9 +1,9 @@
-import React from 'react'
-import { css } from '@emotion/react'
-import Layout from './layout'
-import SignIn from './SignIn'
-import Services from './Services'
-import OtherOptions from './OtherOptions'
+import React from 'react';
+import { css } from '@emotion/react';
+import Layout from './layout';
+import SignIn from './SignIn';
+import Services from './Services';
+import OtherOptions from './OtherOptions';
 
 const Options = () => {
     return (
@@ -19,7 +19,7 @@ const Options = () => {
                 <OtherOptions />
             </div>
         </Layout>
-    )
-}
+    );
+};
 
-export default Options
+export default Options;

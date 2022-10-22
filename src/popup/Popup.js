@@ -1,49 +1,49 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { css } from '@emotion/react'
-import { Box, CircularProgress } from '@mui/material'
-import { getApiInstance } from '../providers/builder'
-import Header from './Header'
-import LogInNotice from './LogInNotice'
-import AnimeDetail from './AnimeDetail'
-import ListTabs from './ListTabs'
-import AnimeSearch from './AnimeSearch'
+import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { css } from '@emotion/react';
+import { Box, CircularProgress } from '@mui/material';
+import { getApiInstance } from '../providers/builder';
+import Header from './Header';
+import LogInNotice from './LogInNotice';
+import AnimeDetail from './AnimeDetail';
+import ListTabs from './ListTabs';
+import AnimeSearch from './AnimeSearch';
 
 const Popup = () => {
-    const [authState, setAuthState] = useState(null)
-    const [selectedAnime, setSelectedAnime] = useState()
-    const [search, setSearch] = useState(false)
-    const { search: query } = useLocation()
-    const navigate = useNavigate()
-    const params = useMemo(() => new URLSearchParams(query), [query])
+    const [authState, setAuthState] = useState(null);
+    const [selectedAnime, setSelectedAnime] = useState();
+    const [search, setSearch] = useState(false);
+    const { search: query } = useLocation();
+    const navigate = useNavigate();
+    const params = useMemo(() => new URLSearchParams(query), [query]);
 
-    const [api, setApi] = useState(null)
+    const [api, setApi] = useState(null);
 
     function showAnime(id, isListEntry = true) {
-        setSelectedAnime({ id, isListEntry })
+        setSelectedAnime({ id, isListEntry });
     }
 
     function toggleSearch() {
-        setSearch(!search)
+        setSearch(!search);
     }
 
     useEffect(() => {
         if (params.has('detail')) {
-            navigate(`detail/${params.get('detail')}`)
+            navigate(`detail/${params.get('detail')}`);
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         (async () => {
-            const apiInstance = await getApiInstance()
-            setApi(apiInstance)
+            const apiInstance = await getApiInstance();
+            setApi(apiInstance);
             if (!apiInstance) {
-                setAuthState(false)
-                return
+                setAuthState(false);
+                return;
             }
-            setAuthState(await apiInstance.isAuthenticated())
-        })()
-    }, [setAuthState, setApi])
+            setAuthState(await apiInstance.isAuthenticated());
+        })();
+    }, [setAuthState, setApi]);
 
     const Body = () => {
         if (authState === null) {
@@ -60,11 +60,11 @@ const Popup = () => {
                 >
                     <CircularProgress />
                 </Box>
-            )
+            );
         }
 
         if (!authState) {
-            return <LogInNotice />
+            return <LogInNotice />;
         }
 
         if (selectedAnime) {
@@ -77,7 +77,7 @@ const Popup = () => {
                     toggleSearch={search ? toggleSearch : undefined}
                     isPopup
                 />
-            )
+            );
         }
 
         if (search) {
@@ -87,7 +87,7 @@ const Popup = () => {
                     toggleSearch={toggleSearch}
                     showAnime={showAnime}
                 />
-            )
+            );
         }
 
         return (
@@ -96,15 +96,15 @@ const Popup = () => {
                 api={api}
                 toggleSearch={toggleSearch}
             />
-        )
-    }
+        );
+    };
 
     return (
         <>
             <Header />
             <Body />
         </>
-    )
-}
+    );
+};
 
-export default Popup
+export default Popup;

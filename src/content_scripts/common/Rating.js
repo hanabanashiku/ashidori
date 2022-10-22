@@ -1,35 +1,35 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Box, Rating, Typography } from '@mui/material'
-import LibraryEntry from '../../models/LibraryEntry'
-import ApiProvider from '../../providers/ApiProvider'
-import { LIST_STATUS } from '../../enums'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Box, Rating, Typography } from '@mui/material';
+import LibraryEntry from '../../models/LibraryEntry';
+import ApiProvider from '../../providers/ApiProvider';
+import { LIST_STATUS } from '../../enums';
 
 function EntryRating({ libraryEntry, api }) {
-    const [value, setRating] = useState(libraryEntry.rating)
-    const [hover, setHover] = useState(-1)
-    const [isLoading, setLoading] = useState(false)
+    const [value, setRating] = useState(libraryEntry.rating);
+    const [hover, setHover] = useState(-1);
+    const [isLoading, setLoading] = useState(false);
 
     async function onChange(e, newValue) {
-        setRating(newValue)
-        setLoading(true)
+        setRating(newValue);
+        setLoading(true);
         try {
             await api.updateLibraryItem(libraryEntry.id, {
                 rating: newValue,
-            })
+            });
         } catch {
-            setRating(value)
+            setRating(value);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 
     async function onChangeActive(e, newHover) {
-        setHover(newHover)
+        setHover(newHover);
     }
 
     if (libraryEntry.status === LIST_STATUS.NOT_WATCHING) {
-        return null
+        return null;
     }
 
     return (
@@ -47,11 +47,11 @@ function EntryRating({ libraryEntry, api }) {
                 {hover !== -1 ? hover : value > 0 ? value : ''}
             </Typography>
         </Box>
-    )
+    );
 }
 EntryRating.propTypes = {
     libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
-}
+};
 
-export default EntryRating
+export default EntryRating;

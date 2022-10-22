@@ -1,28 +1,28 @@
-import _ from 'lodash'
-import { omitBy } from 'lodash/fp'
-import browser from 'webextension-polyfill'
-import axios from 'axios'
-import moment from 'moment'
-import ApiProvider from './ApiProvider'
-import { createApiInstance } from './builder'
-import Settings from '../options/Settings'
-import UserData from '../models/UserData'
-import { PROVIDERS, LIST_STATUS } from '../enums'
-import { getHttpAdapter, generateRandomString } from './helper'
-import { getPkce, setPkce } from '../helpers/storageHelpers'
-import PagedData from '../models/PagedData'
-import LibraryEntry from '../models/LibraryEntry'
-import AnimeSeries from '../models/AnimeSeries'
+import _ from 'lodash';
+import { omitBy } from 'lodash/fp';
+import browser from 'webextension-polyfill';
+import axios from 'axios';
+import moment from 'moment';
+import ApiProvider from './ApiProvider';
+import { createApiInstance } from './builder';
+import Settings from '../options/Settings';
+import UserData from '../models/UserData';
+import { PROVIDERS, LIST_STATUS } from '../enums';
+import { getHttpAdapter, generateRandomString } from './helper';
+import { getPkce, setPkce } from '../helpers/storageHelpers';
+import PagedData from '../models/PagedData';
+import LibraryEntry from '../models/LibraryEntry';
+import AnimeSeries from '../models/AnimeSeries';
 
-const MAL_BASE_URL = 'https://api.myanimelist.net/v2'
-const MAL_AUTH_URL = 'https://myanimelist.net/v1/oauth2/authorize'
-const MAL_TOKEN_URL = 'https://myanimelist.net/v1/oauth2/token'
-const CLIENT_ID = 'e62f583191ca06e8a96bd8fc66769c09'
+const MAL_BASE_URL = 'https://api.myanimelist.net/v2';
+const MAL_AUTH_URL = 'https://myanimelist.net/v1/oauth2/authorize';
+const MAL_TOKEN_URL = 'https://myanimelist.net/v1/oauth2/token';
+const CLIENT_ID = 'e62f583191ca06e8a96bd8fc66769c09';
 
 const anime_fields =
-    'id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration'
+    'id,title,alternative_titles,status,start_date,end_date,synopsis,genres,media_type,num_episodes,average_episode_duration';
 const library_entry_fields =
-    'start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments'
+    'start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments';
 
 export const STATUS_MAP = {
     watching: LIST_STATUS.CURRENT,
@@ -30,18 +30,18 @@ export const STATUS_MAP = {
     on_hold: LIST_STATUS.ON_HOLD,
     dropped: LIST_STATUS.DROPPED,
     plan_to_watch: LIST_STATUS.PLANNED,
-}
+};
 
 function mapStatusToMalStatus(status) {
-    return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status)
+    return Object.keys(STATUS_MAP).find((key) => STATUS_MAP[key] === status);
 }
 
 export default class MyAnimeListProvider extends ApiProvider {
-    #client = null
-    #userId
+    #client = null;
+    #userId;
 
     constructor() {
-        super()
+        super();
 
         this.#client = axios.create({
             baseURL: MAL_BASE_URL,
@@ -50,23 +50,23 @@ export default class MyAnimeListProvider extends ApiProvider {
                 'Content-Type': 'application/vnd.api+json',
             },
             adapter: getHttpAdapter(),
-        })
+        });
         this.#client.interceptors.request.use(async (config) => {
-            return this._requestInterceptor(config)
-        })
-        this._setProvider(PROVIDERS.MY_ANIME_LIST)
+            return this._requestInterceptor(config);
+        });
+        this._setProvider(PROVIDERS.MY_ANIME_LIST);
 
         this.getUserData().then((data) => {
-            const userId = data?.id ?? null
-            this.#userId = userId
-        })
+            const userId = data?.id ?? null;
+            this.#userId = userId;
+        });
     }
 
     /**
      * @returns The provider type for this api client.
      */
     get providerType() {
-        return PROVIDERS.MY_ANIME_LIST
+        return PROVIDERS.MY_ANIME_LIST;
     }
 
     /**
@@ -89,11 +89,11 @@ export default class MyAnimeListProvider extends ApiProvider {
         if (!Object.values(STATUS_MAP).includes(status)) {
             return new PagedData({
                 data: [],
-            })
+            });
         }
 
-        const fields = `fields=node(${anime_fields}),list_status{${library_entry_fields}}`
-        const sortString = MyAnimeListProvider.#mapSort(sort)
+        const fields = `fields=node(${anime_fields}),list_status{${library_entry_fields}}`;
+        const sortString = MyAnimeListProvider.#mapSort(sort);
 
         const response = await this.#client.get(
             `/users/@me/animelist?status=${mapStatusToMalStatus(
@@ -101,11 +101,11 @@ export default class MyAnimeListProvider extends ApiProvider {
             )}&${fields}${
                 (sortString && `&sort=${sortString}`) || ''
             }&limit=${limit}%offset=${limit * page}`
-        )
+        );
 
         const items = response.data.data.map((entry) =>
             MyAnimeListProvider.#mapData(LibraryEntry, entry)
-        )
+        );
 
         return new PagedData({
             data: await Promise.all(items),
@@ -113,7 +113,7 @@ export default class MyAnimeListProvider extends ApiProvider {
             limit,
             // a cheap guess to keep pagination working - MAL doesn't send a total...
             total: items.length + (response.data.paging.next ? limit : 0),
-        })
+        });
     }
 
     /**
@@ -124,12 +124,12 @@ export default class MyAnimeListProvider extends ApiProvider {
     async getSingleLibraryEntry(entryId) {
         const response = await this.#client.get(
             `/anime/${entryId}?fields=${anime_fields},my_list_status{${library_entry_fields}}`
-        )
+        );
 
         return MyAnimeListProvider.#mapData(LibraryEntry, {
             node: response.data,
             list_status: response.data.my_list_status,
-        })
+        });
     }
 
     /**
@@ -140,31 +140,31 @@ export default class MyAnimeListProvider extends ApiProvider {
     async getSingleLibraryEntryByAnime(animeId) {
         // The library entry id key is the username + the anime id,
         // so these calls are synonymous for MAL.
-        return this.getSingleLibraryEntry(animeId)
+        return this.getSingleLibraryEntry(animeId);
     }
 
     async createLibraryItem(animeId, patch) {
         // In the MAL API, PATCH functions as an upsert.
         // Additionally, the key is simply the username + anime id
         // so we can pass in the animeId as the itemId directly.
-        return this.updateLibraryItem(animeId, patch)
+        return this.updateLibraryItem(animeId, patch);
     }
 
     async updateLibraryItem(itemId, patch) {
-        const data = MyAnimeListProvider.#createPatch(patch)
-        const params = new URLSearchParams()
+        const data = MyAnimeListProvider.#createPatch(patch);
+        const params = new URLSearchParams();
 
         for (const key in data) {
-            params.append(key, data[key])
+            params.append(key, data[key]);
         }
 
         return this.#client.patch(`/anime/${itemId}/my_list_status`, params, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        })
+        });
     }
 
     async removeLibraryItem(itemId) {
-        return this.#client.delete(`/anime/${itemId}/my_list_status`)
+        return this.#client.delete(`/anime/${itemId}/my_list_status`);
     }
 
     /**
@@ -176,14 +176,14 @@ export default class MyAnimeListProvider extends ApiProvider {
         try {
             const response = await this.#client.get(
                 `/anime/${animeId}?fields=${anime_fields}`
-            )
+            );
 
-            return MyAnimeListProvider.#mapData(AnimeSeries, response.data)
+            return MyAnimeListProvider.#mapData(AnimeSeries, response.data);
         } catch (e) {
             if (e.response?.status === 404) {
-                return null
+                return null;
             }
-            throw e
+            throw e;
         }
     }
 
@@ -192,11 +192,11 @@ export default class MyAnimeListProvider extends ApiProvider {
             `/anime?q=${encodeURIComponent(
                 text
             )}&fields=${anime_fields}&limit=${limit}&offset=${limit * page}`
-        )
+        );
 
         const shows = response.data.data.map((show) =>
             MyAnimeListProvider.#mapData(AnimeSeries, show.node)
-        )
+        );
 
         return new PagedData({
             data: await Promise.all(shows),
@@ -204,78 +204,78 @@ export default class MyAnimeListProvider extends ApiProvider {
             limit,
             // a cheap guess to keep pagination working - MAL doesn't send a total...
             total: shows.length + (response.data.paging.next ? limit : 0),
-        })
+        });
     }
 
     static async authorize() {
-        const pkce = generateRandomString(128)
-        await setPkce(pkce)
-        let url = MAL_AUTH_URL
-        url += '?response_type=code'
-        url += `&client_id=${CLIENT_ID}`
-        url += '&scope=write:users'
-        url += `&redirect_uri=${browser.identity.getRedirectURL()}`
-        url += `&code_challenge=${pkce}`
-        url += '&code_challenge_method=plain'
+        const pkce = generateRandomString(128);
+        await setPkce(pkce);
+        let url = MAL_AUTH_URL;
+        url += '?response_type=code';
+        url += `&client_id=${CLIENT_ID}`;
+        url += '&scope=write:users';
+        url += `&redirect_uri=${browser.identity.getRedirectURL()}`;
+        url += `&code_challenge=${pkce}`;
+        url += '&code_challenge_method=plain';
 
         const href = await browser.identity.launchWebAuthFlow({
             interactive: true,
             url,
-        })
+        });
 
-        const api = createApiInstance(PROVIDERS.MY_ANIME_LIST)
+        const api = createApiInstance(PROVIDERS.MY_ANIME_LIST);
 
-        return api.authorizeCallback(href)
+        return api.authorizeCallback(href);
     }
 
     async authorizeCallback(href) {
-        const recievedParams = new URLSearchParams(href.split('?')[1])
+        const recievedParams = new URLSearchParams(href.split('?')[1]);
 
-        const params = new URLSearchParams()
-        params.append('client_id', CLIENT_ID)
-        params.append('code', recievedParams.get('code'))
-        params.append('code_verifier', await getPkce())
-        params.append('grant_type', 'authorization_code')
-        params.append('redirect_uri', browser.identity.getRedirectURL())
+        const params = new URLSearchParams();
+        params.append('client_id', CLIENT_ID);
+        params.append('code', recievedParams.get('code'));
+        params.append('code_verifier', await getPkce());
+        params.append('grant_type', 'authorization_code');
+        params.append('redirect_uri', browser.identity.getRedirectURL());
 
-        let response
+        let response;
         try {
-            response = await axios.post(MAL_TOKEN_URL, params)
+            response = await axios.post(MAL_TOKEN_URL, params);
         } catch (e) {
-            return Promise.reject()
+            return Promise.reject();
         }
 
-        await this.#setTokenResponse(response)
-        return this.fetchUserData()
+        await this.#setTokenResponse(response);
+        return this.fetchUserData();
     }
 
     async refresh() {
-        const token = this.getRefreshToken()
-        const params = new URLSearchParams()
-        params.append('grant_type', 'refresh_token')
-        params.append('refresh_token', await token)
+        const token = this.getRefreshToken();
+        const params = new URLSearchParams();
+        params.append('grant_type', 'refresh_token');
+        params.append('refresh_token', await token);
 
         try {
-            const response = await axios.post(MAL_TOKEN_URL, params)
-            await this.#setTokenResponse(response)
-            return true
+            const response = await axios.post(MAL_TOKEN_URL, params);
+            await this.#setTokenResponse(response);
+            return true;
         } catch {
-            throw 'Unalve to authenticate. Check refresh token.'
+            throw 'Unalve to authenticate. Check refresh token.';
         }
     }
 
     async fetchUserData() {
         try {
-            const response = await this.#client.get('/users/@me')
+            const response = await this.#client.get('/users/@me');
             const userData = new UserData({
                 ...response.data,
                 provider: PROVIDERS.MY_ANIME_LIST,
-            })
-            await super.fetchUserData(userData)
-            this.#userId = response.data.id
-            return userData
+            });
+            await super.fetchUserData(userData);
+            this.#userId = response.data.id;
+            return userData;
         } catch (e) {
-            throw new Error('Unable to get user info.')
+            throw new Error('Unable to get user info.');
         }
     }
 
@@ -298,54 +298,54 @@ export default class MyAnimeListProvider extends ApiProvider {
                     ? null
                     : MyAnimeListProvider.#formatDate(patch.completedDate),
             comments: patch.notes,
-        })
+        });
     }
 
     static #formatDate(date) {
         if (!date) {
-            return undefined
+            return undefined;
         }
-        return moment(date).format('YYYY-MM-DD')
+        return moment(date).format('YYYY-MM-DD');
     }
 
     async #setTokenResponse(response) {
-        const token = response.data.access_token
-        const refresh = response.data.refresh_token
+        const token = response.data.access_token;
+        const refresh = response.data.refresh_token;
         const expiresAt =
             ((new Date().getTime() / 1000) | 0) +
-            Number(response.data.expires_in)
+            Number(response.data.expires_in);
 
         return Promise.all([
             this._setAuthToken(token, expiresAt),
             this._setRefreshToken(refresh),
-        ])
+        ]);
     }
 
     static async #mapData(type, data) {
-        const titleLanguagePreference = Settings.getTitleLanguagePreference()
+        const titleLanguagePreference = Settings.getTitleLanguagePreference();
         return new type({
             ...data,
             provider: PROVIDERS.MY_ANIME_LIST,
             __langPref: await titleLanguagePreference,
-        })
+        });
     }
 
     static #mapSort(field) {
         if (!field) {
-            return null
+            return null;
         }
 
         switch (field) {
             case 'rating':
-                return 'list_score'
+                return 'list_score';
             case 'lastUpdated':
-                return 'list_updated_at'
+                return 'list_updated_at';
             case 'title':
-                return 'anime_title'
+                return 'anime_title';
             case 'startDate':
-                return 'anime_start_date'
+                return 'anime_start_date';
             default:
-                return null
+                return null;
         }
     }
 }

@@ -1,8 +1,8 @@
-import _ from 'lodash'
-import AnimeSeries from './AnimeSeries'
-import { LIST_STATUS, PROVIDERS } from '../enums'
-import { STATUS_MAP as KITSU_STATUSES } from '../providers/KitsuProvider'
-import { STATUS_MAP as MAL_STATUES } from '../providers/MyAnimeListProvider'
+import _ from 'lodash';
+import AnimeSeries from './AnimeSeries';
+import { LIST_STATUS, PROVIDERS } from '../enums';
+import { STATUS_MAP as KITSU_STATUSES } from '../providers/KitsuProvider';
+import { STATUS_MAP as MAL_STATUES } from '../providers/MyAnimeListProvider';
 
 /**
  * An entry in the user's anime library.
@@ -11,12 +11,12 @@ export default class LibraryEntry {
     constructor(data = {}) {
         switch (data.provider) {
             case PROVIDERS.KITSU:
-                this.#mapFromKitsu(data)
-                break
+                this.#mapFromKitsu(data);
+                break;
 
             case PROVIDERS.MY_ANIME_LIST:
-                this.#mapFromMal(data)
-                break
+                this.#mapFromMal(data);
+                break;
 
             default:
                 _.defaultsDeep(
@@ -35,8 +35,8 @@ export default class LibraryEntry {
                             : null,
                     },
                     DEFAULT_VALUES
-                )
-                break
+                );
+                break;
         }
     }
 
@@ -44,7 +44,7 @@ export default class LibraryEntry {
      * @returns {string|number} The library entry id.
      */
     get id() {
-        return this._id
+        return this._id;
     }
 
     /**
@@ -52,60 +52,60 @@ export default class LibraryEntry {
      * @see LIST_STATUS
      */
     get status() {
-        return this._status
+        return this._status;
     }
 
     /**
      * @returns {number} The latest watched episode number.
      */
     get progress() {
-        return this._progress
+        return this._progress;
     }
 
     /**
      * @returns {string} The user's watch notes.
      */
     get notes() {
-        return this._notes
+        return this._notes;
     }
 
     /**
      * @returns {Date?} The date the user started the series.
      */
     get startDate() {
-        return this._startDate
+        return this._startDate;
     }
 
     /**
      * @returns {Date?} The date the user completed the series.
      */
     get completedDate() {
-        return this._completedDate
+        return this._completedDate;
     }
 
     get rewatchCount() {
-        return this._rewatchCount
+        return this._rewatchCount;
     }
 
     /**
      * @returns {Date?} The last time the user updated the library entry.
      */
     get lastUpdated() {
-        return this._lastUpdated
+        return this._lastUpdated;
     }
 
     /**
      * @returns {number} The user's rating, from 1-10.
      */
     get rating() {
-        return this._rating
+        return this._rating;
     }
 
     /**
      * @returns {AnimeSeries} The series this entry relates to.
      */
     get anime() {
-        return this._anime
+        return this._anime;
     }
 
     #mapFromKitsu(data) {
@@ -113,7 +113,7 @@ export default class LibraryEntry {
             (inc) =>
                 inc.type === 'anime' &&
                 inc.id === data.relationships.anime.data.id
-        )
+        );
 
         _.defaultsDeep(
             this,
@@ -143,12 +143,12 @@ export default class LibraryEntry {
                     : null,
             },
             DEFAULT_VALUES
-        )
+        );
     }
 
     #mapFromMal(data) {
-        const anime = data.node
-        const list = data.list_status ?? {}
+        const anime = data.node;
+        const list = data.list_status ?? {};
 
         _.defaultsDeep(
             this,
@@ -176,7 +176,7 @@ export default class LibraryEntry {
                 }),
             },
             DEFAULT_VALUES
-        )
+        );
     }
 }
 
@@ -191,4 +191,4 @@ const DEFAULT_VALUES = {
     _lastUpdated: null,
     _rating: 0,
     _anime: new AnimeSeries(),
-}
+};

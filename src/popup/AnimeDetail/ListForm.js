@@ -1,8 +1,8 @@
-import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
-import _ from 'lodash'
-import { css } from '@emotion/react'
-import { useForm, Controller } from 'react-hook-form'
+import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import { css } from '@emotion/react';
+import { useForm, Controller } from 'react-hook-form';
 import {
     Box,
     Stack,
@@ -15,16 +15,16 @@ import {
     Select,
     MenuItem,
     Slider,
-} from '@mui/material'
-import { LoadingButton, DatePicker, LocalizationProvider } from '@mui/lab'
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import { Save as SaveIcon, Delete } from '@mui/icons-material'
-import DeleteModal from './DeleteModal'
-import NumberInput from '../../components/NumberInput'
-import LibraryEntry from '../../models/LibraryEntry'
-import ApiProvider from '../../providers/ApiProvider'
-import { LIST_STATUS, PROVIDERS } from 'enums'
-import lang from 'lang'
+} from '@mui/material';
+import { LoadingButton, DatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { Save as SaveIcon, Delete } from '@mui/icons-material';
+import DeleteModal from './DeleteModal';
+import NumberInput from '../../components/NumberInput';
+import LibraryEntry from '../../models/LibraryEntry';
+import ApiProvider from '../../providers/ApiProvider';
+import { LIST_STATUS, PROVIDERS } from 'enums';
+import lang from 'lang';
 
 const ListForm = ({ entry, api, close }) => {
     const {
@@ -45,29 +45,30 @@ const ListForm = ({ entry, api, close }) => {
             completedDate: entry.completedDate,
             notes: entry.notes,
         },
-    })
-    const modalRef = useRef()
+    });
+    const modalRef = useRef();
 
-    const supportsHalfStepRatings = api.providerType !== PROVIDERS.MY_ANIME_LIST
+    const supportsHalfStepRatings =
+        api.providerType !== PROVIDERS.MY_ANIME_LIST;
 
     async function onSubmit(values) {
         if (!isDirty) {
-            close(false)
-            return
+            close(false);
+            return;
         }
 
         const toPatch = Object.keys(dirtyFields).filter(
             (key) => dirtyFields[key]
-        )
-        let patch = _.pick(values, toPatch)
+        );
+        let patch = _.pick(values, toPatch);
 
         if (entry.status === LIST_STATUS.NOT_WATCHING) {
-            await api.createLibraryItem(entry.anime.id, patch)
+            await api.createLibraryItem(entry.anime.id, patch);
         } else {
-            await api.updateLibraryItem(entry.id, patch)
+            await api.updateLibraryItem(entry.id, patch);
         }
 
-        close(true)
+        close(true);
     }
 
     return (
@@ -95,7 +96,7 @@ const ListForm = ({ entry, api, close }) => {
                                 id={name}
                                 value={value}
                                 onChange={(e) => {
-                                    onChange(e)
+                                    onChange(e);
                                     if (
                                         e.target.value ===
                                             LIST_STATUS.CURRENT &&
@@ -104,7 +105,7 @@ const ListForm = ({ entry, api, close }) => {
                                     ) {
                                         setValue('startDate', new Date(), {
                                             shouldDirty: true,
-                                        })
+                                        });
                                     } else if (
                                         e.target.value ===
                                             LIST_STATUS.COMPLETED &&
@@ -112,7 +113,7 @@ const ListForm = ({ entry, api, close }) => {
                                     ) {
                                         setValue('completedDate', new Date(), {
                                             shouldDirty: true,
-                                        })
+                                        });
                                         if (entry.anime.episodeCount) {
                                             setValue(
                                                 'progress',
@@ -120,7 +121,7 @@ const ListForm = ({ entry, api, close }) => {
                                                 {
                                                     shouldDirty: true,
                                                 }
-                                            )
+                                            );
                                         }
                                     }
                                 }}
@@ -312,12 +313,12 @@ const ListForm = ({ entry, api, close }) => {
                 modalRef={modalRef}
             />
         </Box>
-    )
-}
+    );
+};
 ListForm.propTypes = {
     entry: PropTypes.instanceOf(LibraryEntry).isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     close: PropTypes.func.isRequired,
-}
+};
 
-export default ListForm
+export default ListForm;

@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Typography } from '@mui/material'
-import LibraryEntry from '../../models/LibraryEntry'
-import { LIST_STATUS } from '../../enums'
-import lang from '../../lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Typography } from '@mui/material';
+import LibraryEntry from '../../models/LibraryEntry';
+import { LIST_STATUS } from '../../enums';
+import lang from '../../lang';
 
 function Progress({ libraryEntry }) {
     if (
@@ -11,7 +11,7 @@ function Progress({ libraryEntry }) {
             libraryEntry.status
         )
     ) {
-        return null
+        return null;
     }
 
     return (
@@ -30,10 +30,10 @@ function Progress({ libraryEntry }) {
             {libraryEntry.anime.episodeCount > 0 &&
                 ` / ${libraryEntry.anime.episodeCount}`}
         </Typography>
-    )
+    );
 }
 Progress.propTypes = {
     libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
-}
+};
 
-export default Progress
+export default Progress;

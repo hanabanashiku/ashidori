@@ -1,11 +1,11 @@
-import React from 'react'
-import Title from './Title'
-import Progress from './Progress'
-import Rating from './Rating'
-import { LIST_STATUS } from '../../enums'
-import lang from 'lang'
+import React from 'react';
+import Title from './Title';
+import Progress from './Progress';
+import Rating from './Rating';
+import { LIST_STATUS } from '../../enums';
+import lang from 'lang';
 
-export const editableColumns = ['progress', 'rating']
+export const editableColumns = ['progress', 'rating'];
 
 export function buildColumns(status) {
     switch (status) {
@@ -38,7 +38,7 @@ export function buildColumns(status) {
                     width: 110,
                     sortable: false,
                 },
-            ]
+            ];
 
         case LIST_STATUS.COMPLETED:
             return [
@@ -68,7 +68,7 @@ export function buildColumns(status) {
                     width: 110,
                     sortable: false,
                 },
-            ]
+            ];
 
         case LIST_STATUS.ON_HOLD:
             return [
@@ -92,7 +92,7 @@ export function buildColumns(status) {
                     width: 100,
                     sortable: false,
                 },
-            ]
+            ];
         case LIST_STATUS.DROPPED:
         case LIST_STATUS.PLANNED:
             return [
@@ -115,9 +115,9 @@ export function buildColumns(status) {
                     width: 100,
                     sortable: false,
                 },
-            ]
+            ];
 
         default:
-            return []
+            return [];
     }
 }

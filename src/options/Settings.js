@@ -1,11 +1,11 @@
-import browser from 'webextension-polyfill'
+import browser from 'webextension-polyfill';
 import {
     SERVICES,
     NOTIFY_EPSIODE_ANSWERS,
     TITLE_LANGUAGE_PREFERENCES,
-} from '../enums'
+} from '../enums';
 
-const DEFAULT_SERVICES = Object.values(SERVICES)
+const DEFAULT_SERVICES = Object.values(SERVICES);
 
 /**
  * A manager for handling setting stored in local storage.
@@ -17,7 +17,7 @@ export default class Settings {
      * @see SERVICES
      */
     static async getEnabledServices() {
-        return this.#getStoredKey('enabled_services', DEFAULT_SERVICES)
+        return this.#getStoredKey('enabled_services', DEFAULT_SERVICES);
     }
 
     /**
@@ -27,7 +27,7 @@ export default class Settings {
      * @see SERVICES
      */
     static async setEnabledServices(services) {
-        return this.#setStoredKey('enabled_services', services)
+        return this.#setStoredKey('enabled_services', services);
     }
 
     /**
@@ -37,8 +37,8 @@ export default class Settings {
      * @see SERVICES
      */
     static async isServiceEnabled(service) {
-        const providers = await this.getEnabledServices()
-        return providers.includes(service)
+        const providers = await this.getEnabledServices();
+        return providers.includes(service);
     }
 
     /**
@@ -46,7 +46,7 @@ export default class Settings {
      * @returns {Promise<boolean>} Whether to enable the automatically update list feature.
      */
     static async listUpdatingEnabled() {
-        return this.#getStoredKey('update_enabled', true)
+        return this.#getStoredKey('update_enabled', true);
     }
 
     /**
@@ -55,7 +55,7 @@ export default class Settings {
      * @returns {Promise<void>}
      */
     static async setListUpdatingEnabled(value) {
-        return this.#setStoredKey('update_enabled', Boolean(value))
+        return this.#setStoredKey('update_enabled', Boolean(value));
     }
 
     /**
@@ -63,7 +63,7 @@ export default class Settings {
      * @returns {Promise<number>} A number of minutes.
      */
     static async shouldUpdateAfterMinutes() {
-        return this.#getStoredKey('update_delay', 10)
+        return this.#getStoredKey('update_delay', 10);
     }
 
     /**
@@ -72,7 +72,7 @@ export default class Settings {
      * @returns {Promise<void>}
      */
     static async setShouldUpdateAfterMinutes(value) {
-        return this.#setStoredKey('update_delay', parseFloat(value))
+        return this.#setStoredKey('update_delay', parseFloat(value));
     }
 
     /**
@@ -80,7 +80,7 @@ export default class Settings {
      * @returns {Promise<boolean>} A promise that returns true if the popup should be shown.
      */
     static async shouldShowUpdatePopup() {
-        return this.#getStoredKey('enable_update_popup', true)
+        return this.#getStoredKey('enable_update_popup', true);
     }
 
     /**
@@ -88,7 +88,7 @@ export default class Settings {
      * @returns {Promise<boolean>} A promise that returns true if the popup should be shown.
      */
     static async shouldShowAddPopup() {
-        return this.#getStoredKey('enable_add_popup', true)
+        return this.#getStoredKey('enable_add_popup', true);
     }
 
     /**
@@ -97,7 +97,7 @@ export default class Settings {
      * @returns {Promise<void>}
      */
     static async setShouldShowUpdatePopup(value) {
-        return this.#setStoredKey('enable_update_popup', value)
+        return this.#setStoredKey('enable_update_popup', value);
     }
 
     /**
@@ -106,7 +106,7 @@ export default class Settings {
      * @returns {Promise<void>}
      */
     static async setShouldShowAddPopup(value) {
-        return this.#setStoredKey('enable_add_popup', value)
+        return this.#setStoredKey('enable_add_popup', value);
     }
 
     /**
@@ -118,7 +118,7 @@ export default class Settings {
         return this.#getStoredKey(
             'should_notify_for_new_episodes',
             NOTIFY_EPSIODE_ANSWERS.LATEST
-        )
+        );
     }
 
     /**
@@ -128,7 +128,7 @@ export default class Settings {
      * @see NOTIFY_EPISODE_ANSWERS
      */
     static async setNotifiyForNewEpisodes(value) {
-        return this.#setStoredKey('should_notify_for_new_episodes', value)
+        return this.#setStoredKey('should_notify_for_new_episodes', value);
     }
 
     static async getTitleLanguagePreference() {
@@ -137,25 +137,25 @@ export default class Settings {
             browser.i18n.getUILanguage().includes('en')
                 ? TITLE_LANGUAGE_PREFERENCES.ROMAJI
                 : TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE
-        )
+        );
     }
 
     static async setTitleLanguagePreference(value) {
-        return this.#setStoredKey('title_language_preference', value)
+        return this.#setStoredKey('title_language_preference', value);
     }
 
     static async #getStoredKey(key, defaultValue) {
         const request = {
             [key]: defaultValue,
-        }
-        const result = await browser.storage.sync.get(request)
-        return result[key]
+        };
+        const result = await browser.storage.sync.get(request);
+        return result[key];
     }
 
     static async #setStoredKey(key, value) {
         const request = {
             [key]: value,
-        }
-        return browser.storage.sync.set(request)
+        };
+        return browser.storage.sync.set(request);
     }
 }

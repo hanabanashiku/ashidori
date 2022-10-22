@@ -1,10 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
-import { css } from '@emotion/react'
-import { Box, Button, Typography } from '@mui/material'
-import MyAnimeListProvider from '../../providers/MyAnimeListProvider'
-import lang from 'lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+import { Box, Button, Typography } from '@mui/material';
+import MyAnimeListProvider from '../../providers/MyAnimeListProvider';
+import lang from 'lang';
 
 const ProviderButton = ({ name, logo, onClick }) => (
     <Box
@@ -28,16 +28,16 @@ const ProviderButton = ({ name, logo, onClick }) => (
             {lang.signInButton}
         </Button>
     </Box>
-)
+);
 
 ProviderButton.propTypes = {
     name: PropTypes.string.isRequired,
     logo: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
-}
+};
 
 const SignInButtons = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     return (
         <Box>
@@ -67,7 +67,7 @@ const SignInButtons = () => {
                     name="Kitsu"
                     logo="../../static/images/kitsu.png"
                     onClick={() => {
-                        navigate('signin/kitsu')
+                        navigate('signin/kitsu');
                     }}
                 />
 
@@ -78,7 +78,7 @@ const SignInButtons = () => {
         /> */}
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default SignInButtons
+export default SignInButtons;

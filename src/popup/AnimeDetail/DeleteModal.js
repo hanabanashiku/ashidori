@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import util from 'util'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import util from 'util';
 import {
     Dialog,
     DialogTitle,
@@ -8,31 +8,31 @@ import {
     DialogContentText,
     DialogActions,
     Button,
-} from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import AnimeSeries from '../../models/AnimeSeries'
-import ApiProvider from '../../providers/ApiProvider'
-import lang from 'lang'
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import AnimeSeries from '../../models/AnimeSeries';
+import ApiProvider from '../../providers/ApiProvider';
+import lang from 'lang';
 
 const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
-    const [isOpen, setOpen] = useState(false)
-    const [isSaving, setSaving] = useState(false)
+    const [isOpen, setOpen] = useState(false);
+    const [isSaving, setSaving] = useState(false);
 
     useEffect(() => {
-        modalRef.current = () => setOpen(true)
-    }, [])
+        modalRef.current = () => setOpen(true);
+    }, []);
 
     function handleClose() {
-        setOpen(false)
+        setOpen(false);
     }
 
     async function onDelete() {
         try {
-            setSaving(true)
-            await api.removeLibraryItem(entryId)
-            close()
+            setSaving(true);
+            await api.removeLibraryItem(entryId);
+            close();
         } catch (e) {
-            setSaving(false)
+            setSaving(false);
         }
     }
 
@@ -68,8 +68,8 @@ const DeleteModal = ({ entryId, anime, api, close, modalRef }) => {
                 </LoadingButton>
             </DialogActions>
         </Dialog>
-    )
-}
+    );
+};
 DeleteModal.propTypes = {
     entryId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
@@ -77,6 +77,6 @@ DeleteModal.propTypes = {
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     close: PropTypes.func.isRequired,
     modalRef: PropTypes.object.isRequired,
-}
+};
 
-export default DeleteModal
+export default DeleteModal;

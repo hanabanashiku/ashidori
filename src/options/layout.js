@@ -1,6 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import {
     Container,
     Box,
@@ -9,15 +9,15 @@ import {
     Stack,
     Typography,
     Link,
-} from '@mui/material'
+} from '@mui/material';
 import {
     BugReport as BugReportIcon,
     Lightbulb as LightbulbIcon,
-} from '@mui/icons-material'
-import useDarkMode from '../helpers/useDarkMode'
+} from '@mui/icons-material';
+import useDarkMode from '../helpers/useDarkMode';
 
 const Layout = ({ children }) => {
-    const isDarkMode = useDarkMode()
+    const isDarkMode = useDarkMode();
     return (
         <Container
             css={css`
@@ -123,10 +123,10 @@ const Layout = ({ children }) => {
                 </Grid>
             </Paper>
         </Container>
-    )
-}
+    );
+};
 Layout.propTypes = {
     children: PropTypes.any,
-}
+};
 
-export default Layout
+export default Layout;

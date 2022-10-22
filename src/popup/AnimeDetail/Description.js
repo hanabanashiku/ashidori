@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Typography, Link } from '@mui/material'
-import { css } from '@emotion/react'
-import lang from 'lang'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Typography, Link } from '@mui/material';
+import { css } from '@emotion/react';
+import lang from 'lang';
 
 const Description = ({ children }) => {
-    const [expanded, setExpanded] = useState(false)
-    const allVisible = children.length < 175
+    const [expanded, setExpanded] = useState(false);
+    const allVisible = children.length < 175;
 
     function style() {
         if (expanded || allVisible) {
@@ -15,7 +15,7 @@ const Description = ({ children }) => {
                 padding-top: 4px;
                 line-height: 1;
                 font-size: 12px;
-            `
+            `;
         }
 
         return css`
@@ -26,7 +26,7 @@ const Description = ({ children }) => {
             line-height: 1;
             font-size: 12px;
             overflow: hidden;
-        `
+        `;
     }
 
     return (
@@ -51,10 +51,10 @@ const Description = ({ children }) => {
                 </Link>
             )}
         </>
-    )
-}
+    );
+};
 Description.propTypes = {
     children: PropTypes.string.isRequired,
-}
+};
 
-export default Description
+export default Description;

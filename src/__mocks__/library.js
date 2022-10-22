@@ -1,6 +1,6 @@
-import AnimeSeries from '../models/AnimeSeries'
-import LibraryEntry from '../models/LibraryEntry'
-import { LIST_STATUS, ANIME_STATUS } from '../enums'
+import AnimeSeries from '../models/AnimeSeries';
+import LibraryEntry from '../models/LibraryEntry';
+import { LIST_STATUS, ANIME_STATUS } from '../enums';
 
 export default [
     new LibraryEntry({
@@ -53,4 +53,4 @@ export default [
             _link: 'https://kitsu.io/anime/13',
         }),
     }),
-]
+];

@@ -1,43 +1,43 @@
-import _ from 'lodash'
-import { SERVICES } from '../enums'
+import _ from 'lodash';
+import { SERVICES } from '../enums';
 
 export default class AnimeSeason {
     constructor(data = {}) {
         switch (data.service) {
             case SERVICES.CRUNCHYROLL:
-                this.#mapFromCrunchyroll(data)
-                return
+                this.#mapFromCrunchyroll(data);
+                return;
         }
 
-        _.defaultsDeep(this, data, DEFAULT_VALUES)
+        _.defaultsDeep(this, data, DEFAULT_VALUES);
     }
 
     /**
      * @returns {string} The season id.
      */
     get id() {
-        return this._id
+        return this._id;
     }
 
     /**
      * @returns {string} The name of the season;
      */
     get name() {
-        return this._name
+        return this._name;
     }
 
     /**
      * @returns {number} The season number.
      */
     get number() {
-        return this._number
+        return this._number;
     }
 
     /**
      * @returns {boolean} True if the season is currently being simulcast.
      * */
     get isAiring() {
-        return this._isAiring
+        return this._isAiring;
     }
 
     #mapFromCrunchyroll(data) {
@@ -50,7 +50,7 @@ export default class AnimeSeason {
                 _isAiring: data.is_simulcast,
             },
             DEFAULT_VALUES
-        )
+        );
     }
 }
 
@@ -59,4 +59,4 @@ const DEFAULT_VALUES = {
     _name: '',
     _number: 0,
     _isAiring: false,
-}
+};

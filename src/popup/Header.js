@@ -1,13 +1,13 @@
-import React from 'react'
-import { css } from '@emotion/react'
-import { openOptions } from '../helpers/extensionHelpers'
-import { Box, IconButton } from '@mui/material'
-import { Settings } from '@mui/icons-material'
-import useDarkMode from '../helpers/useDarkMode'
-import lang from 'lang'
+import React from 'react';
+import { css } from '@emotion/react';
+import { openOptions } from '../helpers/extensionHelpers';
+import { Box, IconButton } from '@mui/material';
+import { Settings } from '@mui/icons-material';
+import useDarkMode from '../helpers/useDarkMode';
+import lang from 'lang';
 
 const Header = () => {
-    const isDarkMode = useDarkMode()
+    const isDarkMode = useDarkMode();
 
     return (
         <Box
@@ -43,7 +43,7 @@ const Header = () => {
                 <Settings />
             </IconButton>
         </Box>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

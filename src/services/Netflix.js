@@ -1,38 +1,38 @@
-import axios from 'axios'
-import AnimeEpisode from '../models/AnimeEpisode'
-import AnimeSeason from '../models/AnimeSeason'
-import AnimeSeries from '../models/AnimeSeries'
+import axios from 'axios';
+import AnimeEpisode from '../models/AnimeEpisode';
+import AnimeSeason from '../models/AnimeSeason';
+import AnimeSeries from '../models/AnimeSeries';
 
 export default class NetflixService {
     constructor(baseUrl) {
-        this.baseUrl = baseUrl
+        this.baseUrl = baseUrl;
     }
 
     async getEpisodeMetadata(movieId) {
         const response = await axios.get(
             `${this.baseUrl}/metadata?movieid=${movieId}&imageFormat=webp&withSize=true&materialize=true`
-        )
-        const video = response.data.video
-        let currentSeason, currentEpisode
+        );
+        const video = response.data.video;
+        let currentSeason, currentEpisode;
 
         const episodeCount = video.seasons.reduce(
             (previous, current) => previous + current.episodes.length,
             0
-        )
+        );
 
         for (let season of video.seasons) {
             for (let episode of season.episodes) {
                 if (episode.id !== movieId) {
-                    continue
+                    continue;
                 }
 
-                currentSeason = season
-                currentEpisode = episode
+                currentSeason = season;
+                currentEpisode = episode;
             }
         }
 
         if (!currentSeason || !currentEpisode) {
-            return null
+            return null;
         }
 
         return new AnimeEpisode({
@@ -55,6 +55,6 @@ export default class NetflixService {
                 _name: currentSeason.title,
                 _number: currentSeason.seq,
             }),
-        })
+        });
     }
 }

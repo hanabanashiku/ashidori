@@ -1,15 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Box, Typography, Input } from '@mui/material'
-import { Star, StarBorder } from '@mui/icons-material'
-import ApiProvider from '../../providers/ApiProvider'
-import EditableCell from './EditableCell'
-import lang from 'lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Box, Typography, Input } from '@mui/material';
+import { Star, StarBorder } from '@mui/icons-material';
+import ApiProvider from '../../providers/ApiProvider';
+import EditableCell from './EditableCell';
+import lang from 'lang';
 
 const Rating = ({ value: { id, rating, api }, readonly }) => {
     async function updateValue(value) {
-        return api.updateLibraryItem(id, { rating: value })
+        return api.updateLibraryItem(id, { rating: value });
     }
 
     return (
@@ -44,7 +44,7 @@ const Rating = ({ value: { id, rating, api }, readonly }) => {
                             </>
                         )}
                     </Box>
-                )
+                );
             }}
             renderEditView={({
                 value,
@@ -75,12 +75,12 @@ const Rating = ({ value: { id, rating, api }, readonly }) => {
                             autoFocus
                         />
                     </Box>
-                )
+                );
             }}
             readonly={readonly}
         />
-    )
-}
+    );
+};
 Rating.propTypes = {
     value: PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -89,9 +89,9 @@ Rating.propTypes = {
         api: PropTypes.instanceOf(ApiProvider),
     }).isRequired,
     readonly: PropTypes.bool,
-}
+};
 Rating.defaultProps = {
     readonly: false,
-}
+};
 
-export default Rating
+export default Rating;

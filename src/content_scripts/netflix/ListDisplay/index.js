@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import browser from 'webextension-polyfill'
-import util from 'util'
+import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import browser from 'webextension-polyfill';
+import util from 'util';
 import {
     Button,
     Card,
@@ -10,15 +10,15 @@ import {
     Popper,
     Typography,
     Stack,
-} from '@mui/material'
-import Progress from '../../common/Progress'
-import Rating from '../../common/Rating'
-import { onOpenDetail } from '../../common'
-import LibraryEntry from '../../../models/LibraryEntry'
-import ApiProvider from '../../../providers/ApiProvider'
-import UserData from '../../../models/UserData'
-import { PROVIDER_NAMES } from '../../../enums'
-import lang from '../../../lang'
+} from '@mui/material';
+import Progress from '../../common/Progress';
+import Rating from '../../common/Rating';
+import { onOpenDetail } from '../../common';
+import LibraryEntry from '../../../models/LibraryEntry';
+import ApiProvider from '../../../providers/ApiProvider';
+import UserData from '../../../models/UserData';
+import { PROVIDER_NAMES } from '../../../enums';
+import lang from '../../../lang';
 
 function ListDisplay({ libraryEntry, api, userData, forwardRef }) {
     return (
@@ -87,48 +87,48 @@ function ListDisplay({ libraryEntry, api, userData, forwardRef }) {
                 </Stack>
             </CardContent>
         </Card>
-    )
+    );
 }
 ListDisplay.propTypes = {
     libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     userData: PropTypes.instanceOf(UserData).isRequired,
     forwardRef: PropTypes.object,
-}
+};
 
 function ListDisplayIcon({ libraryEntry, api, userData }) {
-    const [anchorEl, setAnchorEl] = useState(null)
-    const popperRef = useRef(null)
-    const controlsObserver = useRef(null)
-    const open = Boolean(anchorEl)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const popperRef = useRef(null);
+    const controlsObserver = useRef(null);
+    const open = Boolean(anchorEl);
 
     function onOpen(e) {
-        setAnchorEl(e.currentTarget)
+        setAnchorEl(e.currentTarget);
 
         if (controlsObserver.current) {
-            return
+            return;
         }
 
         // Setup observer to close the tooltip when the video footer closes (e.g. timeout with no mouse movement)
         const observer = new MutationObserver(() => {
             if (document.querySelector('div[data-uia=controls-standard')) {
-                return
+                return;
             }
 
-            onClose()
-        })
-        controlsObserver.current = observer
+            onClose();
+        });
+        controlsObserver.current = observer;
         observer.observe(document.querySelector('div[data-uia=player]'), {
             childList: true,
             subtree: true,
-        })
+        });
     }
 
     function onClose() {
-        setAnchorEl(null)
+        setAnchorEl(null);
 
-        controlsObserver.current?.disconnect()
-        controlsObserver.current = null
+        controlsObserver.current?.disconnect();
+        controlsObserver.current = null;
     }
 
     return (
@@ -138,7 +138,7 @@ function ListDisplayIcon({ libraryEntry, api, userData }) {
             onMouseLeave={() => {
                 // Close if the mouse is not focused on the tooltip
                 if (!popperRef.current?.parentNode.matches(':hover')) {
-                    onClose()
+                    onClose();
                 }
             }}
             css={css`
@@ -168,12 +168,12 @@ function ListDisplayIcon({ libraryEntry, api, userData }) {
                 />
             </Popper>
         </div>
-    )
+    );
 }
 ListDisplayIcon.propTypes = {
     libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     userData: PropTypes.instanceOf(UserData).isRequired,
-}
+};
 
-export default ListDisplayIcon
+export default ListDisplayIcon;

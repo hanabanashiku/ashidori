@@ -1,14 +1,14 @@
-import { ANIME_STATUS } from '../../../../enums'
-import AnimeEpisode from '../../../../models/AnimeEpisode'
-import AnimeSeason from '../../../../models/AnimeSeason'
-import AnimeSeries from '../../../../models/AnimeSeries'
+import { ANIME_STATUS } from '../../../../enums';
+import AnimeEpisode from '../../../../models/AnimeEpisode';
+import AnimeSeason from '../../../../models/AnimeSeason';
+import AnimeSeries from '../../../../models/AnimeSeries';
 
 const Scenarios = {
     'resolves for long running series compiled to one season': 0,
     'resolves for one season anime': 1,
     'resolves for season of a not-airing multi-season anime': 2,
     // "resolves for season of an anime where the season names don't match extracted data": 3,
-}
+};
 
 const ScrapedEpisodeData = {
     0: new AnimeEpisode({
@@ -119,7 +119,7 @@ const ScrapedEpisodeData = {
             },
         }),
     }),
-}
+};
 
 const SeasonResults = {
     0: {
@@ -5697,7 +5697,7 @@ const SeasonResults = {
             last: 'https://kitsu.io/api/edge/anime?filter%5Btext%5D=86+EIGHTY-SIX&include=streamingLinks%2Cgenres&page%5Blimit%5D=5&page%5Boffset%5D=570',
         },
     },
-}
+};
 
 const SeriesResults = {
     0: {
@@ -8180,7 +8180,7 @@ const SeriesResults = {
             last: 'https://kitsu.io/api/edge/anime?filter%5Btext%5D=86+EIGHTY-SIX&include=streamingLinks%2Cgenres&page%5Blimit%5D=5&page%5Boffset%5D=570',
         },
     },
-}
+};
 
 const ListResults = {
     0: {
@@ -10706,7 +10706,7 @@ const ListResults = {
             last: 'https://kitsu.io/api/edge/library-entries?filter%5BanimeId%5D=13881&filter%5Bkind%5D=anime&filter%5BuserId%5D=32602&include=anime%2Canime.streamingLinks%2Canime.genres&page%5Blimit%5D=10&page%5Boffset%5D=0',
         },
     },
-}
+};
 
 const Expected = {
     0: {
@@ -10725,7 +10725,7 @@ const Expected = {
         calledTimes: 3,
         animeId: '44398',
     },
-}
+};
 
 export default {
     Scenarios,
@@ -10734,4 +10734,4 @@ export default {
     SeriesResults,
     ListResults,
     Expected,
-}
+};

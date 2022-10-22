@@ -1,6 +1,6 @@
-import React from 'react'
-import { Box, Typography } from '@mui/material'
-import lang from '../lang'
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+import lang from '../lang';
 
 const ErrorDisplay = () => {
     return (
@@ -10,7 +10,7 @@ const ErrorDisplay = () => {
             </Typography>
             <Typography>{lang.errorOccurredBody}</Typography>
         </Box>
-    )
-}
+    );
+};
 
-export default ErrorDisplay
+export default ErrorDisplay;

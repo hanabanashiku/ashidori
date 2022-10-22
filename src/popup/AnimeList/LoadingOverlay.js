@@ -1,6 +1,6 @@
-import React from 'react'
-import { LinearProgress } from '@mui/material'
-import { GridOverlay } from '@mui/x-data-grid'
+import React from 'react';
+import { LinearProgress } from '@mui/material';
+import { GridOverlay } from '@mui/x-data-grid';
 
 const LoadingOverlay = () => {
     return (
@@ -9,7 +9,7 @@ const LoadingOverlay = () => {
                 <LinearProgress />
             </div>
         </GridOverlay>
-    )
-}
+    );
+};
 
-export default LoadingOverlay
+export default LoadingOverlay;

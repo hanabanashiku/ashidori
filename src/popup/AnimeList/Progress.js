@@ -1,23 +1,23 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { css } from '@emotion/react'
-import { Box, LinearProgress, Typography, Input } from '@mui/material'
-import ApiProvider from '../../providers/ApiProvider'
-import { LIST_STATUS } from '../../enums'
-import EditableCell from './EditableCell'
-import lang from 'lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Box, LinearProgress, Typography, Input } from '@mui/material';
+import ApiProvider from '../../providers/ApiProvider';
+import { LIST_STATUS } from '../../enums';
+import EditableCell from './EditableCell';
+import lang from 'lang';
 
 const Progress = ({ value: { id, current, total, api, refresh } }) => {
     async function updateValue(value) {
-        const completed = value === total
-        const patch = { progress: value }
+        const completed = value === total;
+        const patch = { progress: value };
         if (completed) {
-            patch.status = LIST_STATUS.COMPLETED
-            patch.completedDate = new Date()
+            patch.status = LIST_STATUS.COMPLETED;
+            patch.completedDate = new Date();
         }
-        await api.updateLibraryItem(id, patch)
+        await api.updateLibraryItem(id, patch);
         if (completed) {
-            refresh()
+            refresh();
         }
     }
 
@@ -26,8 +26,8 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
             initialValue={current}
             saveValue={updateValue}
             renderCell={({ value, onClick }) => {
-                const normalizedTotal = total ? total : current * 12
-                const progress = (current / normalizedTotal) * 100
+                const normalizedTotal = total ? total : current * 12;
+                const progress = (current / normalizedTotal) * 100;
 
                 return (
                     <Box
@@ -55,7 +55,7 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
                             `}
                         />
                     </Box>
-                )
+                );
             }}
             renderEditView={({
                 value,
@@ -82,11 +82,11 @@ const Progress = ({ value: { id, current, total, api, refresh } }) => {
                         />
                         / {total}
                     </Box>
-                )
+                );
             }}
         />
-    )
-}
+    );
+};
 Progress.propTypes = {
     value: PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -96,6 +96,6 @@ Progress.propTypes = {
         api: PropTypes.instanceOf(ApiProvider).isRequired,
         refresh: PropTypes.func.isRequired,
     }),
-}
+};
 
-export default Progress
+export default Progress;

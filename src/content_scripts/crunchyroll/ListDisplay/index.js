@@ -1,17 +1,17 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import util from 'util'
-import { css } from '@emotion/react'
-import CrunchyrollThemeProvider from '../theme'
-import { Box, Stack, Typography, Button } from '@mui/material'
-import Progress from '../../common/Progress'
-import Rating from '../../common/Rating'
-import { onOpenDetail } from '../../common'
-import LibraryEntry from '../../../models/LibraryEntry'
-import ApiProvider from '../../../providers/ApiProvider'
-import UserData from '../../../models/UserData'
-import { PROVIDER_NAMES } from '../../../enums'
-import lang from '../../../lang'
+import React from 'react';
+import PropTypes from 'prop-types';
+import util from 'util';
+import { css } from '@emotion/react';
+import CrunchyrollThemeProvider from '../theme';
+import { Box, Stack, Typography, Button } from '@mui/material';
+import Progress from '../../common/Progress';
+import Rating from '../../common/Rating';
+import { onOpenDetail } from '../../common';
+import LibraryEntry from '../../../models/LibraryEntry';
+import ApiProvider from '../../../providers/ApiProvider';
+import UserData from '../../../models/UserData';
+import { PROVIDER_NAMES } from '../../../enums';
+import lang from '../../../lang';
 
 function ListDisplay({ libraryEntry, api, userData }) {
     return (
@@ -57,12 +57,12 @@ function ListDisplay({ libraryEntry, api, userData }) {
                 </Box>
             </Box>
         </CrunchyrollThemeProvider>
-    )
+    );
 }
 ListDisplay.propTypes = {
     libraryEntry: PropTypes.instanceOf(LibraryEntry).isRequired,
     api: PropTypes.instanceOf(ApiProvider).isRequired,
     userData: PropTypes.instanceOf(UserData).isRequired,
-}
+};
 
-export default ListDisplay
+export default ListDisplay;

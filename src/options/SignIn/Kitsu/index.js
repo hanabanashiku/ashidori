@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/react'
-import { useNavigate } from 'react-router-dom'
-import { returnToOptions } from '../util'
+import React, { useState, useEffect } from 'react';
+import { css } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
+import { returnToOptions } from '../util';
 import {
     Box,
     Stack,
@@ -10,42 +10,42 @@ import {
     TextField,
     ButtonGroup,
     Button,
-} from '@mui/material'
-import { useForm } from 'react-hook-form'
-import Layout from '../../layout'
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import Layout from '../../layout';
 import {
     createApiInstance,
     getApiInstance,
     resetApiInstance,
-} from '../../../providers/builder'
-import { PROVIDERS } from '../../../enums'
-import lang from 'lang'
+} from '../../../providers/builder';
+import { PROVIDERS } from '../../../enums';
+import lang from 'lang';
 
 const KitsuLogin = () => {
-    const { register, handleSubmit } = useForm()
-    const [formEnabled, setFormEnabled] = useState(true)
-    const [isValid, setValid] = useState(true)
-    const navigate = useNavigate()
+    const { register, handleSubmit } = useForm();
+    const [formEnabled, setFormEnabled] = useState(true);
+    const [isValid, setValid] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        ;(async () => {
-            const api = await getApiInstance()
+        (async () => {
+            const api = await getApiInstance();
             if (await api?.isAuthenticated()) {
-                returnToOptions(navigate)
+                returnToOptions(navigate);
             }
-        })()
-    }, [])
+        })();
+    }, []);
 
     async function onSubmit(values) {
-        setFormEnabled(false)
-        const provider = createApiInstance(PROVIDERS.KITSU)
+        setFormEnabled(false);
+        const provider = createApiInstance(PROVIDERS.KITSU);
         try {
-            await provider.authorize(values.username, values.password)
-            returnToOptions(navigate)
+            await provider.authorize(values.username, values.password);
+            returnToOptions(navigate);
         } catch (e) {
-            resetApiInstance()
-            setValid(false)
-            setFormEnabled(true)
+            resetApiInstance();
+            setValid(false);
+            setFormEnabled(true);
         }
     }
 
@@ -123,7 +123,7 @@ const KitsuLogin = () => {
                 </ButtonGroup>
             </Stack>
         </Layout>
-    )
-}
+    );
+};
 
-export default KitsuLogin
+export default KitsuLogin;

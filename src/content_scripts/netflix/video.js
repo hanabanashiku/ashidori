@@ -1,80 +1,80 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import browser from 'webextension-polyfill'
-import Settings from '../../options/Settings'
-import NetflixService from '../../services/Netflix'
-import ListDisplay from './ListDisplay'
-import { getApiInstance } from '../../providers/builder'
-import { waitForElm } from '../common'
-import { SERVICES } from '../../enums'
-import MESSAGE_TYPES from '../../messageTypes'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import browser from 'webextension-polyfill';
+import Settings from '../../options/Settings';
+import NetflixService from '../../services/Netflix';
+import ListDisplay from './ListDisplay';
+import { getApiInstance } from '../../providers/builder';
+import { waitForElm } from '../common';
+import { SERVICES } from '../../enums';
+import MESSAGE_TYPES from '../../messageTypes';
 
-let episodeData
-let loadTime
-let userData
-let listEntry
-let footerObserver
+let episodeData;
+let loadTime;
+let userData;
+let listEntry;
+let footerObserver;
 
 Settings.getEnabledServices().then((enabledServices) => {
     if (!enabledServices.includes(SERVICES.NETFLIX)) {
-        return
+        return;
     }
 
-    init()
+    init();
 
     // unload if the user clicks a link in the SPA
     browser.runtime.onMessage.addListener((message) => {
         if (message.type !== MESSAGE_TYPES.HISTORY_STATE_UPDATED) {
-            return false
+            return false;
         }
 
-        onUnload()
-        resetPage()
+        onUnload();
+        resetPage();
 
         if (message.payload.url.includes('https://www.netflix.com/watch/')) {
-            init()
+            init();
         }
-        return true
-    })
-})
+        return true;
+    });
+});
 
 function injectScript() {
-    const script = browser.runtime.getURL('static/scripts/inject_netflix.js')
-    const scriptEl = document.createElement('script')
-    scriptEl.setAttribute('src', script)
-    scriptEl.setAttribute('type', 'text/javascript')
+    const script = browser.runtime.getURL('static/scripts/inject_netflix.js');
+    const scriptEl = document.createElement('script');
+    scriptEl.setAttribute('src', script);
+    scriptEl.setAttribute('type', 'text/javascript');
     scriptEl.onload = () => {
-        document.body.removeChild(scriptEl)
-    }
-    document.body.appendChild(scriptEl)
+        document.body.removeChild(scriptEl);
+    };
+    document.body.appendChild(scriptEl);
 }
 
 function init() {
-    loadTime = new Date()
-    let api
+    loadTime = new Date();
+    let api;
     getApiInstance()
         .then((value) => {
-            api = value
-            injectScript()
-            return waitForElm('input[name=ashidori-observer]')
+            api = value;
+            injectScript();
+            return waitForElm('input[name=ashidori-observer]');
         })
         .then((hiddenInput) => {
-            const baseUrl = hiddenInput.getAttribute('value')
-            document.body.removeChild(hiddenInput)
+            const baseUrl = hiddenInput.getAttribute('value');
+            document.body.removeChild(hiddenInput);
 
-            const netflixService = new NetflixService(baseUrl)
-            return netflixService.getEpisodeMetadata(getMovieId())
+            const netflixService = new NetflixService(baseUrl);
+            return netflixService.getEpisodeMetadata(getMovieId());
         })
         .then((episode) => {
-            episodeData = episode
-            return api.getUserData()
+            episodeData = episode;
+            return api.getUserData();
         })
         .then((data) => {
-            userData = data
-            return api.resolveLibraryEntryFromAnimeEpisode(episodeData)
+            userData = data;
+            return api.resolveLibraryEntryFromAnimeEpisode(episodeData);
         })
         .then((data) => {
-            listEntry = data
+            listEntry = data;
             browser.runtime.sendMessage({
                 type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
                 payload: {
@@ -83,29 +83,29 @@ function init() {
                     listEntry,
                     episodeData,
                 },
-            })
-            insertListDisplay(listEntry, api, userData)
-        })
+            });
+            insertListDisplay(listEntry, api, userData);
+        });
 }
 
 function insertListDisplay(libraryEntry, api, userData) {
     footerObserver = new MutationObserver(() => {
         const controlSpeedButton = document.querySelector(
             'button[data-uia=control-speed]'
-        )
-        const ashidoriButton = document.getElementById('ashidori-button')
+        );
+        const ashidoriButton = document.getElementById('ashidori-button');
         if (!controlSpeedButton || ashidoriButton) {
-            return
+            return;
         }
 
-        const reference = controlSpeedButton.parentNode
-        const container = document.createElement('div')
-        container.id = 'ashidori-button'
+        const reference = controlSpeedButton.parentNode;
+        const container = document.createElement('div');
+        container.id = 'ashidori-button';
 
         controlSpeedButton.parentNode.parentNode.insertBefore(
             container,
             reference.nextSibling
-        )
+        );
         ReactDOM.render(
             <ListDisplay
                 libraryEntry={libraryEntry}
@@ -113,13 +113,13 @@ function insertListDisplay(libraryEntry, api, userData) {
                 userData={userData}
             />,
             container
-        )
-    })
+        );
+    });
 
     footerObserver.observe(document.body, {
         childList: true,
         subtree: true,
-    })
+    });
 }
 
 function onUnload() {
@@ -133,22 +133,22 @@ function onUnload() {
                 userData,
                 listEntry,
             },
-        })
+        });
     }
     if (footerObserver) {
-        footerObserver.disconnect()
-        footerObserver = null
+        footerObserver.disconnect();
+        footerObserver = null;
     }
 }
 
 function resetPage() {
-    episodeData = null
-    loadTime = null
-    listEntry = null
+    episodeData = null;
+    loadTime = null;
+    listEntry = null;
 }
 
 function getMovieId() {
-    const regex = /https?:\/\/(?:www\.)?netflix.com\/watch\/(\d+)/
-    const groups = regex.exec(window.location.href)
-    return parseInt(groups[1])
+    const regex = /https?:\/\/(?:www\.)?netflix.com\/watch\/(\d+)/;
+    const groups = regex.exec(window.location.href);
+    return parseInt(groups[1]);
 }
