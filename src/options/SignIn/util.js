@@ -1,3 +1,3 @@
 export function returnToOptions(navigate) {
-  navigate("/" + window.location.pathname.split("/").slice(-3)[0]);
+    navigate('/' + window.location.pathname.split('/').slice(-3)[0])
 }

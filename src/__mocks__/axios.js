@@ -1,10 +1,10 @@
 /* istanbul ignore file */
-const mockAxios = jest.genMockFromModule("axios");
+const mockAxios = jest.genMockFromModule('axios')
 mockAxios.interceptors = {
-  request: {
-    use: jest.fn(),
-  },
-};
-mockAxios.create = jest.fn(() => mockAxios);
+    request: {
+        use: jest.fn(),
+    },
+}
+mockAxios.create = jest.fn(() => mockAxios)
 
-export default mockAxios;
+export default mockAxios
