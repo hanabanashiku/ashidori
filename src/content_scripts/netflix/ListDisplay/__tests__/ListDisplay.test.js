@@ -1,5 +1,5 @@
 import React from "react";
-import { render, act, screen, fireEvent } from "@testing-library/react";
+import { render, act, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ListDisplay from "..";
 import MockApiProvider from "../../../../__mocks__/MockApiProvider";
@@ -25,11 +25,63 @@ describe("List display component", () => {
   const userData = new UserData({
     _provider: PROVIDERS.KITSU,
   });
+  let playerWindow;
+  let controls;
 
   function showListDisplay() {
     const button = screen.getByRole('button', { name: /ashidori data/i});
     fireEvent.mouseEnter(button);
   }
+
+  // Setup DOM
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    playerWindow = document.createElement('div');
+    playerWindow.setAttribute('data-uia', 'player');
+    controls = document.createElement('div');
+    controls.setAttribute('data-uia', 'controls-standard');
+
+    playerWindow.appendChild(controls);
+    document.body.appendChild(playerWindow);
+  });
+
+  it('renders the ashidori button', () => {
+    render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    expect(screen.getByRole('button', { name: /ashidori data/i})).toBeInTheDocument();
+  });
+
+  it('renders the list display on hover', () => {
+    render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    showListDisplay();
+    expect(document.querySelector("div[data-uia=ashidori-display]")).toBeInTheDocument();
+  });
+
+  it('hides the list display on mouse exit', () => {
+    render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    showListDisplay();
+    fireEvent.mouseLeave(document.querySelector("div[data-uia=ashidori-display]"));
+    expect(document.querySelector("div[data-uia=ashidori-display]")).not.toBeTruthy();
+  });
+
+  it('hides the list display when the control footer closes', async () => {
+    render(
+      <ListDisplay libraryEntry={entry} api={api} userData={userData} />
+    );
+
+    showListDisplay();
+
+    playerWindow.removeChild(controls);
+    await waitFor(() => expect(document.querySelector("div[data-uia=ashidori-display]")).not.toBeTruthy());
+  });
 
   it("renders the anime title", () => {
     render(
