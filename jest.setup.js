@@ -4,6 +4,7 @@ import { toHaveNoViolations } from "jest-axe";
 global.beforeAll(() => {
   expect.extend(toHaveNoViolations);
 
+  chrome.runtime.id = "testid";
   browser.scripting = {
     executeScript: jest.fn(),
   };
@@ -12,6 +13,7 @@ global.beforeAll(() => {
   browser.notifications.onClicked.removeListener = jest.fn();
   browser.runtime = {
     ...browser.runtime,
+    id: "testid",
     getManifest: jest.fn(),
     getURL: jest.fn(),
   };
