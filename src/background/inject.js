@@ -22,7 +22,7 @@ async function injectScript(details) {
     );
 
     // Crunchyroll video
-    if (/^https?:\/\/beta\.crunchyroll\.com\/watch\/.*/.test(details.url)) {
+    if (/^https?:\/\/www\.crunchyroll\.com\/watch\/.*/.test(details.url)) {
         executeScript(
             details.tabId,
             await getVideoScript(SERVICES.CRUNCHYROLL)
@@ -39,7 +39,7 @@ async function getVideoScript(service) {
     switch (service) {
         case SERVICES.CRUNCHYROLL:
             return manifest.content_scripts.find((cs) =>
-                cs.matches.includes('*://beta.crunchyroll.com/watch/**')
+                cs.matches.includes('*://www.crunchyroll.com/watch/**')
             ).js;
         case SERVICES.NETFLIX:
             return manifest.content_scripts.find((cs) =>

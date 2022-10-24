@@ -273,7 +273,7 @@ export default class AnimeSeries {
                 _episodeCount: data.episode_count,
                 _genres: data.keywords,
                 _streamingLinks: {
-                    [SERVICES.CRUNCHYROLL]: `https://beta.crunchyroll.com/series/${data.id}`,
+                    [SERVICES.CRUNCHYROLL]: `https://www.crunchyroll.com/series/${data.id}`,
                 },
                 _link: `https://beta-api.crunchyroll.com${data.__href__}`,
             },

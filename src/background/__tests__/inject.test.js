@@ -21,7 +21,7 @@ describe('Background script injector', () => {
         browser.runtime.getManifest.mockReturnValue({
             content_scripts: [
                 {
-                    matches: ['*://beta.crunchyroll.com/watch/**'],
+                    matches: ['*://www.crunchyroll.com/watch/**'],
                     js: ['video.js'],
                 },
                 {
@@ -66,7 +66,7 @@ describe('Background script injector', () => {
         onHistoryStateUpdated({
             tabId: 1,
             frameId: 2,
-            url: 'https://beta.crunchyroll.com/watch/GPWUK5WJ8/backlighting-is-the-best',
+            url: 'https://www.crunchyroll.com/watch/GPWUK5WJ8/backlighting-is-the-best',
         });
         await waitFor(() => expect(executeScriptSpy).toHaveBeenCalledTimes(1));
         expect(executeScriptSpy).toHaveBeenLastCalledWith(1, ['video.js']);
