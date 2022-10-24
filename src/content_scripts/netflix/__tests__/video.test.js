@@ -29,7 +29,7 @@ describe('Netflix video content script', () => {
             _title: 'Healer Girl',
             _streamingLinks: {
                 [SERVICES.CRUNCHYROLL]:
-                    'https://beta.crunchyroll.com/series/GXJHM37WP',
+                    'https://www.crunchyroll.com/series/GXJHM37WP',
             },
         }),
     });

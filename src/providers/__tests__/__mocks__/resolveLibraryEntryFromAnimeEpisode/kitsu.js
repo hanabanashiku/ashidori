@@ -34,7 +34,7 @@ const ScrapedEpisodeData = {
             _episodeLength: 24,
             _genres: ['Action', 'Adventure', 'Fantasy', 'Shonen'],
             _streamingLinks: {
-                0: 'https://beta.crunchyroll.com/series/GRMG8ZQZR/one-piece',
+                0: 'https://www.crunchyroll.com/series/GRMG8ZQZR/one-piece',
             },
         }),
         _airDate: null,
@@ -62,7 +62,7 @@ const ScrapedEpisodeData = {
             _episodeLength: 24,
             _genres: [],
             _streamingLinks: {
-                0: 'https://beta.crunchyroll.com/series/GQWH0M9N8/my-dress-up-darling',
+                0: 'https://www.crunchyroll.com/series/GQWH0M9N8/my-dress-up-darling',
             },
         }),
         _airDate: null,
@@ -88,7 +88,7 @@ const ScrapedEpisodeData = {
             _episodeLength: 24,
             _genres: ['Action', 'Fantasy', 'Shonen'],
             _streamingLinks: {
-                0: 'https://beta.crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia',
+                0: 'https://www.crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia',
             },
         }),
         _airDate: null,
@@ -115,7 +115,7 @@ const ScrapedEpisodeData = {
             _episodeLength: 0,
             _genres: [],
             _streamingLinks: {
-                0: 'https://beta.crunchyroll.com/series/GVDHX8DM5',
+                0: 'https://www.crunchyroll.com/series/GVDHX8DM5',
             },
         }),
     }),
@@ -2491,7 +2491,7 @@ const SeasonResults = {
                 attributes: {
                     createdAt: '2021-06-12T16:12:37.576Z',
                     updatedAt: '2021-06-12T16:12:37.576Z',
-                    url: 'https://beta.crunchyroll.com/series/GG5H5X7DK/Urusei-Yatsura-Movies',
+                    url: 'https://www.crunchyroll.com/series/GG5H5X7DK/Urusei-Yatsura-Movies',
                     subs: ['en'],
                     dubs: ['ja', 'en'],
                 },
@@ -10021,7 +10021,7 @@ const ListResults = {
                 attributes: {
                     createdAt: '2021-06-12T16:12:37.576Z',
                     updatedAt: '2021-06-12T16:12:37.576Z',
-                    url: 'https://beta.crunchyroll.com/series/GG5H5X7DK/Urusei-Yatsura-Movies',
+                    url: 'https://www.crunchyroll.com/series/GG5H5X7DK/Urusei-Yatsura-Movies',
                     subs: ['en'],
                     dubs: ['ja', 'en'],
                 },

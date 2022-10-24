@@ -7,7 +7,7 @@ describe('File helpers', () => {
             browser.runtime.getManifest.mockReturnValue({
                 content_scripts: [
                     {
-                        matches: ['*://beta.crunchyroll.com/watch/**'],
+                        matches: ['*://www.crunchyroll.com/watch/**'],
                         js: 'crunchyroll.js',
                     },
                 ],

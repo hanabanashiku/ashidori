@@ -134,7 +134,7 @@ describe('Anime series model', () => {
             'https://beta-api.crunchyroll.com/cms/v2/US/M3/crunchyroll/series/G6NQ5DWZ6'
         );
         expect(actual.streamingLinks).toStrictEqual({
-            0: 'https://beta.crunchyroll.com/series/G6NQ5DWZ6',
+            0: 'https://www.crunchyroll.com/series/G6NQ5DWZ6',
         });
     });
 

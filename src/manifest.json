@@ -19,7 +19,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://beta.crunchyroll.com/watch/**"],
+      "matches": ["*://www.crunchyroll.com/watch/**"],
       "js": ["content_scripts/crunchyroll/video.js"]
     },
     {
