@@ -29,7 +29,7 @@ describe('Crunchyroll video content script', () => {
             _title: 'Healer Girl',
             _streamingLinks: {
                 [SERVICES.CRUNCHYROLL]:
-                    'https://beta.crunchyroll.com/series/GXJHM37WP',
+                    'https://www.crunchyroll.com/series/GXJHM37WP',
             },
         }),
     });
@@ -90,7 +90,7 @@ describe('Crunchyroll video content script', () => {
         mediaInfo.className = 'erc-current-media-info';
         document.body.appendChild(mediaInfo);
         mockUrl(
-            'https://beta.crunchyroll.com/watch/GVWU0Q2Z4/the-best-guarantee--buy-the-cd'
+            'https://www.crunchyroll.com/watch/GVWU0Q2Z4/the-best-guarantee--buy-the-cd'
         );
     }
 
@@ -165,7 +165,7 @@ describe('Crunchyroll video content script', () => {
         historyStateUpdatedListener({
             type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
             payload: {
-                url: 'https://beta.crunchyroll.com/watchlist',
+                url: 'https://www.crunchyroll.com/watchlist',
             },
         });
 
@@ -192,7 +192,7 @@ describe('Crunchyroll video content script', () => {
         historyStateUpdatedListener({
             type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
             payload: {
-                url: 'https://beta.crunchyroll.com/watch/GJWU2520V/the-counter-secret-police-cover-operation',
+                url: 'https://www.crunchyroll.com/watch/GJWU2520V/the-counter-secret-police-cover-operation',
             },
         });
 

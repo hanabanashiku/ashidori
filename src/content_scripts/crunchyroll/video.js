@@ -31,7 +31,7 @@ Settings.getEnabledServices().then((enabledServices) => {
         resetPage();
 
         if (
-            message.payload.url.includes('https://beta.crunchyroll.com/watch/')
+            message.payload.url.includes('https://www.crunchyroll.com/watch/')
         ) {
             init();
         }
