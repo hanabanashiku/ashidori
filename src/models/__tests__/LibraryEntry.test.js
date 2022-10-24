@@ -20,6 +20,7 @@ describe('Library entry model', () => {
         expect(actual.lastUpdated).toBeNull();
         expect(actual.rating).toBe(0);
         expect(actual.anime).toStrictEqual(new AnimeSeries());
+        expect(actual.provider).toBeUndefined();
     });
 
     it('loads data from kitsu', () => {
@@ -45,6 +46,7 @@ describe('Library entry model', () => {
         expect(actual.anime).not.toBeNull();
         expect(actual.anime.title).toBe('Black Clover');
         expect(actual.anime.id).toBe('13209');
+        expect(actual.provider).toBe(PROVIDERS.KITSU);
     });
 
     it('loads data from MyAnimeList', () => {
@@ -67,5 +69,6 @@ describe('Library entry model', () => {
         expect(actual.anime).not.toBeNull();
         expect(actual.anime.title).toBe('One Piece');
         expect(actual.anime.id).toBe(21);
+        expect(actual.provider).toBe(PROVIDERS.MY_ANIME_LIST);
     });
 });

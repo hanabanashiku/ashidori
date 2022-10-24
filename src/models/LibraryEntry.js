@@ -108,6 +108,10 @@ export default class LibraryEntry {
         return this._anime;
     }
 
+    get provider() {
+        return this._provider;
+    }
+
     #mapFromKitsu(data) {
         const anime = data.included.find(
             (inc) =>
@@ -141,6 +145,7 @@ export default class LibraryEntry {
                           __langPref: data.__langPref,
                       })
                     : null,
+                _provider: PROVIDERS.KITSU,
             },
             DEFAULT_VALUES
         );
@@ -174,6 +179,7 @@ export default class LibraryEntry {
                     provider: PROVIDERS.MY_ANIME_LIST,
                     __langPref: data.__langPref,
                 }),
+                _provider: PROVIDERS.MY_ANIME_LIST,
             },
             DEFAULT_VALUES
         );
@@ -191,4 +197,5 @@ const DEFAULT_VALUES = {
     _lastUpdated: null,
     _rating: 0,
     _anime: new AnimeSeries(),
+    _provider: undefined,
 };
