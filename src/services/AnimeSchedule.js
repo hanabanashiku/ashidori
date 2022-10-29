@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
+import { cacheAnimeIdMap, getCachedAnimeIdMappings } from '../helpers/storageHelpers';
 import {PROVIDERS} from "../enums";
 import AnimeEpisodeSchedule from "../models/AnimeEpisodeSchedule";
 
@@ -22,10 +24,11 @@ export default class AnimeSchedule {
     /**
      Gets the airing schedule for a particular library entry.
      @param libraryEntries {LibraryEntry[]} The library entry
+     @returns {[id]: AnimeEpisodeSchedule[]} A dictionary mapping the provider anime id to the list of scheduled episodes.
      **/
     async getSchedulesForLibraryItems(libraryEntries) {
         if(libraryEntries.length == 0) {
-            return [];
+            return {};
         }
         
         const mediaIdDictionary = await this.#getMediaIds(libraryEntries.map(entry => entry.anime), libraryEntries[0].provider);
@@ -61,7 +64,7 @@ export default class AnimeSchedule {
 
             hasNextPage = result.data.data.Page.pageInfo.hasNextPage;
 
-            return results.data.Page.airingSchedules.reduce((prev, current) => {
+            return result.data.Page.airingSchedules.reduce((prev, current) => {
                 const id = Object.keys(mediaIdDictionary).find(key => mediaIdDictionary[key] == current.mediaId);
                 const anime = libraryEntries.find(entry => entry.anime.id === id).anime;
                 const item = new AnimeEpisodeSchedule({...current, mediaId: id, anime, });
@@ -87,24 +90,44 @@ export default class AnimeSchedule {
     async #getMediaIds(animes, listProvider) {
         let anilistIds;
         let mediaIds;
+        let toFetch;
+
+        // Check the cache
+        if(listProvider !== PROVIDERS.ANILIST) {
+            mediaIds = getCachedAnimeIdMappings(animes.map(anime => anime.id), listProvider);
+            const cacheMisses = mediaIds.filter(map => map[PROVIDERS.ANILIST] === -1);
+            toFetch = cacheMisses
+                .map(map => animes.find(anime => anime.id === map[listProvider]));
+
+            mediaIds = _.differenceWith(mediaIds, cacheMisses, (a, b) => a[listProvider] === b[listProvider])
+                .reduce((prev, current) => ({
+                    ...prev,
+                    [current[listProvider]]: current[PROVIDERS.ANILIST],
+                }), {});
+        }
+        
 
         switch(listProvider) {
             case PROVIDERS.MY_ANIME_LIST:
-                mediaIds = await this.#getMediaIdsForMal(animes);
+                mediaIds = {
+                    ...mediaIds,
+                    ...(await this.#getMediaIdsForMal(toFetch))
+                };
                 break;
+
                 case PROVIDERS.ANILIST:
                     mediaIds = animes.reduce((prev, current) => ({...prev, [current.id]: current.id}), {});
                     break;
 
                     default:
-                        anilistIds = await Promise.all(animes.map(async anime => await this.#getMediaIdForKitsu(anime)));
+                        anilistIds = await Promise.all(toFetch.map(async anime => await this.#getMediaIdForKitsu(anime)));
 
                         mediaIds = animes.reduce((prev, current, i) => ({
                             ...prev,
                             [current.id]: anilistIds[i],
-                        }));
+                        }), mediaIds);
                         break;
-        }
+                    }
 
         return mediaIds;
     }
@@ -145,6 +168,12 @@ export default class AnimeSchedule {
         while(hasNextPage) {
             results = await fetchPage();
         }
+
+        for(const malId in results) {
+            await cacheAnimeIdMap(malId, PROVIDERS.MY_ANIME_LIST, results[malId]);
+        }
+
+        return results;
     }
 
     /**
@@ -167,7 +196,13 @@ export default class AnimeSchedule {
         `;
 
         const result = await this.#post(query, variables);
-        return result.data.data.Media?.id ?? -1;
+        const anilistId = result.data.data.Media?.id;
+
+        if(anilistId) {
+            await cacheAnimeIdMap(anime.id, PROVIDERS.KITSU, anilistId, PROVIDERS.ANILIST);
+        }
+
+        return anilistId ?? -1;
     }
 
     async #post(query, variables) {
