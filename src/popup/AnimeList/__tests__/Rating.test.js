@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import Rating from '../Rating';
 import MockApiProvider from '../../../__mocks__/MockApiProvider';
@@ -17,13 +17,13 @@ describe('Rating cell', () => {
     });
 
     it('dispalys the rating', () => {
-        const { getByText } = render(<Rating value={value} />);
+        render(<Rating value={value} />);
 
-        expect(getByText('8')).toBeInTheDocument();
+        expect(screen.getByText('8')).toBeInTheDocument();
     });
 
     it('does not display an empty rating', () => {
-        const { getByText } = render(
+        render(
             <Rating
                 value={{
                     ...value,
@@ -32,50 +32,60 @@ describe('Rating cell', () => {
             />
         );
 
-        expect(getByText('Rate')).toBeInTheDocument();
+        expect(screen.getByText('Rate')).toBeInTheDocument();
     });
 
     it('clicking switches to edit mode', () => {
-        const { container, getByLabelText } = render(<Rating value={value} />);
+        const { container } = render(<Rating value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
+        userEvent.click(container.firstChild);
 
-        expect(getByLabelText('Series rating')).toBeInTheDocument();
+        expect(screen.getByLabelText('Series rating')).toBeInTheDocument();
     });
 
     it('typing the escape button cancels the operation', () => {
-        const { container, getByLabelText } = render(<Rating value={value} />);
+        const { container } = render(<Rating value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox = getByLabelText('Series rating').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Series rating')
+            .querySelector('input');
         userEvent.type(textBox, '9{esc}');
 
         expect(value.api.updateLibraryItem).not.toHaveBeenCalled();
         expect(textBox).not.toBeInTheDocument();
     });
 
-    it('submitting the change updates the anime', () => {
-        const { container, getByLabelText } = render(<Rating value={value} />);
+    it('submitting the change updates the anime', async () => {
+        const { container } = render(<Rating value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox = getByLabelText('Series rating').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Series rating')
+            .querySelector('input');
         userEvent.type(textBox, '{backspace}10{enter}');
 
-        expect(value.api.updateLibraryItem).toHaveBeenCalled();
+        await waitFor(() =>
+            expect(value.api.updateLibraryItem).toHaveBeenCalled()
+        );
         expect(value.api.updateLibraryItem).toHaveBeenLastCalledWith('12345', {
             rating: 10,
         });
     });
 
-    it('blurring the field updates the anime', () => {
-        const { container, getByLabelText } = render(<Rating value={value} />);
+    it('blurring the field updates the anime', async () => {
+        const { container } = render(<Rating value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox = getByLabelText('Series rating').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Series rating')
+            .querySelector('input');
         userEvent.type(textBox, '{backspace}7');
         fireEvent.blur(textBox);
 
-        expect(value.api.updateLibraryItem).toHaveBeenCalled();
+        await waitFor(() =>
+            expect(value.api.updateLibraryItem).toHaveBeenCalled()
+        );
         expect(value.api.updateLibraryItem).toHaveBeenLastCalledWith('12345', {
             rating: 7,
         });

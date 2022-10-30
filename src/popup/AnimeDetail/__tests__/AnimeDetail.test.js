@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor, act } from '@testing-library/react';
+import { render, waitFor, act } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import AnimeDetail from '..';

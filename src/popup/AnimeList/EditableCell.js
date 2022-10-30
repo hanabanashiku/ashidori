@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation } from 'react-query';
 
 const EditableCell = ({
     initialValue,
@@ -10,8 +11,19 @@ const EditableCell = ({
 }) => {
     const [currentValue, setValue] = useState(initialValue);
     const [isEditing, setEditing] = useState(false);
-    const [isSaving, setSaving] = useState(false);
-    const [error, setError] = useState(false);
+
+    const {
+        mutate,
+        isLoading: isSaving,
+        isError,
+    } = useMutation(
+        async () => {
+            await saveValue(currentValue);
+        },
+        {
+            onSettled: () => setEditing(false),
+        }
+    );
 
     function toggleEditing() {
         if (readonly) {
@@ -19,22 +31,6 @@ const EditableCell = ({
         }
 
         setEditing((value) => !value);
-    }
-
-    function onEdit(e) {
-        setSaving(true);
-        (async () => {
-            try {
-                await saveValue(currentValue);
-                setEditing(false);
-                if (error) setError(false);
-            } catch (e) {
-                setError(true);
-            } finally {
-                setSaving(false);
-            }
-        })();
-        e?.preventDefault();
     }
 
     function onKeyDown(e) {
@@ -46,7 +42,7 @@ const EditableCell = ({
                 break;
 
             case 'Enter':
-                onEdit(e);
+                mutate();
                 break;
         }
     }
@@ -55,10 +51,10 @@ const EditableCell = ({
         return renderEditView({
             value: currentValue,
             disabled: isSaving,
-            error: error,
+            error: isError,
             onKeyDown,
             onChange: (v) => setValue(v),
-            onBlur: (e) => onEdit(e),
+            onBlur: () => mutate(),
         });
     }
 

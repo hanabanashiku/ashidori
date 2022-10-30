@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { useQuery } from 'react-query';
 import { DataGrid } from '@mui/x-data-grid';
 import ApiProvider from '../../providers/ApiProvider';
 import LoadingOverlay from './LoadingOverlay';
@@ -11,60 +12,29 @@ const DEFAULT_PAGE_SIZE = 25;
 
 const AnimeList = ({ status, hide, showAnime, showError, api }) => {
     const [page, setPage] = useState(0);
-    const [listRefresher, refreshList] = useState(0);
     const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-    const [apiState, setApiState] = useState('loading');
-    const [items, setItems] = useState([]);
-    const [itemCount, setItemCount] = useState(0);
 
-    useEffect(() => {
-        if (hide) {
-            return;
+    const { data, isLoading, refetch } = useQuery(
+        ['animeList', status],
+        async () => {
+            return status === LIST_STATUS.CURRENT
+                ? await api.getAnimeListByStatus(
+                      status,
+                      page,
+                      pageSize,
+                      'lastUpdated',
+                      'desc'
+                  )
+                : await api.getAnimeListByStatus(status, page, pageSize);
+        },
+        {
+            staleTime: 15 * 60 * 1000,
+            enabled: !hide && !!api,
+            onError: () => showError(),
         }
-        setApiState('loading');
-        (async () => {
-            if (!api) {
-                return;
-            }
+    );
 
-            try {
-                const data =
-                    status === LIST_STATUS.CURRENT
-                        ? await api.getAnimeListByStatus(
-                              status,
-                              page,
-                              pageSize,
-                              'lastUpdated',
-                              'desc'
-                          )
-                        : await api.getAnimeListByStatus(
-                              status,
-                              page,
-                              pageSize
-                          );
-                setApiState('done');
-                setItems(data.data);
-                setItemCount(data.total);
-            } catch {
-                setApiState('error');
-                showError();
-            }
-        })();
-    }, [
-        api,
-        hide,
-        page,
-        pageSize,
-        status,
-        listRefresher,
-        setItems,
-        setPage,
-        setApiState,
-    ]);
-
-    function refresh() {
-        refreshList((v) => v + 1);
-    }
+    const itemCount = data?.total ?? 0;
 
     function onCellClick(params, e) {
         e.defaultMuiPrevented = true;
@@ -81,11 +51,11 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
      * @param {LibraryEntry} item
      * @returns
      */
-    const buildRow = (item) => {
+    function buildRow(item) {
         const common = {
             id: item.id,
             api,
-            refresh,
+            refetch,
         };
 
         return {
@@ -103,12 +73,13 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
                 rating: item.rating,
             },
         };
-    };
-    const rows = items.map((item) => buildRow(item));
+    }
 
     if (hide) {
         return null;
     }
+
+    const rows = data?.data.map((item) => buildRow(item)) ?? [];
 
     return (
         <DataGrid
@@ -117,7 +88,7 @@ const AnimeList = ({ status, hide, showAnime, showError, api }) => {
                 margin: 0;
                 height: 490px;
             `}
-            loading={apiState === 'loading'}
+            loading={isLoading}
             columns={columns}
             rows={rows}
             rowCount={itemCount}

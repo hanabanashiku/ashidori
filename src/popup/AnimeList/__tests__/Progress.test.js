@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import Progress from '../Progress';
 import MockApiProvider from '../../../__mocks__/MockApiProvider';
@@ -28,13 +28,13 @@ describe('Progress cell', () => {
     });
 
     it('renders the value', () => {
-        const { getByText } = render(<Progress value={value} />);
+        render(<Progress value={value} />);
 
-        expect(getByText('25/50')).toBeInTheDocument();
+        expect(screen.getByText('25/50')).toBeInTheDocument();
     });
 
     it('does not render the total when the total is null', () => {
-        const { getByText } = render(
+        render(
             <Progress
                 value={{
                     ...value,
@@ -43,77 +43,77 @@ describe('Progress cell', () => {
             />
         );
 
-        expect(getByText('25')).toBeInTheDocument();
+        expect(screen.getByText('25')).toBeInTheDocument();
     });
 
     it('clicking switches to edit mode', () => {
-        const { container, getByText, getByLabelText } = render(
-            <Progress value={value} />
-        );
+        const { container } = render(<Progress value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
+        userEvent.click(container.firstChild);
 
-        expect(getByText('/ 50')).toBeInTheDocument();
-        expect(getByLabelText('Current episode')).toBeInTheDocument();
+        expect(screen.getByText('/ 50')).toBeInTheDocument();
+        expect(screen.getByLabelText('Current episode')).toBeInTheDocument();
     });
 
     it('typing the escape button cancels the operation', () => {
-        const { container, getByLabelText } = render(
-            <Progress value={value} />
-        );
+        const { container } = render(<Progress value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox =
-            getByLabelText('Current episode').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Current episode')
+            .querySelector('input');
         userEvent.type(textBox, '15{esc}');
 
         expect(value.api.updateLibraryItem).not.toHaveBeenCalled();
         expect(textBox).not.toBeInTheDocument();
     });
 
-    it('submitting the change updates the anime', () => {
-        const { container, getByLabelText } = render(
-            <Progress value={value} />
-        );
+    it('submitting the change updates the anime', async () => {
+        const { container } = render(<Progress value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox =
-            getByLabelText('Current episode').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Current episode')
+            .querySelector('input');
         userEvent.type(textBox, '{backspace}{backspace}15{enter}');
 
-        expect(value.api.updateLibraryItem).toHaveBeenCalled();
+        await waitFor(() =>
+            expect(value.api.updateLibraryItem).toHaveBeenCalled()
+        );
         expect(value.api.updateLibraryItem).toHaveBeenLastCalledWith('12345', {
             progress: 15,
         });
     });
 
-    it('blurring the field updates the anime', () => {
-        const { container, getByLabelText } = render(
-            <Progress value={value} />
-        );
+    it('blurring the field updates the anime', async () => {
+        const { container } = render(<Progress value={value} />);
 
-        act(() => userEvent.click(container.firstChild));
-        const textBox =
-            getByLabelText('Current episode').querySelector('input');
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Current episode')
+            .querySelector('input');
         userEvent.type(textBox, '{backspace}{backspace}15');
         fireEvent.blur(textBox);
 
-        expect(value.api.updateLibraryItem).toHaveBeenCalled();
+        await waitFor(() =>
+            expect(value.api.updateLibraryItem).toHaveBeenCalled()
+        );
         expect(value.api.updateLibraryItem).toHaveBeenLastCalledWith('12345', {
             progress: 15,
         });
     });
 
     it('completing the anime sets the status and calls refresh', async () => {
-        const { container, getByLabelText } = render(
-            <Progress value={value} />
-        );
-        act(() => userEvent.click(container.firstChild));
-        const textBox =
-            getByLabelText('Current episode').querySelector('input');
+        const { container } = render(<Progress value={value} />);
+        userEvent.click(container.firstChild);
+        const textBox = screen
+            .getByLabelText('Current episode')
+            .querySelector('input');
         userEvent.type(textBox, '{backspace}{backspace}50{enter}');
 
-        expect(value.api.updateLibraryItem).toHaveBeenCalled();
+        await waitFor(() =>
+            expect(value.api.updateLibraryItem).toHaveBeenCalled()
+        );
         expect(value.api.updateLibraryItem).toHaveBeenLastCalledWith('12345', {
             progress: 50,
             status: LIST_STATUS.COMPLETED,

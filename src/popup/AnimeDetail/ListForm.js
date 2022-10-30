@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { css } from '@emotion/react';
 import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import {
     Box,
     Stack,
@@ -33,7 +34,7 @@ const ListForm = ({ entry, api, close }) => {
         control,
         getValues,
         setValue,
-        formState: { errors, isDirty, dirtyFields, isSubmitting },
+        formState: { errors, isDirty, dirtyFields },
     } = useForm({
         mode: 'onBlur',
         defaultValues: {
@@ -46,29 +47,36 @@ const ListForm = ({ entry, api, close }) => {
             notes: entry.notes,
         },
     });
+
+    const { mutate, isLoading } = useMutation(
+        async (values) => {
+            const toPatch = Object.keys(dirtyFields).filter(
+                (key) => dirtyFields[key]
+            );
+            let patch = _.pick(values, toPatch);
+
+            if (entry.status === LIST_STATUS.NOT_WATCHING) {
+                await api.createLibraryItem(entry.anime.id, patch);
+            } else {
+                await api.updateLibraryItem(entry.id, patch);
+            }
+        },
+        {
+            onSuccess: () => close(true),
+        }
+    );
     const modalRef = useRef();
 
     const supportsHalfStepRatings =
         api.providerType !== PROVIDERS.MY_ANIME_LIST;
 
-    async function onSubmit(values) {
+    function onSubmit(values) {
         if (!isDirty) {
             close(false);
             return;
         }
 
-        const toPatch = Object.keys(dirtyFields).filter(
-            (key) => dirtyFields[key]
-        );
-        let patch = _.pick(values, toPatch);
-
-        if (entry.status === LIST_STATUS.NOT_WATCHING) {
-            await api.createLibraryItem(entry.anime.id, patch);
-        } else {
-            await api.updateLibraryItem(entry.id, patch);
-        }
-
-        close(true);
+        mutate(values);
     }
 
     return (
@@ -278,7 +286,7 @@ const ListForm = ({ entry, api, close }) => {
                     variant="contained"
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
-                    loading={isSubmitting}
+                    loading={isLoading}
                     disabled={
                         entry.status === LIST_STATUS.NOT_WATCHING &&
                         getValues('status') === LIST_STATUS.NOT_WATCHING

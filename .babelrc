@@ -14,7 +14,8 @@
           "providers": "./src/providers",
           "static": "./src/static",
           "utils": "./src/utils",
-          "lang": "./src/lang"
+          "lang": "./src/lang",
+          "test-utils": "./testUtils"
         }
       }
     ],

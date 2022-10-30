@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import MockApiProvider from '../../../__mocks__/MockApiProvider';
 import library from '../../../__mocks__/library';

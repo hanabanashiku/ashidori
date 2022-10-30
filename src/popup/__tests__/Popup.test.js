@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, screen, act, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import Popup from '../Popup';

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import lang from '../../lang';
+import { useQuery, useQueryClient } from 'react-query';
 import { Box, Button, CircularProgress, Alert } from '@mui/material';
 import { KeyboardBackspace } from '@mui/icons-material';
 import ApiProvider from '../../providers/ApiProvider';
 import AnimeData from './AnimeData';
 import ListForm from './ListForm';
 import { resetSearchPage } from '../../helpers/storageHelpers';
+import lang from '../../lang';
 
 const AnimeDetail = ({
     selectedAnime,
@@ -16,34 +17,39 @@ const AnimeDetail = ({
     toggleSearch,
     isPopup,
 }) => {
-    const [anime, setAnime] = useState(null);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const result = isListEntryId
-                    ? await api.getSingleLibraryEntry(selectedAnime)
-                    : await api.getSingleLibraryEntryByAnime(selectedAnime);
-                setAnime(result);
-            } catch (e) {
-                setAnime('error');
-            }
-        })();
-    }, [selectedAnime, setAnime]);
+    const queryClient = useQueryClient();
+    const {
+        data: libraryEntry,
+        isFetching,
+        isError,
+        remove,
+    } = useQuery(
+        ['animeDetail', isListEntryId, selectedAnime],
+        async () => {
+            return isListEntryId
+                ? await api.getSingleLibraryEntry(selectedAnime)
+                : await api.getSingleLibraryEntryByAnime(selectedAnime);
+        },
+        {
+            enabled: !!api,
+        }
+    );
 
     function closeDetail(saving) {
-        if (saving && toggleSearch) {
-            resetSearchPage();
-            toggleSearch();
+        if (saving) {
+            remove();
+            queryClient.removeQueries(['animeList']);
+
+            if (toggleSearch) {
+                resetSearchPage();
+                toggleSearch();
+            }
         }
+
         close();
     }
 
-    if (!anime) {
-        return <CircularProgress />;
-    }
-
-    if (anime === 'error') {
+    if (isError) {
         return (
             <Alert severity="error">
                 {lang.errorOccurredTitle} {lang.errorOccurredBody}
@@ -51,13 +57,17 @@ const AnimeDetail = ({
         );
     }
 
+    if (isFetching || !libraryEntry) {
+        return <CircularProgress />;
+    }
+
     return (
         <Box>
             <Button startIcon={<KeyboardBackspace />} onClick={close}>
                 {isPopup ? lang.backButton : lang.closeButton}
             </Button>
-            <AnimeData anime={anime.anime} />
-            <ListForm entry={anime} api={api} close={closeDetail} />
+            <AnimeData anime={libraryEntry.anime} />
+            <ListForm entry={libraryEntry} api={api} close={closeDetail} />
         </Box>
     );
 };

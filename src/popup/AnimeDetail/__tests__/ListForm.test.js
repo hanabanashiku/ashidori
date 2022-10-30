@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    render,
-    screen,
-    act,
-    waitFor,
-    fireEvent,
-} from '@testing-library/react';
+import { render, screen, act, waitFor, fireEvent } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import ListForm from '../ListForm';
 import MockApiProvider from '../../../__mocks__/MockApiProvider';
