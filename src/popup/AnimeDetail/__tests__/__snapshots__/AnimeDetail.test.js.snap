@@ -493,8 +493,8 @@ exports[`Anime detail display matches snapshot 1`] = `
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="true"
-            for="mui-21"
-            id="mui-21-label"
+            for="mui-16"
+            id="mui-16-label"
           >
             Started
           </label>
@@ -506,7 +506,7 @@ exports[`Anime detail display matches snapshot 1`] = `
               aria-label="Choose date, selected date is Jan 30, 2022"
               aria-readonly="true"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id="mui-21"
+              id="mui-16"
               readonly=""
               type="text"
               value="01/30/2022"
@@ -531,8 +531,8 @@ exports[`Anime detail display matches snapshot 1`] = `
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for="mui-23"
-            id="mui-23-label"
+            for="mui-18"
+            id="mui-18-label"
           >
             Finished
           </label>
@@ -544,7 +544,7 @@ exports[`Anime detail display matches snapshot 1`] = `
               aria-label="Choose date"
               aria-readonly="true"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id="mui-23"
+              id="mui-18"
               readonly=""
               type="text"
               value=""
@@ -611,7 +611,7 @@ exports[`Anime detail display matches snapshot 1`] = `
       >
         <button
           class="MuiLoadingButton-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-h4t5eh-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root"
-          id="mui-25"
+          id="mui-20"
           tabindex="0"
           type="submit"
         >

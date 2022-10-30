@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { DataGrid } from '@mui/x-data-grid';
 import ApiProvider from '../../providers/ApiProvider';
 import LoadingOverlay from './LoadingOverlay';

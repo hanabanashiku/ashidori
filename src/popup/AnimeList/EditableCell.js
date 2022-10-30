@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 const EditableCell = ({
     initialValue,

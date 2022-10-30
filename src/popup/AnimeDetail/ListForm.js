@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { css } from '@emotion/react';
 import { useForm, Controller } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import {
     Box,
     Stack,

@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function Wrapper({ children }) {
     const queryClient = useRef(
@@ -10,6 +10,7 @@ function Wrapper({ children }) {
             defaultOptions: {
                 queries: {
                     retry: false,
+                    cacheTime: 0,
                 },
                 logger: {
                     log: console.log,

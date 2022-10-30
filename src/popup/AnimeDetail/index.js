@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Box, Button, CircularProgress, Alert } from '@mui/material';
 import { KeyboardBackspace } from '@mui/icons-material';
 import ApiProvider from '../../providers/ApiProvider';
@@ -32,6 +32,7 @@ const AnimeDetail = ({
         },
         {
             enabled: !!api,
+            cacheTime: 0,
         }
     );
 

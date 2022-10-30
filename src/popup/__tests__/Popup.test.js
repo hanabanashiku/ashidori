@@ -229,17 +229,22 @@ describe('Popup window', () => {
             })
         );
 
-        const { getByText, queryAllByRole } = render(<Component />);
+        render(<Component />);
 
-        await waitFor(() => expect(queryAllByRole('tab')).not.toHaveLength(0));
+        await waitFor(() =>
+            expect(screen.queryAllByRole('tab')).not.toHaveLength(0)
+        );
+        await waitFor(() =>
+            expect(screen.queryByText('One Piece')).toBeTruthy()
+        );
 
-        act(() => userEvent.click(getByText('One Piece')));
+        act(() => userEvent.click(screen.getByText('One Piece')));
         expect(api.getSingleLibraryEntry).toHaveBeenCalledTimes(1);
         expect(api.getSingleLibraryEntry).toHaveBeenLastCalledWith('12345');
         await waitFor(() =>
-            expect(queryAllByRole('progressbar')).toHaveLength(0)
+            expect(screen.queryAllByRole('progressbar')).toHaveLength(0)
         );
-        expect(getByText('One Piece')).toBeInTheDocument();
+        expect(screen.getByText('One Piece')).toBeInTheDocument();
     });
 
     it('recieving a show anime redirect opens the anime detail page', async () => {
