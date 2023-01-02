@@ -22,6 +22,10 @@ describe('App settings', () => {
                 return Settings.shouldShowUpdatePopup();
             case 'enable_add_popup':
                 return Settings.shouldShowAddPopup();
+            case 'should_check_for_new_episodes':
+                return Settings.shouldCheckForNewEpisodes();
+            case 'check_for_new_episodes_after':
+                return Settings.checkForNewEpisodesAfterMinutes();
             case 'should_notify_for_new_episodes':
                 return Settings.shouldNotifiyForNewEpisodes();
             case 'title_language_preference':
@@ -43,6 +47,10 @@ describe('App settings', () => {
                 return Settings.setShouldShowUpdatePopup(value);
             case 'enable_add_popup':
                 return Settings.setShouldShowAddPopup(value);
+            case 'should_check_for_new_episodes':
+                return Settings.setShouldCheckForNewEpisodes(value);
+            case 'check_for_new_episodes_after':
+                return Settings.setCheckForNewEpisodesAfterMinutes(value);
             case 'should_notify_for_new_episodes':
                 return Settings.setNotifiyForNewEpisodes(value);
             case 'title_language_preference':
@@ -58,6 +66,8 @@ describe('App settings', () => {
         ['update_delay', 10],
         ['enable_update_popup', true],
         ['enable_add_popup', true],
+        ['should_check_for_new_episodes', true],
+        ['check_for_new_episodes_after', 60],
         ['should_notify_for_new_episodes', NOTIFY_EPSIODE_ANSWERS.LATEST],
     ])('returns default value for %p', async function (key, expected) {
         expect(await callGetter(key)).toStrictEqual(expected);
@@ -87,6 +97,8 @@ describe('App settings', () => {
         ['update_delay', 5],
         ['enable_update_popup', false],
         ['enable_add_popup', false],
+        ['should_check_for_new_episodes', false],
+        ['check_for_new_episodes_after', 120],
         ['should_notify_for_new_episodes', NOTIFY_EPSIODE_ANSWERS.NEVER],
         ['title_language_preference', TITLE_LANGUAGE_PREFERENCES.UI_LANGUAGE],
     ])('gets and sets data for %p', async function (key, value) {

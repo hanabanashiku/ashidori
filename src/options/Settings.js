@@ -110,6 +110,40 @@ export default class Settings {
     }
 
     /**
+     * Enable or disable checking for new episodes.
+     * @returns {Promise<boolean>} The answer to the setting.
+     */
+    static async shouldCheckForNewEpisodes() {
+        return this.#getStoredKey('should_check_for_new_episodes', true);
+    }
+
+    /**
+     * Enable or disable notifications for new episodes on watch list.
+     * @param {boolean} value The setting answer.
+     * @returns {Promise<boolean>}
+     */
+    static async setShouldCheckForNewEpisodes(value) {
+        return this.#setStoredKey('should_check_for_new_episodes', value);
+    }
+
+    /**
+     * Check for new episodes after given minutes.
+     * @returns {Promise<number>} The number of minutes to check after.
+     */
+    static async checkForNewEpisodesAfterMinutes() {
+        return this.#getStoredKey('check_for_new_episodes_after', 60);
+    }
+
+    /**
+     * Set the number of minutes to wait before checking for new episodes.
+     * @param {number} value The number of minutes
+     * @returns {Promise<void>}
+     */
+    static async setCheckForNewEpisodesAfterMinutes(value) {
+        return this.#setStoredKey('check_for_new_episodes_after', value);
+    }
+
+    /**
      * Check whether or not to send a notification when a new episode is released.
      * @returns {Promise<number>} The answer to the setting.
      * @see NOTIFY_EPISODE_ANSWERS

@@ -9,6 +9,8 @@ import {
     Checkbox,
     RadioGroup,
     Radio,
+    Select,
+    MenuItem,
 } from '@mui/material';
 import Settings from './Settings';
 import { NOTIFY_EPSIODE_ANSWERS, TITLE_LANGUAGE_PREFERENCES } from '../enums';
@@ -40,6 +42,20 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 shouldShowAddPopup: action.payload,
+            };
+
+        case 'setCheckForNewEpisodes':
+            Settings.setShouldCheckForNewEpisodes(action.payload);
+            return {
+                ...state,
+                shouldCheckForNewEpisodes: action.payload,
+            };
+
+        case 'setCheckForNewEpisodesAfter':
+            Settings.setCheckForNewEpisodesAfterMinutes(action.payload);
+            return {
+                ...state,
+                checkForNewEpisodesAfter: action.payload,
             };
 
         case 'setEpisodeNotifications':
@@ -78,6 +94,10 @@ const OtherOptions = () => {
             const listUpdatingEnabled = Settings.listUpdatingEnabled();
             const shouldShowUpdatePopup = Settings.shouldShowUpdatePopup();
             const shouldShowAddPopup = Settings.shouldShowAddPopup();
+            const shouldCheckForNewEpisodes =
+                Settings.shouldCheckForNewEpisodes();
+            const checkForNewEpisodesAfter =
+                Settings.checkForNewEpisodesAfterMinutes();
             const shouldNotifiyForNewEpisodes =
                 Settings.shouldNotifiyForNewEpisodes();
             const updateDelay = Settings.shouldUpdateAfterMinutes();
@@ -90,6 +110,8 @@ const OtherOptions = () => {
                     listUpdatingEnabled: await listUpdatingEnabled,
                     shouldShowUpdatePopup: await shouldShowUpdatePopup,
                     shouldShowAddPopup: await shouldShowAddPopup,
+                    shouldCheckForNewEpisodes: await shouldCheckForNewEpisodes,
+                    checkForNewEpisodesAfter: await checkForNewEpisodesAfter,
                     shouldNotifiyForNewEpisodes:
                         await shouldNotifiyForNewEpisodes,
                     updateDelay: await updateDelay,
@@ -116,6 +138,20 @@ const OtherOptions = () => {
     const toggleAddPopup = (value) => {
         dispatch({
             type: 'setAddPopup',
+            payload: value,
+        });
+    };
+
+    const toggleCheckForNewEpsiodes = (value) => {
+        dispatch({
+            type: 'setCheckForNewEpisodes',
+            payload: value,
+        });
+    };
+
+    const setNewEpisodeCheckDelay = (value) => {
+        dispatch({
+            type: 'setCheckForNewEpisodesAfter',
             payload: value,
         });
     };
@@ -221,9 +257,42 @@ const OtherOptions = () => {
                 />
                 {lang.askBeforeAdding}
             </InputLabel>
+            <InputLabel>
+                <Checkbox
+                    name="should-check-for-new-episodes"
+                    checked={state.shouldCheckForNewEpisodes}
+                    onChange={(e) =>
+                        toggleCheckForNewEpsiodes(e.target.checked)
+                    }
+                    size="small"
+                />
+                Check for new episodes
+            </InputLabel>
+            <InputLabel
+                css={css`
+                    margin-left: 24px;
+                `}
+            >
+                Check for new episodes after&nbsp;
+                <Select
+                    name="check-for-new-episodes-after"
+                    size="small"
+                    variant="standard"
+                    disabled={!state.shouldCheckForNewEpisodes}
+                    value={state.checkForNewEpisodesAfter}
+                    onChange={(e) => setNewEpisodeCheckDelay(e.target.value)}
+                >
+                    <MenuItem value={10}>10 minutes</MenuItem>
+                    <MenuItem value={30}>30 minutes</MenuItem>
+                    <MenuItem value={60}>1 hour</MenuItem>
+                    <MenuItem value={2 * 60}>2 hours</MenuItem>
+                    <MenuItem value={12 * 60}>12 hours</MenuItem>
+                    <MenuItem value={24 * 60}>1 day</MenuItem>
+                </Select>
+            </InputLabel>
             <FormGroup
                 css={css`
-                    display: none;
+                    margin-left: 24px;
                 `}
             >
                 <Typography>{lang.newEpisodeNotification}</Typography>
@@ -240,6 +309,7 @@ const OtherOptions = () => {
                         <Radio
                             name="notify-for-new-epsiode"
                             size="small"
+                            disabled={!state.shouldCheckForNewEpisodes}
                             checked={
                                 state.shouldNotifiyForNewEpisodes ===
                                 NOTIFY_EPSIODE_ANSWERS.NEVER
@@ -256,6 +326,7 @@ const OtherOptions = () => {
                         <Radio
                             name="notify-for-new-epsiode"
                             size="small"
+                            disabled={!state.shouldCheckForNewEpisodes}
                             checked={
                                 state.shouldNotifiyForNewEpisodes ===
                                 NOTIFY_EPSIODE_ANSWERS.ALWAYS
@@ -271,6 +342,8 @@ const OtherOptions = () => {
                     <InputLabel>
                         <Radio
                             name="notify-for-new-epsiode"
+                            size="small"
+                            disabled={!state.shouldCheckForNewEpisodes}
                             checked={
                                 state.shouldNotifiyForNewEpisodes ===
                                 NOTIFY_EPSIODE_ANSWERS.LATEST

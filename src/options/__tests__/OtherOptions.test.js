@@ -15,10 +15,6 @@ describe('Other options section', () => {
         );
     }
 
-    //   afterEach(() => {
-    //     jest.clearAllMocks();
-    //   });
-
     it('renders default values', async () => {
         render(<OtherOptions />);
         await waitForLoad();
@@ -45,6 +41,22 @@ describe('Other options section', () => {
             screen.getByRole('checkbox', {
                 name: /ask before adding a new series/i,
             })
+        ).toBeChecked();
+
+        expect(
+            screen.getByRole('checkbox', { name: /check for new episodes/i })
+        ).toBeChecked();
+
+        expect(
+            document.querySelector('input[name="check-for-new-episodes-after"]')
+        ).toHaveValue('60');
+
+        expect(
+            screen.getByRole('radio', { name: /when on latest episode/i })
+        ).toBeChecked();
+
+        expect(
+            screen.getByRole('radio', { name: /canonical title/i })
         ).toBeChecked();
     });
 
@@ -177,6 +189,49 @@ describe('Other options section', () => {
                 name: /ask before adding a new series/i,
             })
         ).toBeDisabled();
+    });
+
+    it('toggling the check for new updates box enables or disables the child fields', async () => {
+        render(<OtherOptions />);
+        await waitForLoad();
+
+        expect(
+            document.querySelector('input[name="check-for-new-episodes-after"]')
+        ).toBeEnabled();
+        expect(
+            screen.getByRole('radio', { name: /when on latest episode/i })
+        ).toBeEnabled();
+
+        screen
+            .getByRole('checkbox', { name: /check for new episodes/i })
+            .click();
+        expect(
+            document.querySelector('input[name="check-for-new-episodes-after"]')
+        ).not.toBeEnabled();
+        expect(
+            screen.getByRole('radio', { name: /when on latest episode/i })
+        ).not.toBeEnabled();
+
+        screen
+            .getByRole('checkbox', { name: /check for new episodes/i })
+            .click();
+        expect(
+            document.querySelector('input[name="check-for-new-episodes-after"]')
+        ).toBeEnabled();
+        expect(
+            screen.getByRole('radio', { name: /when on latest episode/i })
+        ).toBeEnabled();
+    });
+
+    it('clicking the check for new episode checkbox updates the setting', async () => {
+        render(<OtherOptions />);
+        await waitForLoad();
+
+        screen
+            .getByRole('checkbox', { name: /check for new episodes/i })
+            .click();
+
+        expect(await Settings.shouldCheckForNewEpisodes()).toBeFalsy();
     });
 
     it('updating the title preference updates the title setting', async () => {
