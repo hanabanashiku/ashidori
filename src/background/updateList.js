@@ -33,6 +33,7 @@ async function onEpisodeStarted(message, sender) {
     }
 
     const episodeTab = sender.tab.id;
+    const episodeUrl = (await browser.tabs.get(episodeTab)).url;
     const loadTime = message.payload.loadTime;
     const userData = new UserData(message.payload.userData);
     const episodeData = new AnimeEpisode(message.payload.episodeData);
@@ -40,16 +41,32 @@ async function onEpisodeStarted(message, sender) {
 
     showCurrentWatchingAlertOnPopup(listEntry, episodeData);
 
-    // register event to update the list when the close the tab
+    // register event to update the list when the tab is closed or the url is changed
     function onTabClose(tabId) {
         if (tabId !== episodeTab) {
             return;
         }
 
         browser.tabs.onRemoved.removeListener(onTabClose);
+        browser.tabs.onUpdated.removeListener(onTabUpdated);
         startUpdate(loadTime, userData, episodeData, listEntry);
     }
+
+    async function onTabUpdated(tabId, changeInfo) {
+        if (
+            tabId !== episodeTab ||
+            (await browser.tabs.get(tabId)).url === episodeUrl
+        ) {
+            return;
+        }
+
+        browser.tabs.onRemoved.removeListener(onTabClose);
+        browser.tabs.onUpdated.removeListener(onTabUpdated);
+        startUpdate(loadTime, userData, episodeData, listEntry);
+    }
+
     browser.tabs.onRemoved.addListener(onTabClose);
+    browser.tabs.onUpdated.addListener(onTabUpdated);
 
     const currentTabs =
         (await browser.storage.local.get('CURRENT_TABS').CURRENT_TABS) ?? {};
