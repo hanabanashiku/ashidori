@@ -569,7 +569,9 @@ describe('Update list background script', () => {
             }),
             sender
         );
-        browser.tabs.get.mockResolvedValueOnce('https://google.com');
+        browser.tabs.get
+            .mockResolvedValueOnce('https://google.com')
+            .mockResolvedValueOnce('https://google.com');
         await onTabUpdated(tabId);
 
         await waitFor(() =>
@@ -1008,6 +1010,7 @@ describe('Update list background script', () => {
 
     it('reverts the anime and shows the reverted popup when clicking the undo button on the updated popup', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -1059,6 +1062,7 @@ describe('Update list background script', () => {
 
     it('reverts the anime and shows the reverted popup when clicking the undo button on the added popup', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -1092,9 +1096,7 @@ describe('Update list background script', () => {
         await waitFor(() =>
             expect(api.removeLibraryItem).toHaveBeenCalledTimes(1)
         );
-        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
-            baseMessage.payload.listEntry._id
-        );
+        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(123);
         expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
         expect(sendNotificationSpy).toHaveBeenLastCalledWith(
             'List updated',
@@ -1104,6 +1106,7 @@ describe('Update list background script', () => {
 
     it('shows error message when reverting fails', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -1138,9 +1141,7 @@ describe('Update list background script', () => {
         await waitFor(() =>
             expect(api.removeLibraryItem).toHaveBeenCalledTimes(1)
         );
-        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
-            baseMessage.payload.listEntry._id
-        );
+        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(123);
         expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
         expect(sendNotificationSpy).toHaveBeenLastCalledWith(
             'An error has occurred.',

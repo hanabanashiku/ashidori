@@ -108,6 +108,14 @@ export default class LibraryEntry {
         return this._anime;
     }
 
+    /**
+     * Update an id in the case of a new entry being created.
+     * @param {string|number} value The value to set
+     */
+    updateId(value) {
+        this._id = value;
+    }
+
     #mapFromKitsu(data) {
         const anime = data.included.find(
             (inc) =>
