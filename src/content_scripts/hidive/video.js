@@ -57,7 +57,7 @@ function init() {
 }
 
 function buildEpisodeMetadata() {
-    const path = document.location.pathname.split('/');
+    const path = window.location.pathname.split('/');
     const desc = $('div#StreamTitleDescription > h2:nth-child(1)')
         .text()
         .split(/\s*\|\s*/);
@@ -69,14 +69,18 @@ function buildEpisodeMetadata() {
 
     return new AnimeEpisode({
         _id: path.at(-1),
-        _title: $('div#StreamTitleDescription > h2:nth-child(2)').text(),
-        _description: $('div#StreamTitleDescription > p').text(),
+        _title: $('div#StreamTitleDescription > h2:nth-child(2)').text().trim(),
+        _description: $('div#StreamTitleDescription > p')
+            .text()
+            .trim()
+            .replace(/[\r\n]+/gm, '')
+            .replace(/\s{2,}/g, ' '),
         _number: parseInt(episode),
         _duration: parseInt($('div.rmp-duration').text().split(':')[0]),
         _series: new AnimeSeries({
             _id: path.at(-2),
-            _title: $('a#TitleDetails').text(),
-            _englishTitle: $('a#TitleDetails').text(),
+            _title: $('a#TitleDetails').text().trim(),
+            _englishTitle: $('a#TitleDetails').text().trim(),
             _seasonCount: $('li.seasonTab').filter((el) =>
                 /season \d+$/i.test(el.textContent)
             ).length,

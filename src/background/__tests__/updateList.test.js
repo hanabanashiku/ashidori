@@ -37,9 +37,12 @@ describe('Update list background script', () => {
         .spyOn(extensionHelpers, 'getBrowserType')
         .mockReturnValue(BROWSER.CHROMIUM);
 
+    const url =
+        'https://www.hidive.com/stream/is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon-iv/s04e000';
     let onEpisodeStarted;
     let onUpdateRequest;
     let onTabClose;
+    let onTabUpdated;
 
     const baseMessage = {
         type: MESSAGE_TYPES.UPDATE_EPISODE,
@@ -97,11 +100,23 @@ describe('Update list background script', () => {
         browser.tabs.onRemoved.addListener.mockImplementation(function (fn) {
             onTabClose = fn;
         });
+        browser.tabs.onUpdated.addListener.mockImplementation(function (fn) {
+            onTabUpdated = fn;
+        });
     });
 
     browser.tabs = {
         ...browser.tabs,
+        get: jest.fn(() =>
+            Promise.resolve({
+                url,
+            })
+        ),
         onRemoved: {
+            addListener: jest.fn(),
+            removeListener: jest.fn(),
+        },
+        onUpdated: {
             addListener: jest.fn(),
             removeListener: jest.fn(),
         },
@@ -146,7 +161,9 @@ describe('Update list background script', () => {
             sender
         );
 
-        expect(showCurrentWatchingAlertOnPopupSpy).toHaveBeenCalledTimes(1);
+        await waitFor(() =>
+            expect(showCurrentWatchingAlertOnPopupSpy).toHaveBeenCalledTimes(1)
+        );
     });
 
     it('does not update if the load time has not been met', async () => {
@@ -533,6 +550,58 @@ describe('Update list background script', () => {
         expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
             onTabClose
         );
+        expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
+            onTabUpdated
+        );
+    });
+
+    it('does update on tab update if the URL has changed', async () => {
+        Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+        Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+        await requireScript();
+        await onEpisodeStarted(
+            _.merge({}, baseMessage, {
+                type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                payload: {
+                    loadTime: now.getTime() - 11 * oneMinute,
+                },
+            }),
+            sender
+        );
+        browser.tabs.get.mockResolvedValueOnce('https://google.com');
+        await onTabUpdated(tabId);
+
+        await waitFor(() =>
+            expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
+        );
+        expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
+            onTabClose
+        );
+        expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
+            onTabUpdated
+        );
+    });
+
+    it('does not update on tab update if the URL has not changed', async () => {
+        Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+        Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+        await requireScript();
+        await onEpisodeStarted(
+            _.merge({}, baseMessage, {
+                type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                payload: {
+                    loadTime: now.getTime() - 11 * oneMinute,
+                },
+            }),
+            sender
+        );
+        await onTabUpdated(tabId);
+
+        expect(api.updateLibraryItem).not.toHaveBeenCalled();
+        expect(browser.tabs.onRemoved.removeListener).not.toHaveBeenCalled();
+        expect(browser.tabs.onUpdated.removeListener).not.toHaveBeenCalled();
     });
 
     test.each(updatePopupTestCases)(
