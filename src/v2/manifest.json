@@ -24,6 +24,10 @@
     {
       "matches": ["*://*.netflix.com/watch/*"],
       "js": ["../content_scripts/netflix/video.js"]
+    },
+    {
+      "matches": ["*://*.hidive.com/stream/**"],
+      "js": ["content_scripts/hidive/video.js"]
     }
   ],
   "web_accessible_resources": [
