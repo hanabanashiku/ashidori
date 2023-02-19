@@ -10,7 +10,7 @@ import MESSAGE_TYPES from '../../messageTypes';
 import AnimeEpisode from '../../models/AnimeEpisode';
 import AnimeSeries from '../../models/AnimeSeries';
 import AnimeSeason from '../../models/AnimeSeason';
-import ListDisplay from '../crunchyroll/ListDisplay';
+import ListDisplay from './ListDisplay';
 
 let episodeData;
 let loadTime;

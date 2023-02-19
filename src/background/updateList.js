@@ -52,7 +52,7 @@ async function onEpisodeStarted(message, sender) {
         startUpdate(loadTime, userData, episodeData, listEntry);
     }
 
-    async function onTabUpdated(tabId, changeInfo) {
+    async function onTabUpdated(tabId) {
         if (
             tabId !== episodeTab ||
             (await browser.tabs.get(tabId)).url === episodeUrl
