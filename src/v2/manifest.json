@@ -27,7 +27,7 @@
     },
     {
       "matches": ["*://*.hidive.com/stream/**"],
-      "js": ["content_scripts/hidive/video.js"]
+      "js": ["../content_scripts/hidive/video.js"]
     }
   ],
   "web_accessible_resources": [
