@@ -85,21 +85,6 @@ function renderListDisplay(listEntry, api) {
     );
 }
 
-// function onUnload() {
-//     // Tell the service worker to update the episode.
-//     if (listEntry && userData) {
-//         browser.runtime.sendMessage({
-//             type: MESSAGE_TYPES.UPDATE_EPISODE,
-//             payload: {
-//                 episodeData,
-//                 loadTime,
-//                 userData,
-//                 listEntry,
-//             },
-//         });
-//     }
-// }
-
 async function getEpisodeData() {
     const episodeId = /watch\/(\w+)\/?.*?/g.exec(window.location.href)[1];
     var client = new CrunchyrollService();

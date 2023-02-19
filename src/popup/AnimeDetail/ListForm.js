@@ -51,6 +51,31 @@ const ListForm = ({ entry, api, close }) => {
     const supportsHalfStepRatings =
         api.providerType !== PROVIDERS.MY_ANIME_LIST;
 
+    function onSelectListStatus(e, onChange) {
+        onChange(e);
+
+        if (
+            e.target.value === LIST_STATUS.CURRENT &&
+            entry.status === LIST_STATUS.NOT_WATCHING
+        ) {
+            setValue('startDate', new Date(), {
+                shouldDirty: true,
+            });
+        } else if (e.target.value === LIST_STATUS.COMPLETED) {
+            if (!entry.startDate && !dirtyFields.startDate) {
+                setValue('startDate', new Date(), { shouldDirty: true });
+            }
+            setValue('completedDate', new Date(), {
+                shouldDirty: true,
+            });
+            if (entry.anime.episodeCount) {
+                setValue('progress', entry.anime.episodeCount, {
+                    shouldDirty: true,
+                });
+            }
+        }
+    }
+
     async function onSubmit(values) {
         if (!isDirty) {
             close(false);
@@ -95,36 +120,9 @@ const ListForm = ({ entry, api, close }) => {
                                 labelId={`${name}-label`}
                                 id={name}
                                 value={value}
-                                onChange={(e) => {
-                                    onChange(e);
-                                    if (
-                                        e.target.value ===
-                                            LIST_STATUS.CURRENT &&
-                                        entry.status ===
-                                            LIST_STATUS.NOT_WATCHING
-                                    ) {
-                                        setValue('startDate', new Date(), {
-                                            shouldDirty: true,
-                                        });
-                                    } else if (
-                                        e.target.value ===
-                                            LIST_STATUS.COMPLETED &&
-                                        entry.status === LIST_STATUS.CURRENT
-                                    ) {
-                                        setValue('completedDate', new Date(), {
-                                            shouldDirty: true,
-                                        });
-                                        if (entry.anime.episodeCount) {
-                                            setValue(
-                                                'progress',
-                                                entry.anime.episodeCount,
-                                                {
-                                                    shouldDirty: true,
-                                                }
-                                            );
-                                        }
-                                    }
-                                }}
+                                onChange={(e) =>
+                                    onSelectListStatus(e, onChange)
+                                }
                                 onBlur={onBlur}
                                 inputRef={ref}
                             >
