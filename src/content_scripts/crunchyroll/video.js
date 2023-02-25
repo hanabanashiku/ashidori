@@ -27,7 +27,7 @@ Settings.getEnabledServices().then((enabledServices) => {
             return false;
         }
 
-        // onUnload();
+        onUnload();
         resetPage();
 
         if (
@@ -83,6 +83,21 @@ function renderListDisplay(listEntry, api) {
         <ListDisplay libraryEntry={listEntry} api={api} userData={userData} />,
         container[0]
     );
+}
+
+function onUnload() {
+    // Tell the service worker to update the episode.
+    if (listEntry && userData) {
+        browser.runtime.sendMessage({
+            type: MESSAGE_TYPES.UPDATE_EPISODE,
+            payload: {
+                episodeData,
+                loadTime,
+                userData,
+                listEntry,
+            },
+        });
+    }
 }
 
 async function getEpisodeData() {

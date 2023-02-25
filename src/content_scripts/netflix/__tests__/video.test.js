@@ -143,7 +143,7 @@ describe('Netflix video content script', () => {
         expect(historyStateUpdatedListener).toBeNull();
     });
 
-    it('does activate if crunchyroll is enabled', async () => {
+    it('does activate if netflix is enabled', async () => {
         Settings.getEnabledServices = jest
             .fn()
             .mockResolvedValue([SERVICES.NETFLIX]);
@@ -162,6 +162,32 @@ describe('Netflix video content script', () => {
                 },
             })
         );
+    });
+
+    it('sends update episode message on unload', async () => {
+        Settings.getEnabledServices = jest
+            .fn()
+            .mockResolvedValue([SERVICES.NETFLIX]);
+
+        requireScript();
+        await waitFor(() => expect(historyStateUpdatedListener).not.toBeNull());
+        historyStateUpdatedListener({
+            type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
+            payload: {
+                url: 'https://www.netflix.com/',
+            },
+        });
+
+        expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(2);
+        expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
+            type: MESSAGE_TYPES.UPDATE_EPISODE,
+            payload: {
+                episodeData: mockAnimeEpisode,
+                loadTime: expect.any(Date),
+                userData: mockUserData,
+                listEntry: mockLibraryEntry,
+            },
+        });
     });
 
     it('re-inits the script when switching to a new episode', async () => {

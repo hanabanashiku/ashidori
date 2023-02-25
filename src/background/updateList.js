@@ -17,7 +17,7 @@ import UserData from '../models/UserData';
 import AnimeEpisode from '../models/AnimeEpisode';
 import LibraryEntry from '../models/LibraryEntry';
 import lang from '../lang';
-import { LIST_STATUS, PROVIDER_NAMES, BROWSER } from '../enums';
+import { LIST_STATUS, PROVIDER_NAMES, BROWSER, SERVICES } from '../enums';
 
 browser.runtime.onMessage.addListener(onEpisodeStarted);
 browser.runtime.onMessage.addListener(onUpdateRequest);
@@ -55,10 +55,7 @@ async function onEpisodeStarted(message, sender) {
     async function onTabUpdated(tabId) {
         const tabUrl = (await browser.tabs.get(tabId)).url;
 
-        if (
-            tabId !== episodeTab ||
-            (await browser.tabs.get(tabId)).url === episodeUrl
-        ) {
+        if (tabId !== episodeTab || tabUrl === episodeUrl) {
             return;
         }
 
@@ -71,7 +68,11 @@ async function onEpisodeStarted(message, sender) {
     }
 
     browser.tabs.onRemoved.addListener(onTabClose);
-    browser.tabs.onUpdated.addListener(onTabUpdated);
+
+    // Update automatically if the page is not a SPA
+    if ([SERVICES.HIDIVE].includes(episodeData.service)) {
+        browser.tabs.onUpdated.addListener(onTabUpdated);
+    }
 
     const currentTabs =
         (await browser.storage.local.get('CURRENT_TABS').CURRENT_TABS) ?? {};

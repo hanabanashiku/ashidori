@@ -7,7 +7,7 @@ import * as extensionHelpers from '../../helpers/extensionHelpers';
 import MockApiProvider from '../../__mocks__/MockApiProvider';
 import AnimeEpisode from '../../models/AnimeEpisode';
 import MESSAGE_TYPES from '../../messageTypes';
-import { BROWSER, LIST_STATUS } from '../../enums';
+import { BROWSER, LIST_STATUS, SERVICES } from '../../enums';
 import LibraryEntry from '../../models/LibraryEntry';
 import AnimeSeries from '../../models/AnimeSeries';
 import {
@@ -550,61 +550,74 @@ describe('Update list background script', () => {
         expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
             onTabClose
         );
-        expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
-            onTabUpdated
-        );
     });
 
-    it('does update on tab update if the URL has changed', async () => {
-        Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
-        Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+    const notSpaCases = [['Hidive', SERVICES.HIDIVE]];
 
-        await requireScript();
-        await onEpisodeStarted(
-            _.merge({}, baseMessage, {
-                type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
-                payload: {
-                    loadTime: now.getTime() - 11 * oneMinute,
-                },
-            }),
-            sender
-        );
-        browser.tabs.get
-            .mockResolvedValueOnce('https://google.com')
-            .mockResolvedValueOnce('https://google.com');
-        await onTabUpdated(tabId);
+    it.each(notSpaCases)(
+        'does update on tab update of the URL has changed for %p',
+        async (_name, service) => {
+            Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+            Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
 
-        await waitFor(() =>
-            expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
-        );
-        expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
-            onTabClose
-        );
-        expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
-            onTabUpdated
-        );
-    });
+            await requireScript();
+            await onEpisodeStarted(
+                _.merge({}, baseMessage, {
+                    type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                    payload: {
+                        loadTime: now.getTime() - 11 * oneMinute,
+                        episodeData: {
+                            _service: service,
+                        },
+                    },
+                }),
+                sender
+            );
+            browser.tabs.get.mockResolvedValueOnce('https://google.com');
+            await onTabUpdated(tabId);
 
-    it('does not update on tab update if the URL has not changed', async () => {
-        Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
-        Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+            await waitFor(() =>
+                expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
+            );
+            expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
+                onTabClose
+            );
+            expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
+                onTabUpdated
+            );
+        }
+    );
 
-        await requireScript();
-        await onEpisodeStarted(
-            _.merge({}, baseMessage, {
-                type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
-                payload: {
-                    loadTime: now.getTime() - 11 * oneMinute,
-                },
-            }),
-            sender
-        );
-        await onTabUpdated(tabId);
+    it.each(notSpaCases)(
+        'does not update on tab update if the URL has not changed for %p',
+        async (_name, service) => {
+            Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+            Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
 
-        expect(api.updateLibraryItem).not.toHaveBeenCalled();
-        expect(browser.tabs.onRemoved.removeListener).not.toHaveBeenCalled();
-        expect(browser.tabs.onUpdated.removeListener).not.toHaveBeenCalled();
-    });
+            await requireScript();
+            await onEpisodeStarted(
+                _.merge({}, baseMessage, {
+                    type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                    payload: {
+                        loadTime: now.getTime() - 11 * oneMinute,
+                        episodeData: {
+                            _service: service,
+                        },
+                    },
+                }),
+                sender
+            );
+            await onTabUpdated(tabId);
+
+            expect(api.updateLibraryItem).not.toHaveBeenCalled();
+            expect(
+                browser.tabs.onRemoved.removeListener
+            ).not.toHaveBeenCalled();
+            expect(
+                browser.tabs.onUpdated.removeListener
+            ).not.toHaveBeenCalled();
+        }
+    );
 
     test.each(updatePopupTestCases)(
         'shows notification before %p if the notification setting is enabled on %p',

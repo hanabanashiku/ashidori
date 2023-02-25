@@ -31,6 +31,7 @@ describe('Hidive video content script', () => {
             _name: 'Season 4',
             _number: 4,
         }),
+        _service: SERVICES.HIDIVE,
     });
     const mockUserData = new UserData({
         _id: '12345',

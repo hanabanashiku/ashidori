@@ -84,6 +84,13 @@ export default class AnimeEpisode {
         return this._airDate;
     }
 
+    /**
+     * @returns The service provider for the episode data.
+     */
+    get service() {
+        return this._service;
+    }
+
     #populateFromCrunchyroll(episode) {
         _.defaultsDeep(
             this,
@@ -96,6 +103,7 @@ export default class AnimeEpisode {
                 _airDate: new Date(episode.episode_air_date),
                 _season: episode.season,
                 _series: episode.series,
+                _service: SERVICES.CRUNCHYROLL,
             },
             DEFAULT_VALUES
         );
@@ -111,4 +119,5 @@ const DEFAULT_VALUES = {
     _season: new AnimeSeason(),
     _series: new AnimeSeries(),
     _airDate: null,
+    _service: null,
 };

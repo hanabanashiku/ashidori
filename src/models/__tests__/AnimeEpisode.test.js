@@ -20,6 +20,7 @@ describe('Anime episode model', () => {
         expect(actual.season).toStrictEqual(new AnimeSeason());
         expect(actual.series).toStrictEqual(new AnimeSeries());
         expect(actual.airDate).toBeNull();
+        expect(actual.service).toBeNull();
     });
 
     it('maps data from Crunchyroll', () => {
@@ -47,5 +48,6 @@ describe('Anime episode model', () => {
         );
         expect(actual.season.id).toBe('GR2PCVZEW');
         expect(actual.series.id).toBe('G6NQ5DWZ6');
+        expect(actual.service).toBe(SERVICES.CRUNCHYROLL);
     });
 });

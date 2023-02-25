@@ -89,6 +89,7 @@ function buildEpisodeMetadata() {
             _name: $('li.seasonTab.active')?.text().trim() ?? seasonDesc[0],
             _number: season,
         }),
+        _service: SERVICES.HIDIVE,
     });
 }
 

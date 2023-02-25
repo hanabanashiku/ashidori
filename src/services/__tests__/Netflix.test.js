@@ -1,6 +1,7 @@
 import NetflixService from '../Netflix';
 import axios from 'axios';
 import mockData from './netflixMockData.json';
+import { SERVICES } from '../../enums';
 
 describe('Netflix service', () => {
     let getSpy;
@@ -37,5 +38,6 @@ describe('Netflix service', () => {
         expect(actual.season.id).toBe(80225500);
         expect(actual.season.name).toBe('Season 2');
         expect(actual.season.number).toBe(2);
+        expect(actual.service).toBe(SERVICES.NETFLIX);
     });
 });

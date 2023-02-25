@@ -124,6 +124,17 @@ function insertListDisplay(libraryEntry, api, userData) {
 
 function onUnload() {
     // Tell the service worker to update the episode.
+    if (listEntry && userData) {
+        browser.runtime.sendMessage({
+            type: MESSAGE_TYPES.UPDATE_EPISODE,
+            payload: {
+                episodeData,
+                loadTime,
+                userData,
+                listEntry,
+            },
+        });
+    }
     if (footerObserver) {
         footerObserver.disconnect();
         footerObserver = null;
