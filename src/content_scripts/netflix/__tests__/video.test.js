@@ -143,7 +143,7 @@ describe('Netflix video content script', () => {
         expect(historyStateUpdatedListener).toBeNull();
     });
 
-    it('does activate if crunchyroll is enabled', async () => {
+    it('does activate if netflix is enabled', async () => {
         Settings.getEnabledServices = jest
             .fn()
             .mockResolvedValue([SERVICES.NETFLIX]);
@@ -206,7 +206,7 @@ describe('Netflix video content script', () => {
         });
 
         await waitFor(() =>
-            expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(3)
+            expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(2)
         );
         expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
             type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,

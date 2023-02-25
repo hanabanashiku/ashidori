@@ -100,6 +100,11 @@ const Services = () => {
                         value={SERVICES.CRUNCHYROLL}
                     />
                     <ServiceCheckbox
+                        name="Hidive"
+                        image="../static/images/hidive.png"
+                        value={SERVICES.HIDIVE}
+                    />
+                    <ServiceCheckbox
                         name="Netflix"
                         image="../static/images/netflix.png"
                         value={SERVICES.NETFLIX}
@@ -119,11 +124,7 @@ const Services = () => {
             image="../static/images/amazon_prime.png"
             value={SERVICES.AMAZON_PRIME}
           />
-          <ServiceCheckbox
-            name="Hidive"
-            image="../static/images/hidive.png"
-            value={SERVICES.HIDIVE}
-  />*/}
+          */}
                 </Box>
             </Box>
 

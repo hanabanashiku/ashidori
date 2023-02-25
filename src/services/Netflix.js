@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { SERVICES } from '../enums';
 import AnimeEpisode from '../models/AnimeEpisode';
 import AnimeSeason from '../models/AnimeSeason';
 import AnimeSeries from '../models/AnimeSeries';
@@ -55,6 +56,7 @@ export default class NetflixService {
                 _name: currentSeason.title,
                 _number: currentSeason.seq,
             }),
+            _service: SERVICES.NETFLIX,
         });
     }
 }

@@ -21,7 +21,7 @@ function ListDisplay({ libraryEntry, api, userData }) {
                     margin-top: 16px;
                 `}
             >
-                <Typography variant="h3">List status</Typography>
+                <Typography variant="h3">{lang.listStatus}</Typography>
                 <Box
                     css={css`
                         margin-top: -4px;

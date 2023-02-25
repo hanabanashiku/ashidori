@@ -17,7 +17,7 @@ import UserData from '../models/UserData';
 import AnimeEpisode from '../models/AnimeEpisode';
 import LibraryEntry from '../models/LibraryEntry';
 import lang from '../lang';
-import { LIST_STATUS, PROVIDER_NAMES, BROWSER } from '../enums';
+import { LIST_STATUS, PROVIDER_NAMES, BROWSER, SERVICES } from '../enums';
 
 browser.runtime.onMessage.addListener(onEpisodeStarted);
 browser.runtime.onMessage.addListener(onUpdateRequest);
@@ -37,19 +37,42 @@ async function onEpisodeStarted(message, sender) {
     const userData = new UserData(message.payload.userData);
     const episodeData = new AnimeEpisode(message.payload.episodeData);
     const listEntry = new LibraryEntry(message.payload.listEntry);
+    let episodeUrl = (await browser.tabs.get(episodeTab)).url;
 
     showCurrentWatchingAlertOnPopup(listEntry, episodeData);
 
-    // register event to update the list when the close the tab
-    function onTabClose(tabId) {
+    // register event to update the list when the tab is closed or the url is changed
+    async function onTabClose(tabId) {
         if (tabId !== episodeTab) {
             return;
         }
 
         browser.tabs.onRemoved.removeListener(onTabClose);
-        startUpdate(loadTime, userData, episodeData, listEntry);
+        browser.tabs.onUpdated.removeListener(onTabUpdated);
+        return startUpdate(loadTime, userData, episodeData, listEntry);
     }
+
+    async function onTabUpdated(tabId) {
+        const tabUrl = (await browser.tabs.get(tabId)).url;
+
+        if (tabId !== episodeTab || tabUrl === episodeUrl) {
+            return;
+        }
+
+        // Fixes bug that causes the popup to show multiple times
+        episodeUrl = tabUrl;
+
+        browser.tabs.onRemoved.removeListener(onTabClose);
+        browser.tabs.onUpdated.removeListener(onTabUpdated);
+        return startUpdate(loadTime, userData, episodeData, listEntry);
+    }
+
     browser.tabs.onRemoved.addListener(onTabClose);
+
+    // Update automatically if the page is not a SPA
+    if ([SERVICES.HIDIVE].includes(episodeData.service)) {
+        browser.tabs.onUpdated.addListener(onTabUpdated);
+    }
 
     const currentTabs =
         (await browser.storage.local.get('CURRENT_TABS').CURRENT_TABS) ?? {};
@@ -393,7 +416,11 @@ async function updateAnimeAsync(episodeData, listEntry, userData) {
 
     try {
         if (listEntry.status === LIST_STATUS.NOT_WATCHING) {
-            await api.createLibraryItem(listEntry.anime.id, patch);
+            const createdId = await api.createLibraryItem(
+                listEntry.anime.id,
+                patch
+            );
+            listEntry.updateId(createdId);
         } else {
             await api.updateLibraryItem(listEntry.id, patch);
         }

@@ -43,7 +43,7 @@ function EntryRating({ libraryEntry, api }) {
                 readOnly={isLoading}
                 data-testid="ashidori-anime-rating"
             />
-            <Typography fontSize="sm" marginLeft={2}>
+            <Typography fontSize="sm" pl={1}>
                 {hover !== -1 ? hover : value > 0 ? value : ''}
             </Typography>
         </Box>

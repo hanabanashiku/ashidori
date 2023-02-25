@@ -43,6 +43,7 @@
   "aired": "放送日",
   "length": "時間",
   "libraryStatus": "ライブラリステータス",
+  "listStatus": "リストステータス",
   "startedDate": "開始日",
   "finishedDate": "完成日",
   "notes": "ノート",

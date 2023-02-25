@@ -147,7 +147,8 @@ export default class MyAnimeListProvider extends ApiProvider {
         // In the MAL API, PATCH functions as an upsert.
         // Additionally, the key is simply the username + anime id
         // so we can pass in the animeId as the itemId directly.
-        return this.updateLibraryItem(animeId, patch);
+        await this.updateLibraryItem(animeId, patch);
+        return animeId;
     }
 
     async updateLibraryItem(itemId, patch) {

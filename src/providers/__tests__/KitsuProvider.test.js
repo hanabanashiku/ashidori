@@ -419,6 +419,49 @@ describe('Kitsu api provider', () => {
         });
     });
 
+    it('create item creates a library item', async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                data: {
+                    id: '12345',
+                },
+            },
+        });
+        const now = new Date();
+
+        const actual = await kitsu.createLibraryItem('5000', {
+            status: LIST_STATUS.CURRENT,
+            progress: 1,
+            startedAt: now,
+        });
+
+        expect(actual).toBe('12345');
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        expect(axios.post).toHaveBeenLastCalledWith('/library-entries', {
+            data: {
+                type: 'libraryEntries',
+                attributes: {
+                    progress: 1,
+                    status: 'current',
+                },
+                relationships: {
+                    anime: {
+                        data: {
+                            type: 'anime',
+                            id: '5000',
+                        },
+                    },
+                    user: {
+                        data: {
+                            type: 'users',
+                            id: userId,
+                        },
+                    },
+                },
+            },
+        });
+    });
+
     it('update item updates a library item', async () => {
         axios.patch.mockResolvedValueOnce();
         const itemId = '12345';

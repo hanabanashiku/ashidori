@@ -7,7 +7,7 @@ import * as extensionHelpers from '../../helpers/extensionHelpers';
 import MockApiProvider from '../../__mocks__/MockApiProvider';
 import AnimeEpisode from '../../models/AnimeEpisode';
 import MESSAGE_TYPES from '../../messageTypes';
-import { BROWSER, LIST_STATUS } from '../../enums';
+import { BROWSER, LIST_STATUS, SERVICES } from '../../enums';
 import LibraryEntry from '../../models/LibraryEntry';
 import AnimeSeries from '../../models/AnimeSeries';
 import {
@@ -37,9 +37,12 @@ describe('Update list background script', () => {
         .spyOn(extensionHelpers, 'getBrowserType')
         .mockReturnValue(BROWSER.CHROMIUM);
 
+    const url =
+        'https://www.hidive.com/stream/is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon-iv/s04e000';
     let onEpisodeStarted;
     let onUpdateRequest;
     let onTabClose;
+    let onTabUpdated;
 
     const baseMessage = {
         type: MESSAGE_TYPES.UPDATE_EPISODE,
@@ -97,11 +100,23 @@ describe('Update list background script', () => {
         browser.tabs.onRemoved.addListener.mockImplementation(function (fn) {
             onTabClose = fn;
         });
+        browser.tabs.onUpdated.addListener.mockImplementation(function (fn) {
+            onTabUpdated = fn;
+        });
     });
 
     browser.tabs = {
         ...browser.tabs,
+        get: jest.fn(() =>
+            Promise.resolve({
+                url,
+            })
+        ),
         onRemoved: {
+            addListener: jest.fn(),
+            removeListener: jest.fn(),
+        },
+        onUpdated: {
             addListener: jest.fn(),
             removeListener: jest.fn(),
         },
@@ -146,7 +161,9 @@ describe('Update list background script', () => {
             sender
         );
 
-        expect(showCurrentWatchingAlertOnPopupSpy).toHaveBeenCalledTimes(1);
+        await waitFor(() =>
+            expect(showCurrentWatchingAlertOnPopupSpy).toHaveBeenCalledTimes(1)
+        );
     });
 
     it('does not update if the load time has not been met', async () => {
@@ -534,6 +551,73 @@ describe('Update list background script', () => {
             onTabClose
         );
     });
+
+    const notSpaCases = [['Hidive', SERVICES.HIDIVE]];
+
+    it.each(notSpaCases)(
+        'does update on tab update of the URL has changed for %p',
+        async (_name, service) => {
+            Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+            Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+            await requireScript();
+            await onEpisodeStarted(
+                _.merge({}, baseMessage, {
+                    type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                    payload: {
+                        loadTime: now.getTime() - 11 * oneMinute,
+                        episodeData: {
+                            _service: service,
+                        },
+                    },
+                }),
+                sender
+            );
+            browser.tabs.get.mockResolvedValueOnce('https://google.com');
+            await onTabUpdated(tabId);
+
+            await waitFor(() =>
+                expect(api.updateLibraryItem).toHaveBeenCalledTimes(1)
+            );
+            expect(browser.tabs.onRemoved.removeListener).toHaveBeenCalledWith(
+                onTabClose
+            );
+            expect(browser.tabs.onUpdated.removeListener).toHaveBeenCalledWith(
+                onTabUpdated
+            );
+        }
+    );
+
+    it.each(notSpaCases)(
+        'does not update on tab update if the URL has not changed for %p',
+        async (_name, service) => {
+            Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(10);
+            Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
+
+            await requireScript();
+            await onEpisodeStarted(
+                _.merge({}, baseMessage, {
+                    type: MESSAGE_TYPES.ANIME_EPISODE_STARTED,
+                    payload: {
+                        loadTime: now.getTime() - 11 * oneMinute,
+                        episodeData: {
+                            _service: service,
+                        },
+                    },
+                }),
+                sender
+            );
+            await onTabUpdated(tabId);
+
+            expect(api.updateLibraryItem).not.toHaveBeenCalled();
+            expect(
+                browser.tabs.onRemoved.removeListener
+            ).not.toHaveBeenCalled();
+            expect(
+                browser.tabs.onUpdated.removeListener
+            ).not.toHaveBeenCalled();
+        }
+    );
 
     test.each(updatePopupTestCases)(
         'shows notification before %p if the notification setting is enabled on %p',
@@ -939,6 +1023,7 @@ describe('Update list background script', () => {
 
     it('reverts the anime and shows the reverted popup when clicking the undo button on the updated popup', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -990,6 +1075,7 @@ describe('Update list background script', () => {
 
     it('reverts the anime and shows the reverted popup when clicking the undo button on the added popup', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -1023,9 +1109,7 @@ describe('Update list background script', () => {
         await waitFor(() =>
             expect(api.removeLibraryItem).toHaveBeenCalledTimes(1)
         );
-        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
-            baseMessage.payload.listEntry._id
-        );
+        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(123);
         expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
         expect(sendNotificationSpy).toHaveBeenLastCalledWith(
             'List updated',
@@ -1035,6 +1119,7 @@ describe('Update list background script', () => {
 
     it('shows error message when reverting fails', async () => {
         getBrowserTypeSpy.mockReturnValue(BROWSER.CHROMIUM);
+        api.createLibraryItem.mockResolvedValueOnce(123);
 
         Settings.shouldUpdateAfterMinutes = jest.fn().mockResolvedValue(0);
         Settings.shouldShowUpdatePopup = jest.fn().mockResolvedValue(false);
@@ -1069,9 +1154,7 @@ describe('Update list background script', () => {
         await waitFor(() =>
             expect(api.removeLibraryItem).toHaveBeenCalledTimes(1)
         );
-        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(
-            baseMessage.payload.listEntry._id
-        );
+        expect(api.removeLibraryItem).toHaveBeenLastCalledWith(123);
         expect(sendNotificationSpy).toHaveBeenCalledTimes(2);
         expect(sendNotificationSpy).toHaveBeenLastCalledWith(
             'An error has occurred.',

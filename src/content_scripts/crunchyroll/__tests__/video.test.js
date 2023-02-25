@@ -131,6 +131,33 @@ describe('Crunchyroll video content script', () => {
         expect(historyStateUpdatedListener).toBeNull();
     });
 
+    it('sends update episode message on unload', async () => {
+        Settings.getEnabledServices = jest
+            .fn()
+            .mockResolvedValue([SERVICES.CRUNCHYROLL]);
+
+        requireScript();
+        await waitFor(() => expect(historyStateUpdatedListener).not.toBeNull());
+        historyStateUpdatedListener({
+            type: MESSAGE_TYPES.HISTORY_STATE_UPDATED,
+            payload: {
+                url: 'https://www.crunchyroll.com/watchlist',
+            },
+        });
+
+        expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(2);
+        expect(browser.runtime.sendMessage).toHaveBeenLastCalledWith({
+            type: MESSAGE_TYPES.UPDATE_EPISODE,
+            payload: {
+                episodeData: mockAnimeEpisode,
+                loadTime: expect.any(Date),
+                userData: mockUserData,
+                listEntry: mockLibraryEntry,
+            },
+        });
+        expect(document.querySelector('#ashidori-list-info')).toBeFalsy();
+    });
+
     it('does activate if crunchyroll is enabled', async () => {
         Settings.getEnabledServices = jest
             .fn()

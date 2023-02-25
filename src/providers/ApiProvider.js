@@ -56,7 +56,7 @@ export default class ApiProvider {
      * Create a new library entry for a given anime.
      * @param {string|number} animeId
      * @param {object} patch
-     * @returns {Promise<*>}
+     * @returns {Promise<string|number>} The id of the created library item.
      * @see LibraryEntry for valid parameters.
      */
     async createLibraryItem() {

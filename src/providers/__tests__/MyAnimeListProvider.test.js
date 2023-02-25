@@ -256,9 +256,8 @@ describe('MyAnimeList provider', () => {
         expectedPatch.append('start_date', '2022-01-20');
         expectedPatch.append('finish_date', null);
 
-        expect(
-            async () => await mal.createLibraryItem(itemId, patch)
-        ).not.toThrow();
+        const actual = await mal.createLibraryItem(itemId, patch);
+        expect(actual).toStrictEqual(itemId);
         expect(axios.patch).toHaveBeenCalledTimes(1);
         expect(axios.patch).toHaveBeenCalledWith(
             `/anime/${itemId}/my_list_status`,
